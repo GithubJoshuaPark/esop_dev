@@ -1,0 +1,21 @@
+body {    
+    padding-top: 5rem;
+}
+
+.starter-template {        
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+.footer {
+    /* place at the bottom of a page all the time */
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 100; /* place it on top */
+
+    background-color: #f5f5f5;
+    padding: 1rem 0;
+    margin-top: auto;
+}

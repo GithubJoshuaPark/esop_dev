@@ -1,0 +1,29 @@
+/* board.css */
+
+@import url("commoncss/common.css");
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 800px;
+}
+
+.board-item {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.board-item:last-child {
+    border-bottom: none;
+}
+
+.board-item h2 {
+    color: #007bff;
+}
+
+.board-item p {
+    color: #555;
+}
