@@ -1,5 +1,7 @@
 package com.soro.esop.entiry;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
@@ -11,14 +13,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Data
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "board")
+public class Board {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
-    private String password;
+    private String title;
+    private String content;
     private Boolean enabled;
+    private String writer;
+    private LocalDate regDate;
 }

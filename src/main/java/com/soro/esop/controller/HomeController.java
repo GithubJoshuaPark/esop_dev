@@ -20,12 +20,11 @@ import com.soro.esop.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 
-
 @Slf4j
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
-    
+
     private final UserService userService;
 
     @GetMapping
