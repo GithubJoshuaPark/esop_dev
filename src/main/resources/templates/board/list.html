@@ -1,3 +1,11 @@
+<!--
+@author : Joshua Park
+@email : soromiso@gmail.com
+@create date : 2024-08-18 00:13:32
+@modify date : 2024-08-18 00:13:32
+@desc [list.html] : Board list page 
+-->
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head th:replace="~{acom/common :: head('ESOP > List', '/css/list.css')}"/>
@@ -22,12 +30,17 @@
 
               <!-- Search form -->
               <form class="form-inline" 
-                    method="get"
+                    method="GET"
                     th:action="@{/board/list}" 
                     >
                 <div class="form-group mx-sm-3 mb-2">
                   <label for="inputSearch" class="sr-only">Search</label>
-                  <input type="text" class="form-control" id="inputSearch" name="titleOrContent">
+                  <input type="text" 
+                         class="form-control" 
+                         id="inputSearch" 
+                         name="titleOrContent"
+                         th:value="${param.titleOrContent}"
+                         >
                 </div>
                 <button type="submit" class="btn btn-outline-info mb-2">Search</button>
               </form>
@@ -46,6 +59,7 @@
                     <th scope="col">Content</th>
                     <th scope="col">Writer</th>
                     <th scope="col">RegDate</th>
+                    <th scope="col">Delete</th> 
                   </tr>
                 </thead>
                 <tbody>
@@ -55,6 +69,11 @@
                     <td th:text="${board.content}">Content</td>
                     <td th:text="${board.writer}">Writer</td>
                     <td th:text="${board.regDate}">regDate</td>
+                    <td>
+                      <button type="button" 
+                              class="btn btn-outline-danger delete-btn" 
+                              th:data-board-id="${board.id}">Delete</button>
+                    </td>
                   </tr>                      
                 </tbody>
             </table>
@@ -70,7 +89,7 @@
                      href="#" 
                      tabindex="-1" 
                      aria-disabled="true"
-                     th:href="@{/board/list(page=${currentPage - 1}, size=${pageSize})}"
+                     th:href="@{/board/list(titleOrContent=${param.titleOrContent}, page=${currentPage - 1}, size=${pageSize})}">Previous</a>
                      >Previous</a>
                 </li>
 
@@ -80,7 +99,7 @@
                     th:each="i : ${#numbers.sequence(startPage, endPage)}">
                   <a class="page-link" 
                       href="#"                      
-                      th:href="@{/board/list(page=${i-1}, size=${pageSize})}"                      
+                      th:href="@{/board/list(titleOrContent=${param.titleOrContent}, page=${i-1}, size=${pageSize},)}"                      
                       th:text="${i}">1</a>
                 </li>
 
@@ -89,7 +108,7 @@
                     th:classappend="${endPage == currentPage + 1} ? 'disabled'" >
                   <a class="page-link" 
                      href="#"
-                     th:href="@{/board/list(page=${currentPage + 1}, size=${pageSize})}"
+                     th:href="@{/board/list(titleOrContent=${param.titleOrContent}, page=${currentPage + 1}, size=${pageSize})}"
                      >Next</a>
                 </li>
               </ul>              

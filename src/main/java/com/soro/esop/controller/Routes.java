@@ -1,12 +1,10 @@
 package com.soro.esop.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,8 +23,6 @@ import com.soro.esop.mapper.UserMapper;
 import com.soro.esop.service.BoardService;
 import com.soro.esop.service.UserService;
 
-import io.micrometer.common.util.StringUtils;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
  * @email : soromiso@gmail.com
  * @create date : 2024-08-17 16:52:28
  * @modify date : 2024-08-17 16:52:28
- * @desc [description]
+ * @desc : [Routes.java] 
  */
 
 @Slf4j
@@ -54,46 +50,18 @@ public class Routes {
         return "index";
     }
 
-    @GetMapping("/greeting")
-    public String getMethodName(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
-            HttpSession session,
-            Model model) {
-        session.setAttribute("welcomeMsg", "Hello " + name);
-
-        LocalDate today = LocalDate.now();
-        log.debug("param: {}, today: {}", name, today);
-
-        List<User> userList = userService.findAll();
-        log.debug("users: {}", userList);
-
-        // convert users to List<UserDto> using UserMapper
-        List<UserDto> users = UserMapper.toDto(userList);
-
-        model.addAttribute("name", name);
-        model.addAttribute("today", today);
-        model.addAttribute("users", users);
-
-        return "greeting"; // go to greeting.html
-    }
-
     @GetMapping("board/list")
-    public String boardList(Model model, 
+    public String boardList(@RequestParam(name="titleOrContent", required = false, defaultValue = "") String titleOrContent,
                             @PageableDefault(size = 5) Pageable pageable,
-                            @RequestParam(name="titleOrContent", required = false, defaultValue = "") String titleOrContent) 
+                            Model model) 
     {
         log.debug("pageable      : {}", pageable);
         log.debug("titleOrContent: {}", titleOrContent);
 
-        //Pageable pageable_ = PageRequest.of(0, 5, Sort.by("id").descending());
-
         Page<Board> boardList = null;
-        if(StringUtils.isNotEmpty(titleOrContent)) {
-            boardList = boardService.findByTitleOrContent(titleOrContent, titleOrContent, pageable);
-        }
-        else {
-            boardList = boardService.findAll(pageable);
-        }
+        boardList = boardService.findByTitleOrContent(titleOrContent, titleOrContent, pageable);
         
+
         log.debug("boards: {}", boardList);
 
         // convert Page<Board> to Page<BoardDto>
@@ -117,8 +85,8 @@ public class Routes {
     }
 
     @GetMapping("board/form")
-    public String boardForm(Model model, 
-                            @RequestParam(name="id", required = false, defaultValue = "") Long id)
+    public String boardForm(@RequestParam(name="id", required = false, defaultValue = "") Long id,
+                            Model model)
     {
         log.debug("id: {}", id);
 
@@ -167,13 +135,6 @@ public class Routes {
 
         boardService.save(board_);
         return "redirect:/board/list";
-    }
-
-    @Component("helloBean")
-    static class HelloBean {
-        public String sayHello(String data) {
-            return "Hello, World " + data;
-        }
     }
 
 }

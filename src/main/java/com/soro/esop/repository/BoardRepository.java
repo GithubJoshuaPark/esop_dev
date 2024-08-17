@@ -30,5 +30,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     // This method will create a query like: SELECT * FROM board WHERE title LIKE ?1 or content LIKE ?2
     Page<Board> findByTitleStartingWithOrContentStartingWith(String title, String content, Pageable pageable);
+
+    // This method will create a query like: SELECT * FROM board WHERE title LIKE %?1% or content LIKE %?2%
+    Page<Board> findByTitleContainingOrContentContaining(String title, String content, Pageable pageable);
     
 }

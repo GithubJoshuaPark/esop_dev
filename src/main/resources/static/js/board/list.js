@@ -3,12 +3,24 @@ $(document).ready(function() {
     
     loadBoards();
 
-    // $('#board-write').on('click', function (e) {
-    //     e.preventDefault();
-    //     //addTask();
-    //     console.log('addTask...');
-    // });
-
+    $('.delete-btn').click(function() {
+        let button = $(this);
+        let boardId = button.data('board-id'); 
+        if (confirm('Are you sure you want to delete this board?')) {
+            $.ajax({
+                url: '/api/v1/board/' + boardId,
+                type: 'DELETE',
+                success: function(result) {
+                    // Remove the table row
+                    button.closest('tr').remove();
+                    alert('Board deleted successfully');
+                },
+                error: function(xhr, status, error) {
+                    alert('Error deleting board: ' + error);
+                }
+            });
+        }
+    });
 
     function loadBoards() {
         console.log('Loading loadBoards...');

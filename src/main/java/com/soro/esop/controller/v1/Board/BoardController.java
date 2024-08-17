@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
  * @email : soromiso@gmail.com
  * @create date : 2024-08-17 16:52:48
  * @modify date : 2024-08-17 16:52:48
- * @desc [description]
+ * @desc [BoardController.java] 
  */
 
 

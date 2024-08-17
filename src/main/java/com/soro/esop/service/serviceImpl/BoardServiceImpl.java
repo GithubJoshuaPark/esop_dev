@@ -51,7 +51,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Page<Board> findByTitleOrContent(String title, String content, Pageable pageable) {
-        Page<Board> boards = boardRepository.findByTitleStartingWithOrContentStartingWith(title, content, pageable);
+        Page<Board> boards = boardRepository.findByTitleContainingOrContentContaining(title, content, pageable);
         return boards.isEmpty() ? null : boards;
     }
 
