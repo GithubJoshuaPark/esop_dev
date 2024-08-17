@@ -20,6 +20,9 @@ public class UserMapper {
     }
 
     public static List<UserDto> toDto(List<User> users) {
+        if(users == null) {
+            return null;
+        }
         List<UserDto> userDtos = new ArrayList<>();
         for (User user : users) {
             userDtos.add(toDto(user));
@@ -37,6 +40,9 @@ public class UserMapper {
     }
 
     public static List<User> toEntity(List<UserDto> userDtos) {
+        if(userDtos == null) {
+            return null;
+        }
         List<User> users = new ArrayList<>();
         for (UserDto userDto : userDtos) {
             users.add(toEntity(userDto));

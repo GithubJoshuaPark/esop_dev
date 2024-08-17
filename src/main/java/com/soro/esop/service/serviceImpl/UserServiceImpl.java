@@ -2,6 +2,8 @@ package com.soro.esop.service.serviceImpl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.soro.esop.entiry.User;
 import com.soro.esop.repository.UserRepository;
 import com.soro.esop.service.UserService;
@@ -11,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class UserServiceImpl implements UserService {
     
     private final UserRepository userRepository;

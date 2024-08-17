@@ -2,6 +2,8 @@ package com.soro.esop.service.serviceImpl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.soro.esop.entiry.UserRole;
 import com.soro.esop.entiry.pk.UserRolePk;
 import com.soro.esop.repository.UserRoleRepository;
@@ -12,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class UserRoleServiceImpl implements UserRoleService {
     
     private final UserRoleRepository userRoleRepository;

@@ -2,6 +2,10 @@ package com.soro.esop.service.serviceImpl;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import com.soro.esop.entiry.Board;
 import com.soro.esop.repository.BoardRepository;
 import com.soro.esop.service.BoardService;
@@ -11,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class BoardServiceImpl implements BoardService {
     
     private final BoardRepository boardRepository;
@@ -21,8 +26,32 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<Board> findAll() {
-        List<Board> boards = boardRepository.findAll();
+    public Page<Board> findAll(Pageable pageable) {
+        Page<Board> boards = boardRepository.findAll(pageable);
+        return boards.isEmpty() ? null : boards;
+    }
+
+    @Override
+    public List<Board> findByTitle(String title) {
+        List<Board> boards = boardRepository.findByTitleStartingWith(title);
+        return boards.isEmpty() ? null : boards;
+    }
+
+    @Override
+    public List<Board> findByContent(String content) {
+        List<Board> boards = boardRepository.findByContentStartingWith(content);
+        return boards.isEmpty() ? null : boards;
+    }
+
+    @Override
+    public List<Board> findByTitleOrContent(String title, String content) {
+        List<Board> boards = boardRepository.findByTitleStartingWithOrContentStartingWith(title, content);
+        return boards.isEmpty() ? null : boards;
+    }
+
+    @Override
+    public Page<Board> findByTitleOrContent(String title, String content, Pageable pageable) {
+        Page<Board> boards = boardRepository.findByTitleStartingWithOrContentStartingWith(title, content, pageable);
         return boards.isEmpty() ? null : boards;
     }
 

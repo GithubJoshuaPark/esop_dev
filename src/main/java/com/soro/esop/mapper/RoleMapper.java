@@ -18,6 +18,9 @@ public class RoleMapper {
     }
 
     public static List<RoleDto> toDto(List<Role> roles) {
+        if(roles == null) {
+            return null;
+        }
         List<RoleDto> roleDtos = new ArrayList<>();
         for (Role role : roles) {
             roleDtos.add(toDto(role));
@@ -33,6 +36,9 @@ public class RoleMapper {
     }
 
     public static List<Role> toEntity(List<RoleDto> roleDtos) {
+        if(roleDtos == null) {
+            return null;
+        }
         List<Role> roles = new ArrayList<>();
         for (RoleDto roleDto : roleDtos) {
             roles.add(toEntity(roleDto));

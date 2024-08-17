@@ -2,12 +2,9 @@ package com.soro.esop.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 import com.soro.esop.entiry.UserRole;
 import com.soro.esop.entiry.pk.UserRolePk;
 
-@Service
 public interface UserRoleService {
     UserRole findById(UserRolePk id);
     List<UserRole> findAll();

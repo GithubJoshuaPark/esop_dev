@@ -15,9 +15,11 @@ spring:
         properties:
             hibernate:
                 format-sql: true
+                show-sql: true
                 use-sql-comments: true
                 jdbc:
                     time-zone: UTC
+                generate-statistics: true
     output:
         ansi:
             enabled: always
@@ -25,10 +27,23 @@ spring:
     thymeleaf:
         cache: false  # Disable cache for development, it means that the templates will be reloaded every time they are changed
 
+    messages:
+        basename: i18n/messages
+
 logging:
   level:
     com:
         soro:
             esop: debug
+    org:
+        hibernate:
+            SQL: DEBUG
+            type:
+                descriptor:
+                    sql:
+                        BasicBinder: TRACE
+            tool:
+                hbm2ddl: DEBUG    
   pattern:
-    console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){faint} %clr(%5p) %clr(%logger{36}){cyan} - %msg%n"
+    ##console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){faint} %clr(%5p) %clr(%logger{36}){cyan} - %msg%n"
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){faint} %clr(%5p) %clr(%logger{36}){cyan} %clr(:%line){magenta} - %msg%n"

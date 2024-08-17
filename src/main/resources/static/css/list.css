@@ -1,0 +1,35 @@
+body {    
+    padding-top: 5rem;
+}
+
+.starter-template {        
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+#searchAndWrite {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+#board-write {
+    /* align text center vertically and horizontally */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.footer {
+    /* place at the bottom of a page all the time */
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 100; /* place it on top */
+
+    background-color: #f5f5f5;
+    padding: 1rem 0;
+    margin-top: auto;
+}
