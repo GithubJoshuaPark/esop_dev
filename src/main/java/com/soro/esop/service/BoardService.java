@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.soro.esop.entiry.Board;
+import com.soro.esop.repository.nativeInterface.BoardWithUserDto;
 
 
 public interface BoardService {
@@ -15,6 +16,10 @@ public interface BoardService {
     List<Board> findByContent(String content);
     List<Board> findByTitleOrContent(String title, String content);
     Page<Board> findByTitleOrContent(String title, String content, Pageable pageable);
+    
+    // findBoardsWithUsernamesByKeyword
+    Page<BoardWithUserDto> findBoardsWithUsernamesByKeyword(String keyword, Pageable pageable);
+
     Board save(Board Board);
     Board update(Board Board);
     void delete(Long id);

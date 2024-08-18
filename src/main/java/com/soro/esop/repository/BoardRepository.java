@@ -5,8 +5,11 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.soro.esop.entiry.Board;
+import com.soro.esop.repository.nativeInterface.BoardWithUserDto;
 
 /**
  * @author : Joshua Park
@@ -33,5 +36,14 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     // This method will create a query like: SELECT * FROM board WHERE title LIKE %?1% or content LIKE %?2%
     Page<Board> findByTitleContainingOrContentContaining(String title, String content, Pageable pageable);
+
+    @Query(value = "SELECT b.id, b.title, b.content, b.writer, u.username, u.enabled " +
+               "FROM board b " +
+               "INNER JOIN user u ON b.writer = u.id " +
+               "WHERE b.title LIKE %:keyword% OR b.content LIKE %:keyword%", 
+       countQuery = "SELECT COUNT(*) FROM board b INNER JOIN user u ON b.writer = u.id " +
+                    "WHERE b.title LIKE %:keyword% OR b.content LIKE %:keyword%",
+       nativeQuery = true)
+    Page<BoardWithUserDto> findBoardsWithUsernamesByKeyword(@Param("keyword") String keyword, Pageable pageable);
     
 }

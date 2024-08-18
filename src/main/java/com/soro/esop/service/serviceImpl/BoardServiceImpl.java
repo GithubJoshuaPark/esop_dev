@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.soro.esop.entiry.Board;
 import com.soro.esop.repository.BoardRepository;
+import com.soro.esop.repository.nativeInterface.BoardWithUserDto;
 import com.soro.esop.service.BoardService;
 
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,12 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Page<Board> findByTitleOrContent(String title, String content, Pageable pageable) {
         Page<Board> boards = boardRepository.findByTitleContainingOrContentContaining(title, content, pageable);
+        return boards.isEmpty() ? null : boards;
+    }
+
+    @Override
+    public Page<BoardWithUserDto> findBoardsWithUsernamesByKeyword(String keyword, Pageable pageable) {
+        Page<BoardWithUserDto> boards = boardRepository.findBoardsWithUsernamesByKeyword(keyword, pageable);
         return boards.isEmpty() ? null : boards;
     }
 

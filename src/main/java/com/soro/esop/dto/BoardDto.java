@@ -21,8 +21,7 @@ public class BoardDto {
     @NotBlank(message = "Content를 입력해주세요.")
     private String content;
 
-    @NotBlank(message = "Writer를 입력해주세요.")
-    private String writer;
+    private Long writer;
 
     private Boolean enabled = true;
     private LocalDate regDate = LocalDate.now();

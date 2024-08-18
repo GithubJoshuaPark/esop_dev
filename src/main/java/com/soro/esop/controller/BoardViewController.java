@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +23,7 @@ import com.soro.esop.entiry.Board;
 import com.soro.esop.entiry.User;
 import com.soro.esop.mapper.BoardMapper;
 import com.soro.esop.mapper.UserMapper;
+import com.soro.esop.repository.nativeInterface.BoardWithUserDto;
 import com.soro.esop.service.BoardService;
 import com.soro.esop.service.UserService;
 
@@ -55,19 +58,28 @@ public class BoardViewController {
         log.debug("titleOrContent: {}", titleOrContent);
 
         Page<Board> boardList = null;
-        boardList = boardService.findByTitleOrContent(titleOrContent, titleOrContent, pageable);
-        
+        Page<BoardWithUserDto> boardWithUserList = null;
 
-        log.debug("boards: {}", boardList);
+        boardList         = boardService.findByTitleOrContent(titleOrContent, titleOrContent, pageable);
+        boardWithUserList = boardService.findBoardsWithUsernamesByKeyword(titleOrContent, pageable);
+
+        log.debug("boards        : {}", boardList);
+        log.debug("boardsWithUser: {}", boardWithUserList);
 
         // convert Page<Board> to Page<BoardDto>
         // map method is feature of page interface will convert each element of the list
         // BoardMapper::toDto equivalent to board -> BoardMapper.toDto(board)    
         Page<BoardDto> boards_ = (boardList != null) ? boardList.map(BoardMapper::toDto) : null;
 
-        int startPage_ = Math.max(boards_.getPageable().getPageNumber() - 4,1); // at least 1
-        int endPage_   = Math.min(boards_.getTotalPages(), boards_.getPageable().getPageNumber() + 4); // at most totalPages
-        int currentPage_ = boards_.getPageable().getPageNumber(); // 0-based index
+        int startPage_ = 1;
+        int endPage_   = 1;
+        int currentPage_ = 0;
+
+        if(boards_ != null) {
+            startPage_ = Math.max(boards_.getPageable().getPageNumber() - 4,1); // at least 1
+            endPage_   = Math.min(boards_.getTotalPages(), boards_.getPageable().getPageNumber() + 4); // at most totalPages
+            currentPage_ = boards_.getPageable().getPageNumber(); // 0-based index
+        }
         
         log.debug("startPage: {}, endPage: {}, currentPage: {}", 
                           startPage_, endPage_, currentPage_ );
@@ -125,6 +137,20 @@ public class BoardViewController {
             model.addAttribute("users", UserMapper.toDto(userService.findAll()));
             return "board/form";
         }
+
+        // Get the username of the logged in user
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        String username = auth.getName();
+        log.debug("username: {}", username);
+
+        // get user_id from the username
+        User user = userService.findByUsername(username);
+        log.debug("user: {}", user);
+
+        // set the user_id to the boardDto, convert user_id to Long
+        boardDto.setWriter(user.getId());
+        
 
         Board board_ = BoardMapper.toEntity(boardDto);
         log.debug("board: {}", board_);
