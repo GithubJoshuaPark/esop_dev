@@ -7,12 +7,36 @@ import org.springframework.stereotype.Component;
 
 import com.soro.esop.dto.BoardDto;
 import com.soro.esop.entiry.Board;
+import com.soro.esop.repository.nativeInterface.BoardWithUserDto;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
 public class BoardMapper {
+
+    public static BoardDto toBoardWithUserDto(BoardWithUserDto boardWithUserDto) {
+        BoardDto boardDto = new BoardDto();
+        boardDto.setId(boardWithUserDto.getId());
+        boardDto.setTitle(boardWithUserDto.getTitle());
+        boardDto.setContent(boardWithUserDto.getContent());
+        boardDto.setWriter(boardWithUserDto.getWriter());
+        boardDto.setUsername(boardWithUserDto.getUsername());
+        boardDto.setEnabled(boardWithUserDto.getEnabled());
+        return boardDto;
+    }
+    
+    public static List<BoardDto> toBoardWithUserDtoList(List<BoardWithUserDto> boardWithUserDtos) {
+        if(boardWithUserDtos == null) {
+            return null;
+        }
+        List<BoardDto> boardDtos = new ArrayList<>();
+        for (BoardWithUserDto boardWithUserDto : boardWithUserDtos) {
+            boardDtos.add(toBoardWithUserDto(boardWithUserDto));
+        }
+        return boardDtos;
+    }
+    
     public static BoardDto toDto(Board board) {
         BoardDto boardDto = new BoardDto();
         boardDto.setId(board.getId());
@@ -35,6 +59,7 @@ public class BoardMapper {
         log.debug("boardDtos: {}", boardDtos);
         return boardDtos;
     }
+
     
     public static Board toEntity(BoardDto boardDto) {
         Board board = new Board();

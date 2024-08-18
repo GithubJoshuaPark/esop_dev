@@ -22,6 +22,7 @@ public class BoardDto {
     private String content;
 
     private Long writer;
+    private String username;
 
     private Boolean enabled = true;
     private LocalDate regDate = LocalDate.now();

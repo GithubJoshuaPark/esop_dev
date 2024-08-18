@@ -67,7 +67,7 @@
                     <th th:text="${board.id}">1</th>
                     <td><a th:text="${board.title}" th:href="@{/board/form(id=${board.id})}">Title</a></td>
                     <td th:text="${board.content}">Content</td>
-                    <td th:text="${board.writer}">Writer</td>
+                    <td th:text="${board.username}">Writer</td>
                     <td th:text="${board.regDate}">regDate</td>
                     <td>
                       <button type="button" 

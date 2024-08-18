@@ -30,7 +30,7 @@ public class Board {
     private String content;
 
     private Long writer;
-
+    
     private Boolean enabled = true;
     private LocalDate regDate = LocalDate.now();
 }

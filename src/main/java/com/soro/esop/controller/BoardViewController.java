@@ -69,7 +69,8 @@ public class BoardViewController {
         // convert Page<Board> to Page<BoardDto>
         // map method is feature of page interface will convert each element of the list
         // BoardMapper::toDto equivalent to board -> BoardMapper.toDto(board)    
-        Page<BoardDto> boards_ = (boardList != null) ? boardList.map(BoardMapper::toDto) : null;
+        //Page<BoardDto> boards_ = (boardList != null) ? boardList.map(BoardMapper::toDto) : null;
+        Page<BoardDto> boards_ = (boardWithUserList != null) ? boardWithUserList.map(BoardMapper::toBoardWithUserDto) : null;
 
         int startPage_ = 1;
         int endPage_   = 1;
