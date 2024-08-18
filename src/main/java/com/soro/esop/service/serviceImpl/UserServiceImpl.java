@@ -3,6 +3,7 @@ package com.soro.esop.service.serviceImpl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.soro.esop.entiry.User;
 import com.soro.esop.repository.UserRepository;
@@ -30,16 +31,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    @Transactional
     public User save(User user) {
         return userRepository.save(user);
     }
 
     @Override
+    @Transactional
     public User update(User user) {
         return userRepository.save(user);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         userRepository.deleteById(id);
     }

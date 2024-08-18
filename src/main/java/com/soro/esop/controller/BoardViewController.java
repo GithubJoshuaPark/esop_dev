@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.soro.esop.Validator.BoardValidator;
@@ -37,20 +38,15 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
+@RequestMapping("/board")
 @RequiredArgsConstructor
-public class Routes {
+public class BoardViewController {
 
     private final BoardService   boardService;
     private final UserService    userService;    
     private final BoardValidator boardValidator;
 
-
-    @GetMapping
-    public String index(Model model) {
-        return "index";
-    }
-
-    @GetMapping("board/list")
+    @GetMapping("/list")
     public String boardList(@RequestParam(name="titleOrContent", required = false, defaultValue = "") String titleOrContent,
                             @PageableDefault(size = 5) Pageable pageable,
                             Model model) 
@@ -84,7 +80,7 @@ public class Routes {
         return "board/list";
     }
 
-    @GetMapping("board/form")
+    @GetMapping("/form")
     public String boardForm(@RequestParam(name="id", required = false, defaultValue = "") Long id,
                             Model model)
     {
@@ -113,7 +109,7 @@ public class Routes {
         return "board/form";
     }
 
-    @PostMapping("board/form")
+    @PostMapping("/form")
     public String boardForm(@Valid @ModelAttribute("board") BoardDto boardDto, 
                             BindingResult result,
                             Model model) 

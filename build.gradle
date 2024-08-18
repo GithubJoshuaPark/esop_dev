@@ -25,13 +25,23 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation' // Add Validation dependency
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // Add Thymeleaf dependency
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'   // Add JPA dependency
+	implementation 'org.springframework.boot:spring-boot-starter-web'        // Add Web dependency
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'  // Add Thymeleaf dependency
+	implementation 'org.springframework.boot:spring-boot-starter-logging'    // Logging
+	implementation 'org.springframework.boot:spring-boot-starter-security'   // Securityå
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'  // for string manipulation
+	
+	// https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity6
+    implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity6', version: '3.1.2.RELEASE'
+
 	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // Add MariaDB dependency
+	developmentOnly 'org.springframework.boot:spring-boot-devtools' // hot reload
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'              // Add MariaDB dependency
+
 	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor' // Configuration properties
+	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

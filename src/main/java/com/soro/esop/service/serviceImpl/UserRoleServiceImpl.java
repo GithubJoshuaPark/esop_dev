@@ -3,6 +3,7 @@ package com.soro.esop.service.serviceImpl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.soro.esop.entiry.UserRole;
 import com.soro.esop.entiry.pk.UserRolePk;
@@ -31,16 +32,19 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
+    @Transactional
     public UserRole save(UserRole userRole) {
         return userRoleRepository.save(userRole);
     }
 
     @Override
+    @Transactional
     public UserRole update(UserRole userRole) {
         return userRoleRepository.save(userRole);
     }
 
     @Override
+    @Transactional
     public void delete(UserRolePk userRolePk) {
         userRoleRepository.deleteById(userRolePk);
     }

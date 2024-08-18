@@ -1,28 +1,64 @@
-/* login.css */
-
-@import url("commoncss/common.css");
-
-div {
-    margin-bottom: 15px;
+body {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #f5f5f5;
+  height: 100vh;
 }
 
-label {
-    display: block;
-    margin-bottom: 5px;
-    color: #555;
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+.form-signin .checkbox {
+  font-weight: 400;
+}
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
-input[type="text"],
-input[type="password"] {
-    width: 100%;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 100; /* place it on top */
+
+  background-color: #f5f5f5;
+  padding: 1rem 0;
+  margin-top: auto;
 }
 
-p {
-    color: red;
-    margin-top: 10px;
-    text-align: center;
+#logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  
+  /*place log horizontally center*/
+
+  margin-top: 10%;
+  margin-bottom: 10%;
 }
