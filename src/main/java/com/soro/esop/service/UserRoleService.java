@@ -6,10 +6,12 @@ import com.soro.esop.entiry.UserRole;
 import com.soro.esop.entiry.pk.UserRolePk;
 
 public interface UserRoleService {
-    UserRole findById(UserRolePk id);
+    UserRole findById(UserRolePk userRolePk);
     List<UserRole> findAll();
+    List<UserRole> findByUserId(Long userId);
+    void deleteByUserId(Long userId);
     UserRole save(UserRole user);
     UserRole update(UserRole user);
-    void delete(UserRolePk id);
+    void delete(UserRolePk userRolePk);
 }
 

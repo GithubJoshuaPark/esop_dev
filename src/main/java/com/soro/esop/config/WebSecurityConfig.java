@@ -25,6 +25,7 @@ public class WebSecurityConfig {
         "/",
         "/account/login",
         "/account/register",
+        "/api/v1/**",
         // "/resources/**",
         // "/static/**",
         "/css/**",

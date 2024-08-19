@@ -59,8 +59,7 @@ public class BoardApiController {
 
         if(StringUtils.isEmpty(titleOrContent)) {
             Page<Board> boardList =  boardService.findAll(pageable);
-            return ResponseEntity.ok(BoardMapper.toDto(boardList.getContent()));
-            //return ResponseEntity.ok(BoardMapper.toDto(boardList));  // 200 OK
+            return ResponseEntity.ok(BoardMapper.toDto(boardList.getContent())); // 200 OK
         }
         else {
             List<Board> boardList =  boardService.findByTitleOrContent(titleOrContent, titleOrContent);

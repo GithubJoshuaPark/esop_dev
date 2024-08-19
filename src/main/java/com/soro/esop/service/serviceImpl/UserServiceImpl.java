@@ -2,6 +2,8 @@ package com.soro.esop.service.serviceImpl;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Long id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Page<User> findAll(Pageable pageable) {
+        Page<User> users = userRepository.findAll(pageable);
+        return users.isEmpty() ? null : users;
     }
 
     @Override

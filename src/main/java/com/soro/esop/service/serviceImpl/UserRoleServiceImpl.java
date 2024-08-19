@@ -26,6 +26,18 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
+    public List<UserRole> findByUserId(Long userId) {
+        List<UserRole> userRoles = userRoleRepository.findByUserId(userId);
+        return userRoles.isEmpty() ? null : userRoles;
+    }
+
+    @Override
+    @Transactional
+    public void deleteByUserId(Long userId) {
+        userRoleRepository.deleteByUserId(userId);
+    }
+
+    @Override
     public List<UserRole> findAll() {
         List<UserRole> userRoles = userRoleRepository.findAll();
         return userRoles.isEmpty() ? null : userRoles;        
