@@ -102,6 +102,8 @@ public class UserApiController {
         userDto.setPassword(encrptedPassword);
 
         User user = UserMapper.toEntity(userDto);
+
+        // 사용자 저장
         user = userService.save(user);
 
         Role role = roleService.findById(1L);        
@@ -142,6 +144,7 @@ public class UserApiController {
             
             // 사용자 권한 저장
             userRoleService.save(userRole);
+            return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDto(user)); // 201 Created
         }
         else {
             // update
@@ -149,9 +152,8 @@ public class UserApiController {
             user.setPassword(encrptedPassword);
             user.setEnabled(userDto.getEnabled());      
             user = userService.save(user);      
+            return ResponseEntity.ok(UserMapper.toDto(user)); // 200 OK
         }
-
-        return ResponseEntity.ok(UserMapper.toDto(user)); // 200 OK
     }
 
     /**
