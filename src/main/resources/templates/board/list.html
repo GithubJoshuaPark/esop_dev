@@ -59,7 +59,7 @@
                     <th scope="col">Content</th>
                     <th scope="col">Writer</th>
                     <th scope="col">RegDate</th>
-                    <th scope="col">Delete</th> 
+                    <th scope="col" sec:authorize="hasRole('ROLE_ADMIN')">Delete</th> 
                   </tr>
                 </thead>
                 <tbody>
@@ -69,7 +69,7 @@
                     <td th:text="${board.content}">Content</td>
                     <td th:text="${board.username}">Writer</td>
                     <td th:text="${board.regDate}">regDate</td>
-                    <td>
+                    <td sec:authorize="hasRole('ROLE_ADMIN')">
                       <button type="button" 
                               class="btn btn-outline-danger delete-btn" 
                               th:data-board-id="${board.id}">Delete</button>

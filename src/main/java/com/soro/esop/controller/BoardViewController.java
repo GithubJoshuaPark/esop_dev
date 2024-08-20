@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.soro.esop.Validator.BoardValidator;
-import com.soro.esop.dto.BoardDto;
-import com.soro.esop.dto.UserDto;
 import com.soro.esop.entiry.Board;
 import com.soro.esop.entiry.User;
 import com.soro.esop.mapper.BoardMapper;
 import com.soro.esop.mapper.UserMapper;
+import com.soro.esop.model.BoardDto;
+import com.soro.esop.model.UserDto;
 import com.soro.esop.repository.nativeInterface.BoardWithUserDto;
 import com.soro.esop.service.BoardService;
 import com.soro.esop.service.UserService;

@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.soro.esop.dto.RoleDto;
 import com.soro.esop.entiry.Role;
+import com.soro.esop.model.RoleDto;
 
 @Component
 public class RoleMapper {

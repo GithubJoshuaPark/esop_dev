@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.soro.esop.dto.BoardDto;
 import com.soro.esop.entiry.Board;
 import com.soro.esop.mapper.BoardMapper;
+import com.soro.esop.model.BoardDto;
 import com.soro.esop.service.BoardService;
 
 import lombok.RequiredArgsConstructor;
@@ -99,6 +100,7 @@ public class BoardApiController {
      * @param boardDto
      * @return
      */
+    @Secured("ROLE_ADMIN")
     @PutMapping("/{id}")
     public ResponseEntity<BoardDto> putMethodName(@PathVariable(name="id") String id, 
                                                   @RequestBody BoardDto boardDto) 
@@ -125,6 +127,7 @@ public class BoardApiController {
      * @param id
      * @return
      */
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable(name="id") Long id) {        
         Board board = boardService.findById(id);

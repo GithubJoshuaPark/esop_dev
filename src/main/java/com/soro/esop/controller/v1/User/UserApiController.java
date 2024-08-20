@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,11 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.soro.esop.dto.UserDto;
 import com.soro.esop.entiry.Role;
 import com.soro.esop.entiry.User;
 import com.soro.esop.entiry.UserRole;
 import com.soro.esop.mapper.UserMapper;
+import com.soro.esop.model.UserDto;
 import com.soro.esop.service.RoleService;
 import com.soro.esop.service.UserRoleService;
 import com.soro.esop.service.UserService;
@@ -123,6 +124,7 @@ public class UserApiController {
      * @param userDto
      * @return
      */
+    @Secured("ROLE_ADMIN")
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> putMethodName(@PathVariable(name="id") String id, 
                                                   @RequestBody UserDto userDto) 
@@ -161,6 +163,7 @@ public class UserApiController {
      * @param id
      * @return
      */
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable(name="id") Long id) {        
         User user = userService.findById(id);
@@ -179,7 +182,5 @@ public class UserApiController {
         // return with message "User deleted successfully"
         return ResponseEntity.ok("User deleted successfully"); // 200 OK
         
-    }
-    
-    
+    }    
 }

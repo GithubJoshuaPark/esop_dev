@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.soro.esop.dto.UserDto;
 import com.soro.esop.entiry.User;
+import com.soro.esop.model.UserDto;
 
 @Component
 public class UserMapper {

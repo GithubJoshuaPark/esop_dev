@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.soro.esop.dto.UserDto;
+import com.soro.esop.model.UserDto;
 
 import lombok.extern.slf4j.Slf4j;
 

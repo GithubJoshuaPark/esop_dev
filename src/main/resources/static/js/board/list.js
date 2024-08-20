@@ -14,6 +14,7 @@ $(document).ready(function() {
                     // Remove the table row
                     button.closest('tr').remove();
                     alert('Board deleted successfully');
+                    window.location.href = '/board/list'; // Redirect to the board list page
                 },
                 error: function(xhr, status, error) {
                     alert('Error deleting board: ' + error);

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.soro.esop.dto.BoardDto;
+import com.soro.esop.model.BoardDto;
 
 import ch.qos.logback.core.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;

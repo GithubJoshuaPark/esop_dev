@@ -1,4 +1,4 @@
-package com.soro.esop.dto;
+package com.soro.esop.model;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

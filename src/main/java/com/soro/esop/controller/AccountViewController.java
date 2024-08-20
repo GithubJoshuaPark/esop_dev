@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.soro.esop.Validator.UserValidator;
-import com.soro.esop.dto.UserDto;
 import com.soro.esop.entiry.Role;
 import com.soro.esop.entiry.User;
 import com.soro.esop.entiry.UserRole;
 import com.soro.esop.mapper.UserMapper;
+import com.soro.esop.model.UserDto;
 import com.soro.esop.service.RoleService;
 import com.soro.esop.service.UserRoleService;
 import com.soro.esop.service.UserService;
