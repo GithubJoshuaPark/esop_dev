@@ -28,8 +28,9 @@ public class WebSecurityConfig {
     private final BCryptPasswordEncoder passwordEncoder; // 패스워드 인코더
     private final DataSource dataSource; // 데이터베이스 연결
 
-    private final Authentication401Handler authentication401Handler; // 인증 실패 핸들러
-    private final AccessDenied403Handler accessDenied403Handler; // 접근 거부 핸들러
+    private final CustomAuthentication401Filter customAuthentication401Filter; // 인증 필터
+    private final Authentication401Handler      authentication401Handler; // 인증 실패 핸들러
+    private final AccessDenied403Handler        accessDenied403Handler; // 접근 거부 핸들러
     
     private static final String[] AUTH_WHITELIST = {
         "/",
@@ -52,7 +53,7 @@ public class WebSecurityConfig {
             .csrf(csrf -> csrf.disable()) // CSRF 보안 설정, disable: CSRF 설정 비활성화
             .cors(cors -> cors.disable()) // CORS 설정, disable: CORS 설정 비활성화 
             //.sessionManagement(m -> m.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 설정, STATELESS:세션을 사용하지 않음
-            .addFilterBefore(new CustomAuthentication401Filter(), 
+            .addFilterBefore(customAuthentication401Filter, 
                              UsernamePasswordAuthenticationFilter.class) // 인증 필터 추가 before UsernamePasswordAuthenticationFilter
 			.authorizeHttpRequests((requests) -> requests
 				.requestMatchers(AUTH_WHITELIST).permitAll()
@@ -75,6 +76,12 @@ public class WebSecurityConfig {
 	}
 
 
+    /**
+     * 사용자 정보 설정
+     * intercept the authentication request from POST /account/login, and authenticate the user
+     * @param auth
+     * @throws Exception
+     */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) 
     throws Exception {
