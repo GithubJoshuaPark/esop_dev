@@ -36,7 +36,7 @@ public class WebSecurityConfig {
         "/",
         "/account/login",
         "/account/register",
-        //"/api/v1/**",
+        "/api/v1/**",   // allowing for testiong 
         // "/resources/**",
         // "/static/**",
         "/css/**",

@@ -38,6 +38,36 @@ public class UserServiceImpl implements UserService {
         return users.isEmpty() ? null : users;
     }
 
+    // for using JPQL
+    @Override
+    public List<User> findByUsernameQuery(String username) {
+        return userRepository.findByUsernameQuery(username);
+    }
+
+    // for using native query
+    @Override
+    public List<User> findByUsernameNativeQuery(String username) {
+        return userRepository.findByUsernameNativeQuery(username);
+    }
+
+    // for using querydsl
+    // @Override
+    // public Iterable<User> findAllOfQueryDsl(Predicate predicate) {
+    //     return userRepository.findAll(predicate);
+    // }
+
+    // for using CustomizedRepository
+    @Override
+    public List<User> testOfCustomizedRepository(String username) {
+        return userRepository.testOfCustomizedRepository(username);
+    }
+
+    // for using CustomizedRepositoryJDBC
+    @Override
+    public List<User> testOfCustomizedRepositoryJDBC(String username) {
+        return userRepository.testOfCustomizedRepositoryJDBC(username);
+    }
+
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);

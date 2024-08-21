@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 public class HttpResponse implements Serializable {
     private static final long serialVersionUID = 1L;
 
-protected String timeStamp;
+    protected String timeStamp;
     protected HttpStatus status;
     protected int statusCode;
     protected String reason;

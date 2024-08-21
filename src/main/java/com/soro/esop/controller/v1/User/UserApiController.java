@@ -61,12 +61,49 @@ public class UserApiController {
      */
     @SuppressWarnings("deprecation")
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAll(@RequestParam(required = false, defaultValue = "", name="username") String username, 
+    public ResponseEntity<List<UserDto>> getAll( @RequestParam(required = false, defaultValue = "", name = "method") String method,
+                                                 @RequestParam(required = false, defaultValue = "", name="username") String username, 
                                                  Pageable pageable) 
     {
+        log.debug("method: {}", method);
         log.debug("username: {}", username);
 
-        if(StringUtils.isEmpty(username)) {
+        if("query".equals(method)) {
+            // for using JPQL
+            log.debug("for using JPQL");
+            List<User> userList =  userService.findByUsernameQuery(username);
+            return ResponseEntity.ok(UserMapper.toDto(userList)); // 200 OK
+        }
+        else if("native".equals(method)) {
+            // for using native query
+            log.debug("for using native query");
+            List<User> userList =  userService.findByUsernameNativeQuery(username);
+            return ResponseEntity.ok(UserMapper.toDto(userList)); // 200 OK
+        }
+        // else if("querydsl".equals(method)) {
+        //     // for using querydsl
+        //     log.debug("for using querydsl");
+            
+        //     QUser user          = QUser.user;
+        //     Predicate predicate = user.username.containsIgnoreCase(username)
+	    //                          .or(user.username.startsWithIgnoreCase("s"));
+
+        //     Iterable<User> userList =  userService.findAllOfQueryDsl(predicate);
+        //     return ResponseEntity.ok(UserMapper.toDto((List<User>) userList)); // 200 OK
+        // }
+        else if ("entityManager".equals(method)) {
+            // for using CustomizedRepository
+            log.debug("for using EntityManager");
+            List<User> userList =  userService.testOfCustomizedRepository(username);
+            return ResponseEntity.ok(UserMapper.toDto(userList)); // 200 OK
+        }
+        else if("jdbc".equals(pageable)) {
+            // for using CustomizedRepositoryJDBC
+            log.debug("for using jdbc");
+            List<User> userList =  userService.testOfCustomizedRepositoryJDBC(username);
+            return ResponseEntity.ok(UserMapper.toDto(userList)); // 200 OK
+        }
+        else if(StringUtils.isEmpty(username)) {
             Page<User> userList =  userService.findAll(pageable);
             return ResponseEntity.ok(UserMapper.toDto(userList.getContent())); // 200 OK
         }
