@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.soro.esop.entiry.User;
+import com.soro.esop.entity.User;
 
 public interface UserService {
     User findById(Long id);

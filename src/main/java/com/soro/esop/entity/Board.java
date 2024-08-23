@@ -1,4 +1,4 @@
-package com.soro.esop.entiry;
+package com.soro.esop.entity;
 
 import java.time.LocalDate;
 
@@ -10,9 +10,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Data
 @Entity
 @Table(name = "board")

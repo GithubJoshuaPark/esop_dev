@@ -5,16 +5,13 @@ import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.soro.esop.entiry.User;
+import com.soro.esop.entity.User;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CustomizedRepositoryImpl implements CustomizedRepository {
-
-    //@PersistenceContext
-    //private EntityManager em;
 
     private final EntityManager em;
     private final JdbcTemplate jdbcTemplate;

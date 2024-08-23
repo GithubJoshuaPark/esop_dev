@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.soro.esop.entiry.Board;
+import com.soro.esop.entity.Board;
 import com.soro.esop.repository.BoardRepository;
 import com.soro.esop.repository.nativeInterface.BoardWithUserDto;
 import com.soro.esop.service.BoardService;

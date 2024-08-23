@@ -1,4 +1,4 @@
-package com.soro.esop.entiry.pk;
+package com.soro.esop.entity.pk;
 
 import java.io.Serializable;
 

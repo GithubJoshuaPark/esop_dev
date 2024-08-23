@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.soro.esop.entiry.Board;
+import com.soro.esop.entity.Board;
 import com.soro.esop.mapper.BoardMapper;
 import com.soro.esop.model.BoardDto;
 import com.soro.esop.service.BoardService;

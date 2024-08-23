@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.soro.esop.entiry.UserRole;
-import com.soro.esop.entiry.pk.UserRolePk;
+import com.soro.esop.entity.UserRole;
+import com.soro.esop.entity.pk.UserRolePk;
 import com.soro.esop.repository.UserRoleRepository;
 import com.soro.esop.service.UserRoleService;
 

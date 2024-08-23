@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.soro.esop.entiry.Role;
-import com.soro.esop.entiry.User;
-import com.soro.esop.entiry.UserRole;
+import com.soro.esop.entity.Role;
+import com.soro.esop.entity.User;
+import com.soro.esop.entity.UserRole;
 import com.soro.esop.mapper.UserMapper;
 import com.soro.esop.model.UserDto;
 import com.soro.esop.service.RoleService;

@@ -2,8 +2,8 @@ package com.soro.esop.service;
 
 import java.util.List;
 
-import com.soro.esop.entiry.UserRole;
-import com.soro.esop.entiry.pk.UserRolePk;
+import com.soro.esop.entity.UserRole;
+import com.soro.esop.entity.pk.UserRolePk;
 
 public interface UserRoleService {
     UserRole findById(UserRolePk userRolePk);

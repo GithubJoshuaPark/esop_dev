@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.soro.esop.entiry.User;
+import com.soro.esop.entity.User;
 import com.soro.esop.repository.customizedRepository.CustomizedRepository;
 
 public interface UserRepository extends JpaRepository<User, Long>, 

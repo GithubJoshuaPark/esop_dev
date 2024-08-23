@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.soro.esop.entiry.Role;
+import com.soro.esop.entity.Role;
 import com.soro.esop.repository.RoleRepository;
 import com.soro.esop.service.RoleService;
 

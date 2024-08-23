@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.soro.esop.entiry.Board;
+import com.soro.esop.entity.Board;
 import com.soro.esop.repository.nativeInterface.BoardWithUserDto;
 
 /**

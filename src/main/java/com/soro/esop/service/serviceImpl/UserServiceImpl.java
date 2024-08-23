@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.soro.esop.entiry.User;
+import com.soro.esop.entity.User;
 import com.soro.esop.repository.UserRepository;
 import com.soro.esop.service.UserService;
 
