@@ -30,6 +30,14 @@ spring:
     messages:
         basename: i18n/messages
 
+jwt:
+  issuer: SORO_LLC
+  secret: LBjdLr3e1PeayiSVphUKpLyJR4N7U2cd347MfUCBfyA # used by token provider
+  audience: CUSTOMER_SORO_SERVICE
+  authorities: authorities
+  expiration: 1_800_000 # 30 mins
+  refreshExpire: 432_000_000 # 5 days in milliseconds
+
 logging:
   level:
     com:
