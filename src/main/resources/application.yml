@@ -5,8 +5,8 @@ spring:
     application:
         name: esop
     datasource:
-        # url: jdbc:mariadb://localhost:3307/esop # in this pc, mariadb is running on port 3307, MySQL is running on port 3306
-        url: jdbc:mysql://localhost:3306/esop # in this pc, mysql is running on port 3306
+        url: jdbc:mariadb://localhost:3307/esop # in this pc, mariadb is running on port 3307, MySQL is running on port 3306
+        #url: jdbc:mysql://localhost:3306/esop # in this pc, mysql is running on port 3306
         username: root
         password: cdcdcd001!
     jpa:
