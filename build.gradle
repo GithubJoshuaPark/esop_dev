@@ -5,12 +5,11 @@ plugins {
 
 	// queryDSL 추가
 	// ref https://ittrue.tistory.com/293
-	//id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'com.soro'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
 
 java {
 	toolchain {
@@ -22,6 +21,7 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	querydsl.extendsFrom compileClasspath // queryDSL 추가
 }
 
 repositories {
@@ -47,10 +47,14 @@ dependencies {
 	// annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
 	// annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	// annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
 
 	// Thymeleaf Extras
-  implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity6', version: '3.1.2.RELEASE'
+  	implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity6', version: '3.1.2.RELEASE'
 
 	// Lombok
 	compileOnly 'org.projectlombok:lombok'
@@ -63,7 +67,7 @@ dependencies {
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'              // Add MariaDB dependency
 
 	// MySQL Connector
-	//runtimeOnly 'mysql:mysql-connector-java:8.0.33'							  	// Add MySQL dependency (should use 8.0.33)
+	//runtimeOnly 'mysql:mysql-connector-java:8.0.33'				// Add MySQL dependency (should use 8.0.33)
 
 	// Spring Boot Configuration Processor
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
@@ -78,21 +82,29 @@ tasks.named('test') {
 }
 
 // queryDSL 추가 : QueryDSL 빌드 옵션
-// def querydslDir = "$buildDir/generated/querydsl"
+def querydslDir = "$buildDir/generated/querydsl"
 
-// querydsl {
-// 	jpa = true
-// 	querydslSourcesDir = querydslDir
-// }
-// sourceSets {
-// 	main.java.srcDir querydslDir
-// }
-// configurations {
-// 	querydsl.extendsFrom compileClasspath
-// }
-// compileQuerydsl {
-// 	options.annotationProcessorPath = configurations.querydsl
-// }
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
+}
+
+clean {
+    delete file(querydslDir)
+}
+
 // 여기까지
 
 compileJava {
