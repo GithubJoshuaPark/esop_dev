@@ -82,7 +82,8 @@ public class WebSecurityConfig {
                    .logoutSuccessHandler((request, response, authentication) -> {
                     response.sendRedirect("/account/login?logout");
                    })
-                   .permitAll())
+                   .permitAll()
+            )
             .exceptionHandling(exec -> exec
                     .authenticationEntryPoint(authentication401Handler) // 인증 실패 핸들러
                     .accessDeniedHandler(accessDenied403Handler)        // 접근 거부 핸들러
