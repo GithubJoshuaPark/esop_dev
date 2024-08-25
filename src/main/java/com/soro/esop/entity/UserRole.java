@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @IdClass(UserRolePk.class)
 @Table(name = "user_role")
 public class UserRole {
-    
+
     @Id @Column(name="user_id" , nullable=false ) private Long userId;
     @Id @Column(name="role_id" , nullable=false ) private Long roleId;
 }

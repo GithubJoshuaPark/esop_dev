@@ -14,16 +14,18 @@ import com.soro.esop.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+//import com.querydsl.core.types.Predicate;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
-    
+
     private final UserRepository userRepository;
 
     @Override
     public User findById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return (User) userRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -51,6 +53,7 @@ public class UserServiceImpl implements UserService {
     }
 
     // for using querydsl
+    // @SuppressWarnings("unchecked")
     // @Override
     // public Iterable<User> findAllOfQueryDsl(Predicate predicate) {
     //     return userRepository.findAll(predicate);
@@ -76,13 +79,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User save(User user) {
-        return userRepository.save(user);
+        return (User) userRepository.save(user);
     }
 
     @Override
     @Transactional
     public User update(User user) {
-        return userRepository.save(user);
+        return (User) userRepository.save(user);
     }
 
     @Override
@@ -91,5 +94,5 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    
+
 }

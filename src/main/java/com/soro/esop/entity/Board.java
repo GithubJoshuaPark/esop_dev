@@ -15,7 +15,7 @@ import lombok.Data;
 @Entity
 @Table(name = "board")
 public class Board {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,12 +23,12 @@ public class Board {
     @NotBlank(message = "제목을 입력해주세요.")
     @Size(min=2, max=30, message = "Title must be between 2 and 30 characters")
     private String title;
-    
+
     @NotBlank(message = "Content를 입력해주세요.")
     private String content;
 
     private Long writer;
-    
+
     private Boolean enabled = true;
-    private LocalDate regDate = LocalDate.now();
+    private LocalDate regDate = LocalDate.now(); // LocalDate.now() : 현재 날짜를 반환
 }

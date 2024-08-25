@@ -21,6 +21,7 @@ import com.soro.esop.filter.JwtRequestFilter;
 import com.soro.esop.handler.AccessDenied403Handler;
 import com.soro.esop.handler.Authentication401Handler;
 import com.soro.esop.handler.JwtAuthenticationSuccessHandler;
+import com.soro.esop.handler.JwtLogoutHandler;
 import com.soro.esop.service.CustomUserDetailService;
 import com.soro.esop.utils.JwtUtil;
 
@@ -41,16 +42,16 @@ public class WebSecurityConfig {
     private final JwtRequestFilter              jwtRequestFilter;              // JWT 필터
     private final CustomUserDetailService       userDetailsService;            // 사용자 정보 서비스
     private final JwtUtil jwtUtil;
-    
+
     private static final String[] AUTH_WHITELIST = {
         "/",
-        "/api/auth/**", 
+        "/api/auth/**",
         "/account/login",
         "/account/register",
         "/css/**",
         "/js/**",
         "/images/**",
-        //"/api/v1/**",   // allowing for testiong 
+        "/api/v1/**",   // allowing for testiong
     };
 
 
@@ -58,15 +59,15 @@ public class WebSecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
             .csrf(csrf -> csrf.disable()) // CSRF 보안 설정, disable: CSRF 설정 비활성화
-            .cors(cors -> cors.disable()) // CORS 설정, disable: CORS 설정 비활성화 
+            .cors(cors -> cors.disable()) // CORS 설정, disable: CORS 설정 비활성화
 			.authorizeHttpRequests((requests) -> requests
                 .requestMatchers(AUTH_WHITELIST).permitAll()
                 .requestMatchers("/api/**").authenticated() // API 요청은 인증 필요
-                .anyRequest().authenticated()                
-			)            
+                .anyRequest().authenticated()
+			)
             .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 설정, STATELESS:세션을 사용하지 않음
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가 before UsernamePasswordAuthenticationFilter
-            .addFilterBefore(customAuthentication401Filter, 
+            .addFilterBefore(customAuthentication401Filter,
                              UsernamePasswordAuthenticationFilter.class) // 인증 필터 추가 before UsernamePasswordAuthenticationFilter
             .formLogin((form) -> form
                 .loginPage("/account/login") //  a filter that intercepts POST requests to "/account/login"
@@ -74,13 +75,19 @@ public class WebSecurityConfig {
                 .successHandler(new JwtAuthenticationSuccessHandler(jwtUtil))
                 //.defaultSuccessUrl("/", true)
                 .permitAll()
-            )            
-            .logout((logout) -> logout.permitAll())
-            .exceptionHandling((exceptionHandling) -> exceptionHandling
+            )
+            .logout(logout -> logout
+                   .logoutUrl("/account/logout")
+                   .addLogoutHandler(new JwtLogoutHandler())
+                   .logoutSuccessHandler((request, response, authentication) -> {
+                    response.sendRedirect("/account/login?logout");
+                   })
+                   .permitAll())
+            .exceptionHandling(exec -> exec
                     .authenticationEntryPoint(authentication401Handler) // 인증 실패 핸들러
                     .accessDeniedHandler(accessDenied403Handler)        // 접근 거부 핸들러
             );
-                             
+
 		return http.build();
 	}
 
@@ -99,7 +106,7 @@ public class WebSecurityConfig {
     /**
      * 사용자 정보 설정
      * It's called by Spring during the application's security configuration phase.
-     * It sets up the UserDetailsService and PasswordEncoder 
+     * It sets up the UserDetailsService and PasswordEncoder
      * that will be used for authentication throughout the application.
      * @param auth
      * @throws Exception
@@ -119,7 +126,7 @@ public class WebSecurityConfig {
      * @throws Exception
      */
     // @Autowired
-    // public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception 
+    // public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception
     // {
     //     auth.jdbcAuthentication()
     //         .dataSource(dataSource)

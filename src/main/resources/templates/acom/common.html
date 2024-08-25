@@ -38,17 +38,17 @@
         </ul>
 
         <!-- User info, logOut -->
-        <a class="btn btn-info my-2 my-sm-0" 
+        <a class="btn btn-info my-2 my-sm-0"
            th:href="@{/account/login}"
            sec:authorize="!isAuthenticated()">Login</a>
 
-        <a class="btn btn-info my-2 my-sm-0 mx-2" 
+        <a class="btn btn-info my-2 my-sm-0 mx-2"
         th:href="@{/account/register}"
-        sec:authorize="!isAuthenticated()">Register</a>           
+        sec:authorize="!isAuthenticated()">Register</a>
 
         <form class="form-inline my-2 my-lg-0"
               sec:authorize="isAuthenticated()"
-              th:action="@{/logout}" method="POST">
+              th:action="@{/account/logout}" method="POST">
             <span class="text-white" sec:authentication="name">User</span>
             <span class="text-white mx-2" sec:authentication="principal.authorities">권한</span>
             <button class="btn btn-info my-2 my-sm-0" type="submit">LogOut</button>

@@ -31,13 +31,14 @@ import com.soro.esop.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+//import com.querydsl.core.types.Predicate;
 
 /**
  * @author : Joshua Park
  * @email : soromiso@gmail.com
  * @create date : 2024-08-17 16:52:48
  * @modify date : 2024-08-17 16:52:48
- * @desc [UserController.java] 
+ * @desc [UserController.java]
  */
 
 
@@ -54,7 +55,7 @@ public class UserApiController {
     private final RoleService roleService;
     private final UserRoleService userRoleService;
     private final BCryptPasswordEncoder passwordEncoder; // 패스워드 인코더
-    
+
     /**
      * 사용자 목록 조회
      * @return
@@ -62,8 +63,8 @@ public class UserApiController {
     @SuppressWarnings("deprecation")
     @GetMapping
     public ResponseEntity<List<UserDto>> getAll( @RequestParam(required = false, defaultValue = "", name = "method") String method,
-                                                 @RequestParam(required = false, defaultValue = "", name="username") String username, 
-                                                 Pageable pageable) 
+                                                 @RequestParam(required = false, defaultValue = "", name="username") String username,
+                                                 Pageable pageable)
     {
         log.debug("method: {}", method);
         log.debug("username: {}", username);
@@ -83,7 +84,7 @@ public class UserApiController {
         // else if("querydsl".equals(method)) {
         //     // for using querydsl
         //     log.debug("for using querydsl");
-            
+
         //     QUser user          = QUser.user;
         //     Predicate predicate = user.username.containsIgnoreCase(username)
 	    //                          .or(user.username.startsWithIgnoreCase("s"));
@@ -111,7 +112,7 @@ public class UserApiController {
             User user =  userService.findByUsername(username);
             UserDto userDto = UserMapper.toDto(user);
             return ResponseEntity.ok(List.of(userDto)); // 200 OK
-        }                
+        }
     }
 
     /**
@@ -144,11 +145,11 @@ public class UserApiController {
         // 사용자 저장
         user = userService.save(user);
 
-        Role role = roleService.findById(1L);        
+        Role role = roleService.findById(1L);
         UserRole userRole = new UserRole();
         userRole.setUserId(user.getId());
         userRole.setRoleId(role.getId());
-        
+
         // 사용자 권한 저장
         userRoleService.save(userRole);
 
@@ -163,8 +164,8 @@ public class UserApiController {
      */
     @Secured("ROLE_ADMIN")
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> putMethodName(@PathVariable(name="id") String id, 
-                                                  @RequestBody UserDto userDto) 
+    public ResponseEntity<UserDto> putMethodName(@PathVariable(name="id") String id,
+                                                  @RequestBody UserDto userDto)
     {
         // 패스워드 암호화
         String encrptedPassword = passwordEncoder.encode(userDto.getPassword());
@@ -174,13 +175,13 @@ public class UserApiController {
         if(user == null) {
             // insert
             user = UserMapper.toEntity(userDto);
-            user = userService.save(user);      
+            user = userService.save(user);
 
-            Role role = roleService.findById(1L);        
+            Role role = roleService.findById(1L);
             UserRole userRole = new UserRole();
             userRole.setUserId(user.getId());
             userRole.setRoleId(role.getId());
-            
+
             // 사용자 권한 저장
             userRoleService.save(userRole);
             return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDto(user)); // 201 Created
@@ -189,8 +190,8 @@ public class UserApiController {
             // update
             user.setUsername(userDto.getUsername());
             user.setPassword(encrptedPassword);
-            user.setEnabled(userDto.getEnabled());      
-            user = userService.save(user);      
+            user.setEnabled(userDto.getEnabled());
+            user = userService.save(user);
             return ResponseEntity.ok(UserMapper.toDto(user)); // 200 OK
         }
     }
@@ -202,7 +203,7 @@ public class UserApiController {
      */
     @Secured("ROLE_ADMIN")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable(name="id") Long id) {        
+    public ResponseEntity<String> delete(@PathVariable(name="id") Long id) {
         User user = userService.findById(id);
         if(user == null) {
             return ResponseEntity.notFound().build(); // 404 Not Found
@@ -212,12 +213,12 @@ public class UserApiController {
 
         // 사용자 권한 삭제
         userRoleService.deleteByUserId(userId);
-        
+
         // 사용자 삭제
         userService.delete(id);
 
         // return with message "User deleted successfully"
         return ResponseEntity.ok("User deleted successfully"); // 200 OK
-        
-    }    
+
+    }
 }

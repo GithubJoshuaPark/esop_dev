@@ -4,13 +4,15 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+//import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
+//import com.querydsl.core.types.Predicate;
 import com.soro.esop.entity.User;
 import com.soro.esop.repository.customizedRepository.CustomizedRepository;
 
-public interface UserRepository extends JpaRepository<User, Long>, 
+public interface UserRepository extends JpaRepository<User, Long>,
                                         //QuerydslPredicateExecutor<User>,
-                                        CustomizedRepository //  
+                                        CustomizedRepository
 {
     User findByUsername(String username);
 
@@ -19,7 +21,8 @@ public interface UserRepository extends JpaRepository<User, Long>,
     List<User> findByUsernameQuery(String username);
 
     // native query
-    @Query(value = "SELECT * FROM user WHERE username like %?1%", nativeQuery = true)
+    // @Query(value = "SELECT * FROM user WHERE username like %?1%", nativeQuery = true) // for MariaDB
+    @Query(value = "SELECT * FROM user WHERE username LIKE CONCAT('%', ?1, '%')", nativeQuery = true) // for MySQL
     List<User> findByUsernameNativeQuery(String username);
 
     // querydsl is available owing to QuerydslPredicateExecutor<User>
@@ -30,5 +33,5 @@ public interface UserRepository extends JpaRepository<User, Long>,
     // available of testOfCustomizedRepository() owing to CustomizedRepository
     // avavilable of testOfCustomizedRepositoryJDBC() owing to CustomizedRepository
 
-    
+
 }

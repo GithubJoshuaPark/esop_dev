@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 
 import com.soro.esop.entity.User;
 
+//import com.querydsl.core.types.Predicate;
+
 public interface UserService {
     User findById(Long id);
     Page<User> findAll(Pageable pageable);

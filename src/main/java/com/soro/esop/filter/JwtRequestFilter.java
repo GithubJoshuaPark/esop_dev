@@ -29,48 +29,70 @@ public class JwtRequestFilter extends OncePerRequestFilter{
     private final JwtUtil jwtUtil;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, 
-                                    HttpServletResponse response, 
-                                    FilterChain filterChain) throws ServletException, IOException 
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException
     {
-        
-        final Cookie[] cookies = request.getCookies();
-        final String authorizationHeader = request.getHeader("Authorization");
-        String username = null;
-        String jwt      = null;
 
-        if(cookies != null) {
-            for(Cookie cookie : cookies) {
-                if(cookie.getName().equals("jwt")) {
-                    jwt = cookie.getValue();
-                    username = jwtUtil.extractUsername(jwt);
-                    break;
+        String jwt = extractJwtFromRequest(request);
+        String username = null;
+
+        if (jwt != null) {
+            try {
+                username = jwtUtil.extractUsername(jwt);
+                if (jwtUtil.isTokenExpired(jwt)) {
+                    log.info("JWT token has expired");
+                    clearAuthentication();
+                    username = null;
                 }
+            } catch (Exception e) {
+                log.error("Error processing JWT token", e);
+                clearAuthentication();
             }
         }
 
-        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
-            username = jwtUtil.extractUsername(jwt);
-        }
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            try {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-            if(jwtUtil.validateToken(jwt, userDetails)) {
-                // UsernamePasswordAuthenticationToken: A built-in object, 
-                // used by spring to represent the current authenticated / being authenticated user.
-                UsernamePasswordAuthenticationToken userPwdAuthToken 
-                = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-                userPwdAuthToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                // After setting the Authentication in the context, 
-                // specify that the current user is authenticated.
-                SecurityContextHolder.getContext().setAuthentication(userPwdAuthToken);
+                if (jwtUtil.validateToken(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                } else {
+                    clearAuthentication();
+                }
+            } catch (Exception e) {
+                log.error("Error setting user authentication", e);
+                clearAuthentication();
             }
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private String extractJwtFromRequest(HttpServletRequest request) {
+        // Check cookies first
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwt".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+
+        // If not in cookies, check Authorization header
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+
+        return null;
+    }
+
+    private void clearAuthentication() {
+        SecurityContextHolder.clearContext();
     }
 }
