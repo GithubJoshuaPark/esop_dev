@@ -61,8 +61,8 @@ public class WebSecurityConfig {
             .csrf(csrf -> csrf.disable()) // CSRF 보안 설정, disable: CSRF 설정 비활성화
             .cors(cors -> cors.disable()) // CORS 설정, disable: CORS 설정 비활성화
 			.authorizeHttpRequests((requests) -> requests
-                .requestMatchers(AUTH_WHITELIST).permitAll()
-                .requestMatchers("/api/**").authenticated() // API 요청은 인증 필요
+                .requestMatchers(AUTH_WHITELIST).permitAll()  // 인증 없이 접근 가능한 URL (로그인, 회원가입 등)
+                .requestMatchers("/api/**").authenticated() // API 요청은 인증 필요 (혹, 인가 필요시 .hasRole("ADMIN")), .hasAuthority("ROLE_USER"), .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .anyRequest().authenticated()
 			)
             .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 설정, STATELESS:세션을 사용하지 않음
