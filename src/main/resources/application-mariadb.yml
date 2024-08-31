@@ -1,0 +1,8 @@
+spring:
+  config:
+    activate:
+      on-profile: mariadb
+  datasource:
+    url: jdbc:mariadb://localhost:3307/esop
+    username: root
+    password: cdcdcd001!
