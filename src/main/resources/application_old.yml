@@ -6,6 +6,11 @@ spring:
         name: esop
     profiles:
         active: mysql # mysql, mariadb
+  #    datasource:
+  #        #url: jdbc:mariadb://localhost:3307/esop # in this pc, mariadb is running on port 3307, MySQL is running on port 3306
+  #        url: jdbc:mysql://localhost:3306/esop # in this pc, mysql is running on port 3306
+  #        username: root
+  #        password: cdcdcd001!
     jpa:
         hibernate:
             ddl-auto: update
@@ -55,9 +60,7 @@ logging:
 # MySQL profile configuration
 ---
 spring:
-  config:
-    activate:
-      on-profile: mysql
+  profiles: mysql
   datasource:
     url: jdbc:mysql://localhost:3306/esop
     username: root
@@ -66,9 +69,7 @@ spring:
 # MariaDB profile configuration
 ---
 spring:
-  config:
-    activate:
-      on-profile: mariadb
+  profiles: mariadb
   datasource:
     url: jdbc:mariadb://localhost:3307/esop
     username: root
