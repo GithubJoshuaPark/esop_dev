@@ -2,6 +2,8 @@ package com.soro.esop.controller.v1.User;
 
 import java.util.List;
 
+import com.querydsl.core.types.Predicate;
+import com.soro.esop.entity.QUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -81,17 +83,17 @@ public class UserApiController {
             List<User> userList =  userService.findByUsernameNativeQuery(username);
             return ResponseEntity.ok(UserMapper.toDto(userList)); // 200 OK
         }
-        // else if("querydsl".equals(method)) {
-        //     // for using querydsl
-        //     log.debug("for using querydsl");
+         else if("querydsl".equals(method)) {
+             // for using querydsl
+             log.debug("for using querydsl");
 
-        //     QUser user          = QUser.user;
-        //     Predicate predicate = user.username.containsIgnoreCase(username)
-	    //                          .or(user.username.startsWithIgnoreCase("s"));
+             QUser user          = QUser.user;
+             Predicate predicate = user.username.containsIgnoreCase(username)
+	                              .or(user.username.startsWithIgnoreCase("s"));
 
-        //     Iterable<User> userList =  userService.findAllOfQueryDsl(predicate);
-        //     return ResponseEntity.ok(UserMapper.toDto((List<User>) userList)); // 200 OK
-        // }
+             Iterable<User> userList =  userService.findAllOfQueryDsl(predicate);
+             return ResponseEntity.ok(UserMapper.toDto((List<User>) userList)); // 200 OK
+         }
         else if ("entityManager".equals(method)) {
             // for using CustomizedRepository
             log.debug("for using EntityManager");

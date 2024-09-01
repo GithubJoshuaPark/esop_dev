@@ -52,7 +52,7 @@ public class WebSecurityConfig {
         "/css/**",
         "/js/**",
         "/images/**",
-        "/api/v1/**",   // allowing for testiong
+        "/api/v1/**",   // allowing for /ap/v1/** testing
     };
 
 
@@ -66,10 +66,10 @@ public class WebSecurityConfig {
                 .requestMatchers("/api/**").authenticated() // API 요청은 인증 필요 (혹, 인가 필요시 .hasRole("ADMIN")), .hasAuthority("ROLE_USER"), .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .anyRequest().authenticated()
 			)
-            .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 설정, STATELESS:세션을 사용하지 않음
-            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가 before UsernamePasswordAuthenticationFilter
+            .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(customAuthentication401Filter,
-                             UsernamePasswordAuthenticationFilter.class) // 인증 필터 추가 before UsernamePasswordAuthenticationFilter
+                             UsernamePasswordAuthenticationFilter.class)
             .formLogin((form) -> form
                 .loginPage("/account/login") //  a filter that intercepts POST requests to "/account/login"
                 .loginProcessingUrl("/account/login")
@@ -81,7 +81,7 @@ public class WebSecurityConfig {
                    .logoutUrl("/account/logout")
                    .addLogoutHandler(new JwtLogoutHandler())
                    .logoutSuccessHandler((request, response, authentication) -> {
-                    response.sendRedirect("/account/login?logout");
+                        response.sendRedirect("/account/login?logout");
                    })
                    .permitAll()
             )

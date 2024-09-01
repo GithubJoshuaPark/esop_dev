@@ -2,6 +2,7 @@ package com.soro.esop.service.serviceImpl;
 
 import java.util.List;
 
+import com.querydsl.core.types.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -53,11 +54,11 @@ public class UserServiceImpl implements UserService {
     }
 
     // for using querydsl
-    // @SuppressWarnings("unchecked")
-    // @Override
-    // public Iterable<User> findAllOfQueryDsl(Predicate predicate) {
-    //     return userRepository.findAll(predicate);
-    // }
+     @SuppressWarnings("unchecked")
+     @Override
+     public Iterable<User> findAllOfQueryDsl(Predicate predicate) {
+         return userRepository.findAll(predicate);
+     }
 
     // for using CustomizedRepository
     @Override
