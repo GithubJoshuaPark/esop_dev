@@ -71,7 +71,7 @@ public class WebSecurityConfig {
             .cors(cors -> cors.disable()) // CORS 설정, disable: CORS 설정 비활성화
 			.authorizeHttpRequests((requests) -> requests
                 .requestMatchers(AUTH_WHITELIST).permitAll()
-                .requestMatchers("/api/**").authenticated() // API 요청은 인증 필요 (혹, 인가 필요시 .hasRole("ADMIN")), .hasAuthority("ROLE_USER"), .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                .requestMatchers("/api/**").authenticated()
                 .anyRequest().authenticated()
 			)
             .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -102,7 +102,8 @@ public class WebSecurityConfig {
 	}
 
     /**
-     * It's called by the Spring IoC container during the initialization of the security configuration.
+     * It's called by the Spring IoC container
+     * during the initialization of the security configuration.
      * @param authConfig
      * @return
      * @throws Exception
@@ -114,7 +115,8 @@ public class WebSecurityConfig {
 
 
     /**
-     * Set up the UserDetailsService and PasswordEncoder that will be used for authentication throughout the application.
+     * Set up the UserDetailsService and PasswordEncoder
+     * that will be used for authentication throughout the application.
      * It's called by Spring during the application's security configuration phase.
      * It sets up the UserDetailsService and PasswordEncoder
      * that will be used for authentication throughout the application.

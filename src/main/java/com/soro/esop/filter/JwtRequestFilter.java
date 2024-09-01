@@ -35,8 +35,6 @@ public class JwtRequestFilter extends OncePerRequestFilter{
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException
     {
-
-        //String jwt = extractJwtFromRequest(request);
         Map<String, String> tokens = extractJwtFromRequest(request);
         String jwt = tokens.get("jwt");
         String refreshToken = tokens.get("refreshToken");
