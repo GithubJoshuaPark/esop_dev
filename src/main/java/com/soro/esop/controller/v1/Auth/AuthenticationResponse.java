@@ -1,19 +1,13 @@
 package com.soro.esop.controller.v1.Auth;
 
 public class AuthenticationResponse {
-    private final String jwt;
-    private final String refreshToken;
+    private final String responseMsg;
 
-    public AuthenticationResponse(String jwt, String refreshToken) {
-        this.jwt = jwt;
-        this.refreshToken = refreshToken;
+    public AuthenticationResponse(String responseMsg) {
+        this.responseMsg = responseMsg;
     }
 
-    public String getJwt() {
-        return jwt;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
+    public String getResponseMsg() {
+        return responseMsg;
     }
 }

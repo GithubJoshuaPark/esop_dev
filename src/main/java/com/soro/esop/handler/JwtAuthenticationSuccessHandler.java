@@ -34,13 +34,22 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
     {
         log.info("Authentication Success");
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String token = jwtUtil.generateToken(userDetails);
+        String token = jwtUtil.generateToken(userDetails);               // 30 mins
+        String refreshToken = jwtUtil.generateRefreshToken(userDetails); // 5 days
+
         
         // Set JWT as a cookie
         Cookie jwtCookie = new Cookie("jwt", token);
         jwtCookie.setHttpOnly(true);
         jwtCookie.setPath("/");
         response.addCookie(jwtCookie);
+
+        // Set RefreshToken as a cookie
+        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+        refreshCookie.setHttpOnly(true);
+        refreshCookie.setPath("/");
+        response.addCookie(refreshCookie);
+
         response.sendRedirect("/board/list");
     }
 

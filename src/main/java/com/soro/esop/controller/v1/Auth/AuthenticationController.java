@@ -3,6 +3,9 @@ package com.soro.esop.controller.v1.Auth;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -61,9 +64,51 @@ public class AuthenticationController {
                 .loadUserByUsername(authReq.getUsername());
 
         final String jwt = jwtUtil.generateToken(userDetails);
-        final String jwtRefresh = jwtUtil.generateRefreshToken(userDetails);
+        final String refreshToken = jwtUtil.generateRefreshToken(userDetails);
 
-        return ResponseEntity.ok(new AuthenticationResponse(jwt, jwtRefresh));
+        ResponseCookie jwtCookie = ResponseCookie.from("jwt", jwt)
+                .httpOnly(true)
+                .secure(true) // set to true if using HTTPS
+                .path("/")
+                .maxAge(30 * 60) // 30 minutes
+                .build();
+
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(true) // set to true if using HTTPS
+                .path("/")
+                .maxAge(5 * 24 * 60 * 60) // 5 days
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+                .body(new AuthenticationResponse("Login successful"));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) {
+
+        String refreshToken     = jwtUtil.extractRefreshTokenFromCookies(request);
+        String username         = jwtUtil.extractUsername(refreshToken);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+        if (refreshToken != null && jwtUtil.validateToken(refreshToken, userDetails)) {
+            String newJwt = jwtUtil.generateToken(userDetails);
+
+            ResponseCookie jwtCookie = ResponseCookie.from("jwt", newJwt)
+                    .httpOnly(true)
+                    .secure(true) // set to true if using HTTPS
+                    .path("/")
+                    .maxAge(30 * 60) // 30 minutes
+                    .build();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                    .body(new AuthenticationResponse("Token refreshed successfully"));
+        } else {
+            return ResponseEntity.status(401).body(new ErrorResponse("Invalid or expired refresh token"));
+        }
     }
     
 }

@@ -16,8 +16,14 @@ public class JwtLogoutHandler implements LogoutHandler {
     {
         Cookie jwtCookie = new Cookie("jwt", null);
         jwtCookie.setPath("/");           // cookie is visible in all the website
-        jwtCookie.setMaxAge(0);        // delete cookie
-        jwtCookie.setHttpOnly(true); // prevent XSS attacks
+        jwtCookie.setMaxAge(0);           // delete cookie
+        jwtCookie.setHttpOnly(true);      // prevent XSS attacks
+
+        Cookie refreshCookie = new Cookie("refreshToken", null);
+        refreshCookie.setPath("/");        // cookie is visible in all the website
+        refreshCookie.setMaxAge(0);        // delete cookie
+        refreshCookie.setHttpOnly(true);   // prevent XSS attacks
+
         response.addCookie(jwtCookie);
     }
 
