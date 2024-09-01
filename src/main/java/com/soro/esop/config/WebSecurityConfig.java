@@ -46,13 +46,13 @@ public class WebSecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
         "/",
-        "/api/auth/**",
+        "/api/auth/login",  // for /api/auth/login testing
         "/account/login",
         "/account/register",
         "/css/**",
         "/js/**",
-        "/images/**",
-        "/api/v1/**",   // allowing for /ap/v1/** testing
+        "/images/**"
+        //"/api/v1/auth/**",   // allowing for /ap/v1/auth/** testing
     };
 
 
@@ -106,7 +106,7 @@ public class WebSecurityConfig {
 
 
     /**
-     * 사용자 정보 설정
+     * Set up the UserDetailsService and PasswordEncoder that will be used for authentication throughout the application.
      * It's called by Spring during the application's security configuration phase.
      * It sets up the UserDetailsService and PasswordEncoder
      * that will be used for authentication throughout the application.

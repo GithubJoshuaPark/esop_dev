@@ -38,6 +38,9 @@ public class AuthenticationController {
     public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody AuthenticationRequest authReq
                                                         ,BindingResult bindingResult) throws Exception 
     {
+
+        log.debug("authReq: {}", authReq);
+
         if (bindingResult.hasErrors()) {
             List<String> errors = bindingResult.getAllErrors().stream()
                 .map(ObjectError::getDefaultMessage)
@@ -58,8 +61,9 @@ public class AuthenticationController {
                 .loadUserByUsername(authReq.getUsername());
 
         final String jwt = jwtUtil.generateToken(userDetails);
+        final String jwtRefresh = jwtUtil.generateRefreshToken(userDetails);
 
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        return ResponseEntity.ok(new AuthenticationResponse(jwt, jwtRefresh));
     }
     
 }
