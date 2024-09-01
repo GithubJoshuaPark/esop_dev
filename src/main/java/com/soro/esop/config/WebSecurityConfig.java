@@ -1,7 +1,5 @@
 package com.soro.esop.config;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,8 +31,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    private final BCryptPasswordEncoder passwordEncoder; // 패스워드 인코더
-    private final DataSource dataSource; // 데이터베이스 연결
+    // 패스워드 인코더
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    // 데이터베이스 연결
+    //private final DataSource dataSource;
 
     private final CustomAuthentication401Filter customAuthentication401Filter; // 인증 필터
     private final Authentication401Handler      authentication401Handler;      // 인증 실패 핸들러
@@ -61,7 +62,7 @@ public class WebSecurityConfig {
             .csrf(csrf -> csrf.disable()) // CSRF 보안 설정, disable: CSRF 설정 비활성화
             .cors(cors -> cors.disable()) // CORS 설정, disable: CORS 설정 비활성화
 			.authorizeHttpRequests((requests) -> requests
-                .requestMatchers(AUTH_WHITELIST).permitAll()  // 인증 없이 접근 가능한 URL (로그인, 회원가입 등)
+                .requestMatchers(AUTH_WHITELIST).permitAll()
                 .requestMatchers("/api/**").authenticated() // API 요청은 인증 필요 (혹, 인가 필요시 .hasRole("ADMIN")), .hasAuthority("ROLE_USER"), .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .anyRequest().authenticated()
 			)
