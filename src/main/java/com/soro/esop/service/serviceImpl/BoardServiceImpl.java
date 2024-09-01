@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.soro.esop.entity.Board;
 import com.soro.esop.repository.BoardRepository;
-import com.soro.esop.repository.nativeInterface.BoardWithUserDto;
+import com.soro.esop.repository.nativeQueryRsDto.BoardWithUserDto;
 import com.soro.esop.service.BoardService;
 
 import lombok.RequiredArgsConstructor;

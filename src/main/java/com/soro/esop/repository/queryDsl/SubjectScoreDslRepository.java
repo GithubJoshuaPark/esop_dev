@@ -1,4 +1,4 @@
-package com.soro.esop.repository.customizedRepository;
+package com.soro.esop.repository.queryDsl;
 
 import com.soro.esop.model.SubjectScoreDto;
 import org.springframework.data.domain.Page;
@@ -18,7 +18,7 @@ import java.util.List;
  * 2024-08-26             sorom             new
  */
 
-public interface SubjectScoreRepositoryCustom {
+public interface SubjectScoreDslRepository {
     List<SubjectScoreDto> findScoreByStudent(Long id);
     Page<SubjectScoreDto> findScoreByStudent(Long id, Pageable pageable);
 }

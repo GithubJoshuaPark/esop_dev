@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.soro.esop.entity.Board;
 import com.soro.esop.model.BoardDto;
-import com.soro.esop.repository.nativeInterface.BoardWithUserDto;
+import com.soro.esop.repository.nativeQueryRsDto.BoardWithUserDto;
 
 import lombok.extern.slf4j.Slf4j;
 

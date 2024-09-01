@@ -23,7 +23,7 @@ import com.soro.esop.mapper.BoardMapper;
 import com.soro.esop.mapper.UserMapper;
 import com.soro.esop.model.BoardDto;
 import com.soro.esop.model.UserDto;
-import com.soro.esop.repository.nativeInterface.BoardWithUserDto;
+import com.soro.esop.repository.nativeQueryRsDto.BoardWithUserDto;
 import com.soro.esop.service.BoardService;
 import com.soro.esop.service.UserService;
 

@@ -2,7 +2,8 @@ package com.soro.esop.handler;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.soro.esop.entity.Token;
+import com.soro.esop.repository.TokenRepository;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,11 +22,13 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
     private final JwtUtil jwtUtil;
     private final long expiration;
     private final long refreshExpiration;
+    private final TokenRepository tokenRepository;
 
-    public JwtAuthenticationSuccessHandler(JwtUtil jwtUtil, long expiration, long refreshExpiration) {
+    public JwtAuthenticationSuccessHandler(JwtUtil jwtUtil, long expiration, long refreshExpiration, TokenRepository tokenRepository) {
         this.jwtUtil = jwtUtil;
         this.expiration = expiration;
         this.refreshExpiration = refreshExpiration;
+        this.tokenRepository = tokenRepository;
     }
 
     /**
@@ -41,12 +44,16 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
         log.info("refreshExpiration: {}", refreshExpiration);
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String token = jwtUtil.generateToken(userDetails);               // 30 mins
+        String accessToken = jwtUtil.generateToken(userDetails);               // 30 mins
         String refreshToken = jwtUtil.generateRefreshToken(userDetails); // 5 days
+
+        // Save tokens to database
+        tokenRepository.save(new Token(null, accessToken, Token.TokenType.ACCESS, false, false, userDetails.getUsername(), null));
+        tokenRepository.save(new Token(null, refreshToken, Token.TokenType.REFRESH, false, false, userDetails.getUsername(), null));
 
 
         // Set JWT and RefreshToken as a cookie
-        ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
+        ResponseCookie jwtCookie = ResponseCookie.from("jwt", accessToken)
                 .httpOnly(true)
                 .secure(request.isSecure()) // true for HTTPS
                 .path("/")

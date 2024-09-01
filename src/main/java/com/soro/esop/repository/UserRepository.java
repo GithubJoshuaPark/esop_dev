@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 //import com.querydsl.core.types.Predicate;
 import com.soro.esop.entity.User;
-import com.soro.esop.repository.customizedRepository.CustomizedRepository;
+import com.soro.esop.repository.emJdbc.CustomizedRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 public interface UserRepository extends JpaRepository<User, Long>,

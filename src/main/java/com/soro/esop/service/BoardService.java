@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.soro.esop.entity.Board;
-import com.soro.esop.repository.nativeInterface.BoardWithUserDto;
+import com.soro.esop.repository.nativeQueryRsDto.BoardWithUserDto;
 
 
 public interface BoardService {

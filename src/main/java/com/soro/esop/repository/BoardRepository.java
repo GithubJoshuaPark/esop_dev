@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.soro.esop.entity.Board;
-import com.soro.esop.repository.nativeInterface.BoardWithUserDto;
+import com.soro.esop.repository.nativeQueryRsDto.BoardWithUserDto;
 
 /**
  * @author : Joshua Park

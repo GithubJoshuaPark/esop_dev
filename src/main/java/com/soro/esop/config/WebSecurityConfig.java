@@ -1,5 +1,6 @@
 package com.soro.esop.config;
 
+import com.soro.esop.repository.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -44,6 +45,7 @@ public class WebSecurityConfig {
     private final JwtRequestFilter              jwtRequestFilter;              // JWT 필터
     private final CustomUserDetailService       userDetailsService;            // 사용자 정보 서비스
     private final JwtUtil jwtUtil;
+    private final TokenRepository tokenRepository;
 
     private static final String[] AUTH_WHITELIST = {
         "/",
@@ -79,13 +81,13 @@ public class WebSecurityConfig {
             .formLogin((form) -> form
                 .loginPage("/account/login") //  a filter that intercepts POST requests to "/account/login"
                 .loginProcessingUrl("/account/login")
-                .successHandler(new JwtAuthenticationSuccessHandler(jwtUtil, expiration, refreshExpiration))
+                .successHandler(new JwtAuthenticationSuccessHandler(jwtUtil, expiration, refreshExpiration, tokenRepository))
                 //.defaultSuccessUrl("/", true)
                 .permitAll()
             )
             .logout(logout -> logout
                    .logoutUrl("/account/logout")
-                   .addLogoutHandler(new JwtLogoutHandler())
+                   .addLogoutHandler(new JwtLogoutHandler(tokenRepository, jwtUtil))
                    .logoutSuccessHandler((request, response, authentication) -> {
                         response.sendRedirect("/account/login?logout");
                    })

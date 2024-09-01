@@ -1,4 +1,4 @@
-package com.soro.esop.repository.customizedRepository;
+package com.soro.esop.repository.emJdbc;
 
 import java.util.List;
 

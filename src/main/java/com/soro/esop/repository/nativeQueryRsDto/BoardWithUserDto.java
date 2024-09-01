@@ -1,4 +1,4 @@
-package com.soro.esop.repository.nativeInterface;
+package com.soro.esop.repository.nativeQueryRsDto;
 
 public interface BoardWithUserDto {
     Long getId();
