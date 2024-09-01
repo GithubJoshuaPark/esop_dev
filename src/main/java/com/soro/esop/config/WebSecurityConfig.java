@@ -1,6 +1,7 @@
 package com.soro.esop.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -55,6 +56,11 @@ public class WebSecurityConfig {
         //"/api/v1/auth/**",   // allowing for /ap/v1/auth/** testing
     };
 
+    @Value("${jwt.expiration}") // 1_800_000 # 30 mins
+    private Long expiration;
+
+    @Value("${jwt.refreshExpire}") // 432_000_000 # 5 days in milliseconds
+    private Long refreshExpiration;
 
     @Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -73,7 +79,7 @@ public class WebSecurityConfig {
             .formLogin((form) -> form
                 .loginPage("/account/login") //  a filter that intercepts POST requests to "/account/login"
                 .loginProcessingUrl("/account/login")
-                .successHandler(new JwtAuthenticationSuccessHandler(jwtUtil))
+                .successHandler(new JwtAuthenticationSuccessHandler(jwtUtil, expiration, refreshExpiration))
                 //.defaultSuccessUrl("/", true)
                 .permitAll()
             )
