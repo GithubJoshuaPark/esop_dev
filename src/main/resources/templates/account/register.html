@@ -10,15 +10,12 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head th:replace="~{acom/common :: head('ESOP > Register', '/css/register.css')}"/>
-
 <body>
-
-    <nav th:replace="~{acom/common :: menu('Home')}">        
+    <nav th:replace="~{acom/common :: menu('Home')}">
     </nav>
 
     <main role="main" class="container">
-
-        <form class="form-signin" 
+        <form class="form-signin"
               method="post" 
               action="#"
               th:action="@{/account/register}"
@@ -48,12 +45,10 @@
 
             <button type="submit" class="btn btn-lg btn-outline-primary btn-block">Sign Up</button>            
         </form>
-
-    </main>   
+    </main>
     
     <!-- Include the common fragment -->    
     <div th:replace="~{acom/common :: footer}"></div>
-    
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" crossorigin="anonymous"></script>

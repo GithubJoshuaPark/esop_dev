@@ -90,6 +90,7 @@ public class BoardViewController {
         model.addAttribute("pageSize"   , 5);
         model.addAttribute("currentPage", currentPage_    );
         model.addAttribute("boards"     , boards_          );
+        model.addAttribute("welcomeMessage", "Welcome to the Board List Page");
         return "board/list";
     }
 

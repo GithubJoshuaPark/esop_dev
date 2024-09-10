@@ -29,4 +29,19 @@ $(document).ready(function() {
     function loadBoards() {
         console.log('Loading loadBoards...');
     }
+
+    // $(function() {
+    //     $("#gridContainer").dxDataGrid({
+    //         dataSource: "/board/list",
+    //         columns: ["id", "name", "value"],
+    //         paging: {
+    //             pageSize: 10
+    //         },
+    //         pager: {
+    //             showPageSizeSelector: true,
+    //             allowedPageSizes: [5, 10, 20],
+    //             showInfo: true
+    //         }
+    //     });
+    // });
 });
