@@ -54,7 +54,8 @@ public class WebSecurityConfig {
         "/account/register",
         "/css/**",
         "/js/**",
-        "/images/**"
+        "/images/**",
+        //"/board/list/fordx", // for /board/list/fordx testing
         //"/api/v1/auth/**",   // allowing for /ap/v1/auth/** testing
     };
 

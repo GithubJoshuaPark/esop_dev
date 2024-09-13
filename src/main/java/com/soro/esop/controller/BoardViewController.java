@@ -2,6 +2,8 @@ package com.soro.esop.controller;
 
 import java.util.List;
 
+import com.soro.esop.entity.DxEntity;
+import com.soro.esop.service.DxEntityService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -48,6 +50,7 @@ public class BoardViewController {
     private final BoardService   boardService;
     private final UserService    userService;    
     private final BoardValidator boardValidator;
+
 
     @GetMapping("/list")
     public String boardList(@RequestParam(name="titleOrContent", required = false, defaultValue = "") String titleOrContent,

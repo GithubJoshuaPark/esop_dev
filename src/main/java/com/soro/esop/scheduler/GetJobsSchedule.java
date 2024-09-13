@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 public class GetJobsSchedule {
     private final RestTemplate restTemplate;
 
-    //@Scheduled(cron = "0 * * * * ?")
+    //@Scheduled(cron = "0 * * * * ?") // every minute
     public void getJobs() {
         log.info("GetJobsSchedule.getJobs() is called.");
         String url = "http://localhost:8089/api/v1/batch/jobs";

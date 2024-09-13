@@ -24,7 +24,10 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
     private final long refreshExpiration;
     private final TokenRepository tokenRepository;
 
-    public JwtAuthenticationSuccessHandler(JwtUtil jwtUtil, long expiration, long refreshExpiration, TokenRepository tokenRepository) {
+    public JwtAuthenticationSuccessHandler(JwtUtil jwtUtil,
+                                           long expiration,
+                                           long refreshExpiration,
+                                           TokenRepository tokenRepository) {
         this.jwtUtil = jwtUtil;
         this.expiration = expiration;
         this.refreshExpiration = refreshExpiration;
@@ -50,7 +53,6 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
         // Save tokens to database
         tokenRepository.save(new Token(null, accessToken, Token.TokenType.ACCESS, false, false, userDetails.getUsername(), null));
         tokenRepository.save(new Token(null, refreshToken, Token.TokenType.REFRESH, false, false, userDetails.getUsername(), null));
-
 
         // Set JWT and RefreshToken as a cookie
         ResponseCookie jwtCookie = ResponseCookie.from("jwt", accessToken)

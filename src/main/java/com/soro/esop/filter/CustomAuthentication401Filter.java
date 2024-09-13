@@ -2,6 +2,7 @@ package com.soro.esop.filter;
 
 import java.io.IOException;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@Slf4j
 @Component
 public class CustomAuthentication401Filter extends OncePerRequestFilter {
     @Override
@@ -32,12 +34,14 @@ public class CustomAuthentication401Filter extends OncePerRequestFilter {
             (authentication == null || authentication instanceof AnonymousAuthenticationToken))
         {
             if(isApiRequest(request)) {
+                log.info("Unauthorized access to the API");
                 // Set the response status to 401 (Unauthorized)
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 // Write "Unauthorized" to the response
                 response.getWriter().write("Unauthorized");
                 return;
             } else {
+                log.info("Redirecting to the login page");
                 // Redirect the user to the login page
                 response.sendRedirect("/account/login");
                 return;

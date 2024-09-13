@@ -28,20 +28,21 @@ $(document).ready(function() {
 
     function loadBoards() {
         console.log('Loading loadBoards...');
+
+        $("#gridContainer").dxDataGrid({
+            dataSource: "/api/v1/board/list/fordx",
+            method: "GET",
+            columns: ["id", "name", "value"],
+            paging: {
+                pageSize: 10
+            },
+            pager: {
+                showPageSizeSelector: true,
+                allowedPageSizes: [5, 10, 20],
+                showInfo: true
+            }
+        });
     }
 
-    // $(function() {
-    //     $("#gridContainer").dxDataGrid({
-    //         dataSource: "/board/list",
-    //         columns: ["id", "name", "value"],
-    //         paging: {
-    //             pageSize: 10
-    //         },
-    //         pager: {
-    //             showPageSizeSelector: true,
-    //             allowedPageSizes: [5, 10, 20],
-    //             showInfo: true
-    //         }
-    //     });
-    // });
+
 });
