@@ -1,4 +1,4 @@
-import {showCustomNotification} from "../utils/utils.js";
+import {showCustomNotification, NotificationType} from "../utils/utils.js";
 
 $(document).ready(function() {
     console.log("list module...");
@@ -59,12 +59,12 @@ $(document).ready(function() {
                         } else {
                             message = "An error occurred while updating the record.";
                         }
-                        showCustomNotification(message, "info");
+                        showCustomNotification(message, NotificationType.INFO);
                     }
                     else {
                         console.error("Error updating entity: ", error);
                         let message = "Error updating entity: " + error;
-                        showCustomNotification(message, "error");
+                        showCustomNotification(message, NotificationType.ERROR);
                     }
                 });
             },

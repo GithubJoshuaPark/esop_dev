@@ -1,4 +1,18 @@
 // Custom notification function
+/**
+ * Show a custom notification
+ * @param message
+ * @param type: "success", "warning", "error", "info"
+ */
+
+// make enum for type
+export const NotificationType = {
+    SUCCESS: "success",
+    WARNING: "warning",
+    ERROR: "error",
+    INFO: "info"
+};
+
 export function showCustomNotification(message, type) {
     DevExpress.ui.notify({
         contentTemplate: function(element) {

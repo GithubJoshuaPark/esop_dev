@@ -1,4 +1,4 @@
-import {showCustomNotification} from "../utils/utils.js";
+import {showCustomNotification, NotificationType} from "../utils/utils.js";
 
 $(document).ready(function() {
     console.log("list module...");
@@ -64,41 +64,16 @@ $(document).ready(function() {
                         let errorResponse = xhr.responseJSON;
                         if (errorResponse && errorResponse.errors) {
                             let message = errorResponse.errors.join('\n');
-                            DevExpress.ui.notify({
-                                message: message, // Display the validation errors
-                                type: "error",    // type: "info", "warning", "error" or "success"
-                                displayTime: 5000, // Display the message for 5 seconds
-                                position: {
-                                    my: "center", // Position of the notification
-                                    at: "center", // Position of the window to align to
-                                    of: window    // Element to align against
-                                }
-                            });
+                            ShowCustomNotification(message, NotificationType.INFO);
                         } else {
-                            DevExpress.ui.notify({
-                                message: "An error occurred while updating the record.",
-                                type: "error",
-                                displayTime: 5000,
-                                position: {
-                                    my: "center", // Postion of the notification
-                                    at: "center", // Position of the window to align to
-                                    of: window    // Element to align against
-                                }
-                            });
+                            let message = "An error occurred while updating the record.";
+                            ShowCustomNotification(message, NotificationType.ERROR);
                         }
                     }
                     else {
                         console.error("Error updating entity: ", error);
-                        DevExpress.ui.notify({
-                            message: "Error updating entity: " + error,
-                            type: "error",
-                            displayTime: 5000,
-                            position: {
-                                my: "center", // Postion of the notification
-                                at: "center", // Position of the window to align to
-                                of: window    // Element to align against
-                            }
-                        });
+                        let message = "Error updating entity: " + error;
+                        ShowCustomNotification(message, NotificationType.ERROR);
                     }
                 });
             },
