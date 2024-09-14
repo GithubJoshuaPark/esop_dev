@@ -39,10 +39,10 @@ public class WebSecurityConfig {
     // 데이터베이스 연결
     //private final DataSource dataSource;
 
+    private final JwtRequestFilter              jwtRequestFilter;              // JWT 필터
     private final CustomAuthentication401Filter customAuthentication401Filter; // 인증 필터
     private final Authentication401Handler      authentication401Handler;      // 인증 실패 핸들러
     private final AccessDenied403Handler        accessDenied403Handler;        // 접근 거부 핸들러
-    private final JwtRequestFilter              jwtRequestFilter;              // JWT 필터
     private final CustomUserDetailService       userDetailsService;            // 사용자 정보 서비스
     private final JwtUtil jwtUtil;
     private final TokenRepository tokenRepository;
@@ -55,8 +55,6 @@ public class WebSecurityConfig {
         "/css/**",
         "/js/**",
         "/images/**",
-        //"/board/list/fordx", // for /board/list/fordx testing
-        //"/api/v1/auth/**",   // allowing for /ap/v1/auth/** testing
     };
 
     @Value("${jwt.expiration}") // 1_800_000 # 30 mins

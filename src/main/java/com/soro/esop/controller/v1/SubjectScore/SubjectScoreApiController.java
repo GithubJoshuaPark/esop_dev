@@ -28,7 +28,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/score/{id}")
 @RequiredArgsConstructor
-public class SubjectScoreController {
+public class SubjectScoreApiController {
 
     private final SubjectScoreService service;
 

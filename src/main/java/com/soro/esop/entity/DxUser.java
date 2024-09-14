@@ -1,13 +1,14 @@
 package com.soro.esop.entity;
 
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "dx_entity")
-public class DxEntity {
+@Table(name = "dx_user")
+public class DxUser {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +25,7 @@ public class DxEntity {
 
     @NotBlank
     private String ssn;
+
+    @NotBlank
+    private String email;
 }

@@ -30,6 +30,14 @@ import jakarta.servlet.http.HttpServletResponse;
  * (such as a username and password or a token) to access the requested resource.
  */
 
+/**
+ * packageName : com.soro.esop.handler
+ * fileName    : Authentication401Handler
+ * Description : 401 Unauthorized Handler
+ *              - 인증되지 않은 사용자가 페이지에 액세스하려고 할 때 호출되는 핸들러
+ *              - 사용자가 인증되지 않은 경우 401 상태 코드와 함께 사용자에게 메시지를 반환
+ * ===========================================================
+ */
 @Component
 public class Authentication401Handler implements AuthenticationEntryPoint {
 

@@ -22,6 +22,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * packageName : com.soro.esop.filter
+ * fileName    : JwtRequestFilter
+ * Description : JWT 요청 필터
+ *              - JWT 토큰을 요청에서 추출하고, 토큰이 유효한지 확인하여 사용자 인증을 처리하는 필터
+ *              - JWT 토큰이 만료되었을 경우, 리프레시 토큰을 사용하여 새로운 JWT 토큰을 발급
+ *              - JWT 토큰이 유효하지 않을 경우, 사용자 인증을 제거
+ *              - JWT 토큰이 유효할 경우, 사용자 인증을 설정
+ * ===========================================================
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -54,7 +64,7 @@ public class JwtRequestFilter extends OncePerRequestFilter{
                         response.addCookie(new Cookie("jwt", newJwt));
                     } else {
                         log.info("Refresh token is invalid or expired");
-                        clearAuthentication();
+                        clearAuthentication(); // Clear the authentication
                         username = null;
                     }
                 }

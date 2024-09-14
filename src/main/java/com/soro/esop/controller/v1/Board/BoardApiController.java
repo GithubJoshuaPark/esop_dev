@@ -2,8 +2,6 @@ package com.soro.esop.controller.v1.Board;
 
 import java.util.List;
 
-import com.soro.esop.entity.DxEntity;
-import com.soro.esop.service.DxEntityService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -48,7 +46,6 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardApiController {
 
     private final BoardService boardService;
-    private final DxEntityService dxService;
     
     /**
      * 게시판 목록 조회
@@ -141,10 +138,4 @@ public class BoardApiController {
         return ResponseEntity.noContent().build();  // 204 No Content
     }
 
-    @GetMapping("/list/fordx")
-    public List<DxEntity> getData() {
-        return dxService.findAll();
-    }
-    
-    
 }

@@ -1,6 +1,8 @@
 package com.soro.esop.filter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * packageName : com.soro.esop.filter
+ * fileName    : CustomAuthentication401Filter
+ * Description : 사용자 인증 필터
+ *             - 사용자가 인증되지 않은 경우, 401 상태 코드를 반환하거나 로그인 페이지로 리다이렉트
+ *             - 사용자가 인증되지 않은 경우, API 요청에 대해 401 상태 코드를 반환
+ *             - 사용자가 인증되지 않은 경우, 페이지 요청에 대해 로그인 페이지로 리다이렉트
+ */
 @Slf4j
 @Component
 public class CustomAuthentication401Filter extends OncePerRequestFilter {
@@ -29,14 +39,19 @@ public class CustomAuthentication401Filter extends OncePerRequestFilter {
         // Check if the user is authenticated
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        // List of paths that require authentication
+        List<String> pathList = Arrays.asList("/board/list", "/dx/entryList", "/dx/userList");
+
+        Boolean isApiRequest = isApiRequest(request);
+
         // If the user is not authenticated and the request path is "/board/list"
-        if("/board/list".equals(path) && 
+        if(pathList.contains(path) &&
             (authentication == null || authentication instanceof AnonymousAuthenticationToken))
         {
-            if(isApiRequest(request)) {
+            if(isApiRequest) {
                 log.info("Unauthorized access to the API");
                 // Set the response status to 401 (Unauthorized)
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());  // 401
                 // Write "Unauthorized" to the response
                 response.getWriter().write("Unauthorized");
                 return;
@@ -49,16 +64,6 @@ public class CustomAuthentication401Filter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-
-        // if (response.getStatus() == HttpStatus.UNAUTHORIZED.value()) {
-        //     response.setStatus(HttpStatus.OK.value());
-        //     response.getWriter().write("Unauthorized");
-        //     response.getWriter().flush();
-        //     response.getWriter().close();
-        // } else {
-        //     filterChain.doFilter(request, response);
-        // }
-
     }
 
     /*

@@ -1,9 +1,9 @@
 package com.soro.esop.controller.v1.Auth;
 
-public class AuthenticationResponse {
+public class AuthRes {
     private final String responseMsg;
 
-    public AuthenticationResponse(String responseMsg) {
+    public AuthRes(String responseMsg) {
         this.responseMsg = responseMsg;
     }
 

@@ -31,14 +31,14 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-public class AuthenticationController {
+public class AuthApiController {
     
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final CustomUserDetailService userDetailsService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody AuthenticationRequest authReq
+    public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody AuthReq authReq
                                                         ,BindingResult bindingResult) throws Exception 
     {
 
@@ -83,7 +83,7 @@ public class AuthenticationController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
-                .body(new AuthenticationResponse("Login successful"));
+                .body(new AuthRes("Login successful"));
     }
 
     @PostMapping("/refresh")
@@ -105,7 +105,7 @@ public class AuthenticationController {
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                    .body(new AuthenticationResponse("Token refreshed successfully"));
+                    .body(new AuthRes("Token refreshed successfully"));
         } else {
             return ResponseEntity.status(401).body(new ErrorResponse("Invalid or expired refresh token"));
         }
