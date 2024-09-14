@@ -1,5 +1,6 @@
 package com.soro.esop.controller.v1.dx;
 
+import com.soro.esop.domain.ErrorResponse;
 import com.soro.esop.entity.DxEntity;
 import com.soro.esop.service.DxEntityService;
 import jakarta.validation.Valid;
@@ -7,10 +8,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -46,9 +48,9 @@ public class DxEntityApiController {
     }
 
     @PutMapping("/entityList/fordx/{id}")
-    public ResponseEntity<DxEntity> updateDxEntity(@Valid @PathVariable(name="id") Long id,
-                                                   @RequestBody DxEntity dxEntity,
-                                                   BindingResult bindingResult)
+    public ResponseEntity<?> updateDxEntity(@PathVariable(name="id") Long id,
+                                            @Valid @RequestBody DxEntity dxEntity,
+                                            BindingResult bindingResult)
     {
         dxEntity.setId(id);
         log.debug("Request to update entity: {}", dxEntity);
@@ -56,9 +58,10 @@ public class DxEntityApiController {
         if (bindingResult.hasErrors()) {
             log.error("errors: {}", bindingResult.getAllErrors());
 
-            //model.addAttribute("user", userDto);
-            //return "/dx/entryList";
-            return ResponseEntity.badRequest().build();
+            List<String> errors = bindingResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(new ErrorResponse(errors));
         }
 
         DxEntity updatedEntity = dxService.update(dxEntity);

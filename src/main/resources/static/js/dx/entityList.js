@@ -1,3 +1,5 @@
+import {showCustomNotification} from "../utils/utils.js";
+
 $(document).ready(function() {
     console.log("list module...");
     
@@ -29,7 +31,6 @@ $(document).ready(function() {
                 // The key is used to identify the row to update
                 // The all column values are need to put the updated values for the row
                 // So, we need to get the existing data for the row and merge it with the updated values
-                let deferred = $.Deferred();
                 let grid = $("#gridContainer").dxDataGrid("instance");
                 let data = grid.getDataSource().items().find(item => item.id === key);
 
@@ -38,12 +39,15 @@ $(document).ready(function() {
 
                 // Process values before sending
                 if (updatedData.phoneNumber) {
+                    // Remove non-numeric characters
                     updatedData.phoneNumber = updatedData.phoneNumber.replace(/\D/g, '');
                 }
                 if (updatedData.ssn) {
+                    // Remove non-numeric characters
                     updatedData.ssn = updatedData.ssn.replace(/\D/g, '');
                 }
 
+                log.debug('updating....', updatedData);
                 return $.ajax({
                     url: "/api/v1/dx/entityList/fordx/" + key,
                     method: "PUT",
@@ -53,6 +57,49 @@ $(document).ready(function() {
                     data: JSON.stringify(updatedData),
                     contentType: "application/json",
                     dataType: "json"
+                }).fail(function(xhr, status, error) {
+                    // Handle errors
+                    if (xhr.status === 400) {
+                        // Display validation errors
+                        let errorResponse = xhr.responseJSON;
+                        if (errorResponse && errorResponse.errors) {
+                            let message = errorResponse.errors.join('\n');
+                            DevExpress.ui.notify({
+                                message: message, // Display the validation errors
+                                type: "error",    // type: "info", "warning", "error" or "success"
+                                displayTime: 5000, // Display the message for 5 seconds
+                                position: {
+                                    my: "center", // Position of the notification
+                                    at: "center", // Position of the window to align to
+                                    of: window    // Element to align against
+                                }
+                            });
+                        } else {
+                            DevExpress.ui.notify({
+                                message: "An error occurred while updating the record.",
+                                type: "error",
+                                displayTime: 5000,
+                                position: {
+                                    my: "center", // Postion of the notification
+                                    at: "center", // Position of the window to align to
+                                    of: window    // Element to align against
+                                }
+                            });
+                        }
+                    }
+                    else {
+                        console.error("Error updating entity: ", error);
+                        DevExpress.ui.notify({
+                            message: "Error updating entity: " + error,
+                            type: "error",
+                            displayTime: 5000,
+                            position: {
+                                my: "center", // Postion of the notification
+                                at: "center", // Position of the window to align to
+                                of: window    // Element to align against
+                            }
+                        });
+                    }
                 });
             },
             remove: function(key) {
@@ -70,12 +117,15 @@ $(document).ready(function() {
             dataSource: dxDataSource,
             method: "GET",
             columns: [
-                { dataField: "id", allowEditing: false },
-                { dataField: "name", validationRules: [{ type: "required" }] },
-                { dataField: "value" },
-                { dataField: "address", validationRules: [{ type: "required" }] },
+                { dataField: "id", allowEditing: false, width: 50 },
+                { dataField: "name", caption: "이름", validationRules: [{ type: "required" }] },
+                { dataField: "value", caption: "값" },
+                { dataField: "address",
+                    caption: "주소",
+                    validationRules: [{ type: "required" }]
+                },
                 { dataField: "phoneNumber",
-                  caption: "Phone Number",
+                  caption: "전화번호",
                     hint: "Enter a phone number in the format xxxxxx-xxxxxxx",
                   validationRules: [{ type: "required" }],
                   customizeText: function(cellInfo) {
@@ -118,16 +168,17 @@ $(document).ready(function() {
                 mode: "form",
                 allowAdding: true,
                 allowUpdating: true,
-                allowDeleting: true,
+                allowDeleting: true, // Enable the delete button
                 useIcons: true, // Display icons instead of text for edit/delete buttons
+                confirmDelete: false, // Disable the default confirmation dialog
                 texts: {
+                    confirmDeleteMessage: "삭제할 거니?",
                     saveRowChanges: "저장",
                     cancelRowChanges: "취소",
                     deleteRow: "삭제",
                     editRow: "수정",
                     addRow: "추가",
                 },
-                confirmDelete: false,
             },
             paging: {
                 pageSize: 5

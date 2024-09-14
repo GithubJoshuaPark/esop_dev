@@ -43,22 +43,6 @@ public class UserValidator implements Validator {
         if(user.getUsername().length() < 2) {
             errors.rejectValue("username", "username.min.length", new Object[] {2}, "아이디는 2자 이상 입력해주세요.");
         }
-
-        // if(user.getPassword() == null || user.getPassword().isEmpty()) {
-        //     errors.rejectValue("password", "password.empty", new Object[] {}, "비밀번호를 입력해주세요.");
-        // }
-
-        // if(user.getPassword().length() < 8) {
-        //     errors.rejectValue("password", "password.min.length", new Object[] {8}, "비밀번호는 8자 이상 입력해주세요.");
-        // }
-
-        // if(user.getPassword().length() > 20) {
-        //     errors.rejectValue("password", "password.max.length", new Object[] {20}, "비밀번호는 20자 이하로 입력해주세요.");
-        // }
-
-        // if(user.getPassword().equals(user.getUsername())) {
-        //     errors.rejectValue("password", "password.equal.username", new Object[] {}, "아이디와 비밀번호는 같을 수 없습니다.");
-        // }
     }
 
     
