@@ -11,19 +11,37 @@ $(document).ready(function() {
         let dxDataSource = new DevExpress.data.CustomStore({
             key: "id",
             load: function() {
-                return $.getJSON("/api/v1/dx/userList/fordx");
+                return axios.get("/api/v1/dx/userList/fordx", {})
+                            .then(response => {
+                                let response_ = response.data;
+                                console.log('response', response_);
+                                return response_;
+                            })
+                            .catch(error => {
+                                console.error("Error loading entities: ", error);
+                                let message = "Error loading entities: " + error;
+                                showCustomNotification(message, NotificationType.ERROR);
+                                return Promise.reject(message);
+                            });
+
+               //return $.getJSON("/api/v1/dx/userList/fordx");
             },
             insert: function(values) {
-                return $.ajax({
-                    url: "/api/v1/dx/userList/fordx",
-                    method: "POST",
-                    xhrFields: {
-                        withCredentials: true // Send cookies when calling the API
-                    },
-                    data: JSON.stringify(values),
-                    contentType: "application/json",
-                    dataType: "json"
-                });
+                console.log('inserting....', values);
+                return axios.post("/api/v1/dx/userList/fordx", values, {
+                          withCredentials: true // Send cookies when calling the API
+                     })
+                    .then(response => {
+                        let response_ = response.data;
+                        console.log('response', response_);
+                        showCustomNotification("Entity inserted successfully.", NotificationType.SUCCESS);
+                    })
+                    .catch(error => {
+                        console.error("Error inserting entity: ", error);
+                        let message = "Error inserting entity: " + error;
+                        showCustomNotification(message, NotificationType.ERROR);
+                        return Promise.reject(message);
+                    });
             },
             update: function(key, values) {
                 let grid = $("#gridContainer").dxDataGrid("instance");
@@ -39,43 +57,73 @@ $(document).ready(function() {
                 }
 
                 console.log('updating....', updatedData);
-                return $.ajax({
-                    url: "/api/v1/dx/userList/fordx/" + key,
-                    method: "PUT",
-                    xhrFields: {
-                        withCredentials: true // Send cookies when calling the API
-                    },
-                    data: JSON.stringify(updatedData),
-                    contentType: "application/json",
-                    dataType: "json"
-                }).fail(function(xhr, status, error) {
-                    // Handle errors
-                    if (xhr.status === 400) {
-                        // Display validation errors
-                        let errorResponse = xhr.responseJSON;
-                        let message = "";
-                        if (errorResponse && errorResponse.errors) {
-                            message = errorResponse.errors.join('\n');
-                        } else {
-                            message = "An error occurred while updating the record.";
-                        }
-                        showCustomNotification(message, NotificationType.INFO);
-                    }
-                    else {
-                        console.error("Error updating entity: ", error);
-                        let message = "Error updating entity: " + error;
-                        showCustomNotification(message, NotificationType.ERROR);
-                    }
+
+                return axios.put("/api/v1/dx/userList/fordx/" + key, updatedData, {
+                   withCredentials: true // Send cookies when calling the API
+                }).then(response => {
+                    let response_ = response.data;
+                    console.log('response', response_);
+                    showCustomNotification("Entity updated successfully.", NotificationType.SUCCESS);
+                }).catch(error => {
+                    console.error("Error updating entity: ", error);
+                    let message = "Error updating entity: " + error;
+                    showCustomNotification(message, NotificationType.ERROR);
+                    return Promise.reject(message);
                 });
+
+                // return $.ajax({
+                //     url: "/api/v1/dx/userList/fordx/" + key,
+                //     method: "PUT",
+                //     xhrFields: {
+                //         withCredentials: true // Send cookies when calling the API
+                //     },
+                //     data: JSON.stringify(updatedData),
+                //     contentType: "application/json",
+                //     dataType: "json"
+                // }).fail(function(xhr, status, error) {
+                //     // Handle errors
+                //     if (xhr.status === 400) {
+                //         // Display validation errors
+                //         let errorResponse = xhr.responseJSON;
+                //         let message = "";
+                //         if (errorResponse && errorResponse.errors) {
+                //             message = errorResponse.errors.join('\n');
+                //         } else {
+                //             message = "An error occurred while updating the record.";
+                //         }
+                //         showCustomNotification(message, NotificationType.INFO);
+                //     }
+                //     else {
+                //         console.error("Error updating entity: ", error);
+                //         let message = "Error updating entity: " + error;
+                //         showCustomNotification(message, NotificationType.ERROR);
+                //     }
+                // });
             },
             remove: function(key) {
-                return $.ajax({
-                    url: "/api/v1/dx/userList/fordx/" + key,
-                    method: "DELETE",
-                    xhrFields: {
+                return axios.delete("/api/v1/dx/userList/fordx/" + key, {
                         withCredentials: true // Send cookies when calling the API
-                    },
-                });
+                    })
+                    .then(response => {
+                        let response_ = response.data;
+                        console.log('response', response_);
+                        showCustomNotification("Entity deleted successfully.", NotificationType.SUCCESS);
+                    })
+                    .catch(error => {
+                        console.error("Error deleting entity: ", error);
+                        let message = "Error deleting entity: " + error;
+                        showCustomNotification(message, NotificationType.ERROR);
+                        return Promise.reject(message);
+                    }); // Ignore errors
+
+                // return $.ajax({
+                //     url: "/api/v1/dx/userList/fordx/" + key,
+                //     method: "DELETE",
+                //     xhrFields: {
+                //         withCredentials: true // Send cookies when calling the API
+                //     },
+                // });
+
             }
         });
 
