@@ -62,3 +62,16 @@ export function showCustomNotification(message, type) {
         closeOnClick: true
     });
 }
+
+// Helper functions to format phone numbers and SSNs
+export function formatPhoneNumber(value) {
+    if(!value) return "";
+    let digits = value.replace(/\D/g, "");                        // Remove non-numeric characters
+    return digits.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3"); // Apply format (xxx) xxx-xxxx
+}
+
+export function formatSSN(value) {
+    if(!value) return "";
+    let digits = value.replace(/\D/g, "");            // Remove non-numeric characters
+    return digits.replace(/(\d{6})(\d{7})/, '$1-$2'); // Apply format xxxxxx-xxxxxxx
+}

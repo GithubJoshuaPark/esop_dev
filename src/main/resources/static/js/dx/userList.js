@@ -1,4 +1,4 @@
-import {showCustomNotification, NotificationType} from "../utils/utils.js";
+import {showCustomNotification, NotificationType , formatSSN, formatPhoneNumber } from "../utils/utils.js";
 
 $(document).ready(function() {
     console.log("list module...");
@@ -180,9 +180,9 @@ $(document).ready(function() {
                 width: 240,
                 placeholder: "Search..."
             },
-            noDataText: "데이터 없어요.", // Custom message when there's no data
+            noDataText: "데이터 없어요.",             // Custom message when there's no data
             export: {
-                enabled: true, // Enable the export feature
+                enabled: true,                     // Enable the export feature
                 fileName: "userList",
                 //formats: ["XLSX", "CSV", "PDF"], // Formats that can be exported
                 allowExportSelectedData: true,     // Enable/Disable exporting selected rows
@@ -193,7 +193,9 @@ $(document).ready(function() {
                     let value = options.value;
 
                     if(column.dataField === "phoneNumber") {
-                        options.value = formatPhoneNumber(value);
+                        options.value     = formatPhoneNumber(value);
+                        options.font      = { color: { argb: 'FF0000FF' }, bold: true };
+                        options.alignment = { horizontal: 'center' };
                     } else if(column.dataField === "ssn") {
                         options.value = formatSSN(value);
                     }
@@ -210,9 +212,16 @@ $(document).ready(function() {
                 }).then(() => {
                     console.log('Exported to Excel...');
                     workbook.xlsx.writeBuffer().then((buffer) => {
-                        saveAs(new Blob([buffer], { type: 'application/octet-stream' }),
+                        let savedResult = saveAs(new Blob([buffer], { type: 'application/octet-stream' }),
                             'userList.xlsx');
+                        console.log('savedResult', savedResult);
+                        showCustomNotification(savedResult, NotificationType.SUCCESS);
                     });
+                }).catch((error) => {
+                    console.error('Error exporting to Excel: ', error);
+                    let message = "Error exporting to Excel: " + error;
+                    showCustomNotification(message, NotificationType.ERROR);
+                    return Promise.reject(message);
                 });
             },
             onToolbarPreparing: function(e) {
@@ -223,18 +232,6 @@ $(document).ready(function() {
                         options: {
                             icon: "exportxlsx",
                             text: "Export to Excel",
-                            // onClick: function() {
-                            //     console.log('Export to Excel...');
-                            //     e.component.exportToExcel(false).then((response) =>  {
-                            //         let response_ = response;
-                            //         console.log('response', response_);
-                            //     }).catch((error) => {
-                            //         console.error('Error exporting to Excel: ', error);
-                            //         let message = "Error exporting to Excel: " + error;
-                            //         showCustomNotification(message, NotificationType.ERROR);
-                            //         return Promise.reject(message);
-                            //     });  // false means 'Export all rows'
-                            // }
                         },
                         template: function() {
                             return $("<div>").addClass("toolbar-header").text("사용자 목록");
@@ -257,8 +254,7 @@ $(document).ready(function() {
                 // Display a confirmation dialog before deletion
                 e.cancel = true; // Prevent the default deletion action until confirmed
 
-                var dialogResult = DevExpress.ui.dialog.confirm("삭제할 거니?", "삭제 확인");
-
+                let dialogResult = DevExpress.ui.dialog.confirm("삭제할 거니?", "삭제 확인");
                 dialogResult.done(function(confirm) {
                     if (confirm) {
                         console.log('deleting....', e.component);
@@ -273,19 +269,6 @@ $(document).ready(function() {
                 });
             },
         });
-
-        // Helper functions to format phone numbers and SSNs
-        function formatPhoneNumber(value) {
-            if(!value) return "";
-            let digits = value.replace(/\D/g, "");                        // Remove non-numeric characters
-            return digits.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3"); // Apply format (xxx) xxx-xxxx
-        }
-
-        function formatSSN(value) {
-            if(!value) return "";
-            let digits = value.replace(/\D/g, "");            // Remove non-numeric characters
-            return digits.replace(/(\d{6})(\d{7})/, '$1-$2'); // Apply format xxxxxx-xxxxxxx
-        }
     }
 
 });

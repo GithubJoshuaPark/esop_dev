@@ -1,4 +1,4 @@
-import {showCustomNotification, NotificationType} from "../utils/utils.js";
+import {showCustomNotification, NotificationType , formatSSN, formatPhoneNumber } from "../utils/utils.js";
 
 $(document).ready(function() {
     console.log("list module...");
@@ -173,6 +173,65 @@ $(document).ready(function() {
                 placeholder: "Search..."
             },
             noDataText: "데이터 없어요.", // Custom message when there's no data
+            export: {
+                enabled: true,                     // Enable the export feature
+                fileName: "entityList",
+                //formats: ["XLSX", "CSV", "PDF"], // Formats that can be exported
+                allowExportSelectedData: true,     // Enable/Disable exporting selected rows
+                excelFilterEnabled: true,          // Apply the filter when exporting to Excel
+                customizeExcelCell: function(options) {
+                    let grid = $("#gridContainer").dxDataGrid("instance");
+                    let column = grid.columnOption(options.gridCell.column.dataField);
+                    let value = options.value;
+
+                    if(column.dataField === "phoneNumber") {
+                        options.value = formatPhoneNumber(value);
+                    } else if(column.dataField === "ssn") {
+                        options.value = formatSSN(value);
+                    }
+                },
+            },
+            onExporting(e) {
+                const workbook = new ExcelJS.Workbook();
+                const worksheet = workbook.addWorksheet('entityList');
+
+                DevExpress.excelExporter.exportDataGrid({
+                    component: e.component,
+                    worksheet,
+                    autoFilterEnabled: true,
+                }).then(() => {
+                    console.log('Exported to Excel...');
+                    workbook.xlsx.writeBuffer().then((buffer) => {
+                        let savedResult = saveAs(new Blob([buffer], { type: 'application/octet-stream' }),
+                            'entityList.xlsx');
+                        console.log('savedResult', savedResult);
+                        showCustomNotification(savedResult, NotificationType.SUCCESS);
+                    });
+                }).catch((error) => {
+                    console.error('Error exporting to Excel: ', error);
+                    let message = "Error exporting to Excel: " + error;
+                    showCustomNotification(message, NotificationType.ERROR);
+                    return Promise.reject(message);
+                });
+            },
+            onToolbarPreparing: function(e) {
+                e.toolbarOptions.items.unshift(
+                    {
+                        location: "before",
+                        widget: "dxButton",
+                        options: {
+                            icon: "exportxlsx",
+                            text: "Export to Excel",
+                        },
+                        template: function() {
+                            return $("<div>").addClass("toolbar-header").text("사용자 목록");
+                        }
+                    }
+                );
+            }, // Customize the toolbar
+            onRowInserting: function(e) {
+                console.log('inserting....', e.data);
+            },
             // Add the onEditCanceling event handler
             onEditCanceling: function(e) {
                 // Display custom message when cancel button is clicked
