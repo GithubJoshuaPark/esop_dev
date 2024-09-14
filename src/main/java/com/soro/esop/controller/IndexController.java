@@ -22,6 +22,7 @@ public class IndexController {
 
     @GetMapping
     public String index(Model model) {
+        log.debug("index");
         return "index";
     }
 }
