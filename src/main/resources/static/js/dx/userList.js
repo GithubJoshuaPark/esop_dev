@@ -23,8 +23,6 @@ $(document).ready(function() {
                                 showCustomNotification(message, NotificationType.ERROR);
                                 return Promise.reject(message);
                             });
-
-               //return $.getJSON("/api/v1/dx/userList/fordx");
             },
             insert: function(values) {
                 console.log('inserting....', values);
@@ -70,35 +68,6 @@ $(document).ready(function() {
                     showCustomNotification(message, NotificationType.ERROR);
                     return Promise.reject(message);
                 });
-
-                // return $.ajax({
-                //     url: "/api/v1/dx/userList/fordx/" + key,
-                //     method: "PUT",
-                //     xhrFields: {
-                //         withCredentials: true // Send cookies when calling the API
-                //     },
-                //     data: JSON.stringify(updatedData),
-                //     contentType: "application/json",
-                //     dataType: "json"
-                // }).fail(function(xhr, status, error) {
-                //     // Handle errors
-                //     if (xhr.status === 400) {
-                //         // Display validation errors
-                //         let errorResponse = xhr.responseJSON;
-                //         let message = "";
-                //         if (errorResponse && errorResponse.errors) {
-                //             message = errorResponse.errors.join('\n');
-                //         } else {
-                //             message = "An error occurred while updating the record.";
-                //         }
-                //         showCustomNotification(message, NotificationType.INFO);
-                //     }
-                //     else {
-                //         console.error("Error updating entity: ", error);
-                //         let message = "Error updating entity: " + error;
-                //         showCustomNotification(message, NotificationType.ERROR);
-                //     }
-                // });
             },
             remove: function(key) {
                 return axios.delete("/api/v1/dx/userList/fordx/" + key, {
@@ -114,21 +83,13 @@ $(document).ready(function() {
                         let message = "Error deleting entity: " + error;
                         showCustomNotification(message, NotificationType.ERROR);
                         return Promise.reject(message);
-                    }); // Ignore errors
-
-                // return $.ajax({
-                //     url: "/api/v1/dx/userList/fordx/" + key,
-                //     method: "DELETE",
-                //     xhrFields: {
-                //         withCredentials: true // Send cookies when calling the API
-                //     },
-                // });
-
+                    });
             }
         });
 
         $("#gridContainer").dxDataGrid({
             dataSource: dxDataSource,
+            key: "id",
             method: "GET",
             columns: [
                 { dataField: "id", allowEditing: false, width: 50 },
@@ -191,7 +152,7 @@ $(document).ready(function() {
                 allowAdding: true,
                 allowUpdating: true,
                 allowDeleting: true,
-                useIcons: true, // Display icons instead of text for edit/delete buttons
+                useIcons: true,       // Display icons instead of text for edit/delete buttons
                 confirmDelete: false, // Disable the default confirmation dialog
                 texts: {
                     confirmDeleteMessage: "삭제할 거니?",
@@ -220,7 +181,70 @@ $(document).ready(function() {
                 placeholder: "Search..."
             },
             noDataText: "데이터 없어요.", // Custom message when there's no data
-            // Add the onEditCanceling event handler
+            export: {
+                enabled: true, // Enable the export feature
+                fileName: "userList",
+                //formats: ["XLSX", "CSV", "PDF"], // Formats that can be exported
+                allowExportSelectedData: true,     // Enable/Disable exporting selected rows
+                excelFilterEnabled: true,          // Apply the filter when exporting to Excel
+                customizeExcelCell: function(options) {
+                    let grid = $("#gridContainer").dxDataGrid("instance");
+                    let column = grid.columnOption(options.gridCell.column.dataField);
+                    let value = options.value;
+
+                    if(column.dataField === "phoneNumber") {
+                        options.value = formatPhoneNumber(value);
+                    } else if(column.dataField === "ssn") {
+                        options.value = formatSSN(value);
+                    }
+                },
+            },
+            onExporting(e) {
+                const workbook = new ExcelJS.Workbook();
+                const worksheet = workbook.addWorksheet('userList');
+
+                DevExpress.excelExporter.exportDataGrid({
+                    component: e.component,
+                    worksheet,
+                    autoFilterEnabled: true,
+                }).then(() => {
+                    console.log('Exported to Excel...');
+                    workbook.xlsx.writeBuffer().then((buffer) => {
+                        saveAs(new Blob([buffer], { type: 'application/octet-stream' }),
+                            'userList.xlsx');
+                    });
+                });
+            },
+            onToolbarPreparing: function(e) {
+                e.toolbarOptions.items.unshift(
+                    {
+                        location: "before",
+                        widget: "dxButton",
+                        options: {
+                            icon: "exportxlsx",
+                            text: "Export to Excel",
+                            // onClick: function() {
+                            //     console.log('Export to Excel...');
+                            //     e.component.exportToExcel(false).then((response) =>  {
+                            //         let response_ = response;
+                            //         console.log('response', response_);
+                            //     }).catch((error) => {
+                            //         console.error('Error exporting to Excel: ', error);
+                            //         let message = "Error exporting to Excel: " + error;
+                            //         showCustomNotification(message, NotificationType.ERROR);
+                            //         return Promise.reject(message);
+                            //     });  // false means 'Export all rows'
+                            // }
+                        },
+                        template: function() {
+                            return $("<div>").addClass("toolbar-header").text("사용자 목록");
+                        }
+                    }
+                );
+            }, // Customize the toolbar
+            onRowInserting: function(e) {
+                console.log('inserting....', e.data);
+            },
             onEditCanceling: function(e) {
                 // Display custom message when cancel button is clicked
                 DevExpress.ui.notify("수정 취소 하셨어요.", "info", 2000);
@@ -237,12 +261,9 @@ $(document).ready(function() {
 
                 dialogResult.done(function(confirm) {
                     if (confirm) {
-
                         console.log('deleting....', e.component);
-
                         // Proceed with deletion
                         e.component.deleteRow(e.rowIndex);
-
                         // Display custom message after deletion
                         DevExpress.ui.notify("삭제 되었습니다..", "success", 2000);
                     } else {
@@ -252,6 +273,19 @@ $(document).ready(function() {
                 });
             },
         });
+
+        // Helper functions to format phone numbers and SSNs
+        function formatPhoneNumber(value) {
+            if(!value) return "";
+            let digits = value.replace(/\D/g, "");                        // Remove non-numeric characters
+            return digits.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3"); // Apply format (xxx) xxx-xxxx
+        }
+
+        function formatSSN(value) {
+            if(!value) return "";
+            let digits = value.replace(/\D/g, "");            // Remove non-numeric characters
+            return digits.replace(/(\d{6})(\d{7})/, '$1-$2'); // Apply format xxxxxx-xxxxxxx
+        }
     }
 
 });
