@@ -155,56 +155,82 @@ export function exportDataGridToExcel(dataGrid, xlsxFileName) {
     });
 }
 
+/**
+ * Show a custom dialog with a prompt to enter a value(for the exporting file Name) and return the entered value
+ * @param title
+ * @param message
+ * @param defaultValue
+ * @returns {Promise<unknown>}
+ */
 export function showPromptDialog(title, message, defaultValue) {
-    console.log('showPromptDialog() : title: ', title);
-    console.log('showPromptDialog() : message: ', message);
-    console.log('showPromptDialog() : defaultValue: ', defaultValue);
-
+    console.log("showPromptDialog function called");
     return new Promise(function(resolve) {
-        let $popupContent = $('<div>');
-        let $message = $('<p>').text(message).appendTo($popupContent);
-        let $input = $('<div>').dxTextBox({
-            value: defaultValue,
-            width: '100%',
-        }).appendTo($popupContent);
+        console.log("Creating popup");
 
-        let popup = $popupContent.dxPopup({
-            title: title,
-            visible: true,
-            showCloseButton: true,
-            width: 400,
-            height: 'auto',
-            contentTemplate: $popupContent,
-            toolbarItems: [
-                {
+        let textBoxInstance;
+
+        try {
+            const $popup = $('<div>').appendTo('body');  // Append to body explicitly
+
+            const popup = $popup.dxPopup({
+                title: title,
+                contentTemplate: function(contentElement) {
+                    console.log("Content template function called");
+                    const $textBox = $('<div>').dxTextBox({
+                        value: defaultValue,
+                        onValueChanged: function(e) {
+                            console.log("TextBox value changed:", e.value);
+                        }
+                    });
+                    textBoxInstance = $textBox.dxTextBox('instance');
+
+                    contentElement.append(
+                        $('<p>').text(message),
+                        $textBox
+                    );
+                },
+                width: 300,
+                height: 'auto',
+                visible: false,  // Start as invisible
+                zIndex: 9999,
+                onShown: function() {
+                    console.log("Popup shown");
+                    textBoxInstance && textBoxInstance.focus();
+                },
+                toolbarItems: [{
                     widget: 'dxButton',
                     toolbar: 'bottom',
                     location: 'after',
                     options: {
                         text: 'OK',
                         onClick: function() {
-                            let value = $input.dxTextBox('instance').option('value');
+                            const textBoxValue = textBoxInstance.option('value');
+                            console.log("OK clicked, value:", textBoxValue);
                             popup.hide();
-                            resolve(value);
+                            resolve(textBoxValue);
                         }
                     }
-                },
-                {
+                }, {
                     widget: 'dxButton',
                     toolbar: 'bottom',
                     location: 'after',
                     options: {
                         text: 'Cancel',
                         onClick: function() {
+                            console.log("Cancel clicked");
                             popup.hide();
                             resolve(null);
                         }
                     }
-                }
-            ],
-            onHidden: function() {
-                popup.dispose();
-            }
-        }).dxPopup('instance');
+                }]
+            }).dxPopup("instance");
+
+            console.log("Popup created, attempting to show");
+            popup.show();  // Explicitly show the popup
+
+        } catch (error) {
+            console.error("Error creating or showing popup:", error);
+            resolve(null);
+        }
     });
 }

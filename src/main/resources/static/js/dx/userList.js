@@ -1,5 +1,7 @@
-import {showCustomNotification, NotificationType ,
-        formatSSN, formatPhoneNumber, exportDataGridToExcel } from "../utils/utils.js";
+import {
+    showCustomNotification, NotificationType,
+    formatSSN, formatPhoneNumber, exportDataGridToExcel, showPromptDialog
+} from "../utils/utils.js";
 
 $(document).ready(function() {
     console.log("list module...");
@@ -239,21 +241,24 @@ $(document).ready(function() {
 
                 // Show a prompt dialog to get the file name
                 let defaultFileName = 'userList_' + new Date().toISOString().slice(0,10); // e.g., userList_2023-10-14
-                let fileName = prompt("Enter a file name:", defaultFileName);
-                if (fileName) {
-                    // Remove invalid characters from file name
-                    fileName = fileName.replace(/[/\\?%*:|"<>]/g, '-').trim();
-                    if(fileName === '') {
-                        // Show a message if the file name is empty
-                        showCustomNotification("File name is required.", NotificationType.WARNING);
-                    } else {
-                        // Proceed with exporting using the provided file name
-                        exportDataGridToExcel(e.component, fileName);
-                    }
-                } else {
-                    // User canceled or provided an empty file name
-                    showCustomNotification("Export canceled.", NotificationType.INFO);
-                }
+                //let fileName = prompt("Enter a file name:", defaultFileName);
+                showPromptDialog("Export to Excel", "Enter a file name:", defaultFileName)
+                    .then((fileName) => {
+                        if (fileName) {
+                            // Remove invalid characters from file name
+                            fileName = fileName.replace(/[/\\?%*:|"<>]/g, '-').trim();
+                            if(fileName === '') {
+                                // Show a message if the file name is empty
+                                showCustomNotification("File name is required.", NotificationType.WARNING);
+                            } else {
+                                // Proceed with exporting using the provided file name
+                                exportDataGridToExcel(e.component, fileName);
+                            }
+                        } else {
+                            // User canceled or provided an empty file name
+                            showCustomNotification("Export canceled.", NotificationType.INFO);
+                        }
+                    });
             },
             onToolbarPreparing: function(e) {
                 e.toolbarOptions.items.unshift(
