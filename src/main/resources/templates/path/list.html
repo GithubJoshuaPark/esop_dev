@@ -1,0 +1,39 @@
+<!--
+@author : Joshua Park
+@email : soromiso@gmail.com
+@create date : 2024-08-18 00:13:32
+@modify date : 2024-08-18 00:13:32
+@desc [entityList.html] : Board list page
+-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{acom/common :: head('ESOP > List', '/css/list.css')}"/>
+    <body>
+        <nav th:replace="~{acom/common :: menu('pathList')}">
+        </nav>
+        
+        <main role="main" class="container">
+            <div class="text-left">
+                <h3>Dx Path List</h3>
+            </div>
+            <!--  show up test welcome message -->
+            <div>
+                 <div th:if="${welcomeMessage}" class="alert alert-success text-center" role="alert">
+                    <strong th:text="${welcomeMessage}"></strong>
+                 </div>
+            </div>
+
+            <div id="gridContainer"></div>
+        </main>
+
+        <!-- Include the common fragment -->
+        <div th:replace="~{acom/common :: footer}"></div>
+
+        <!-- Include the cdnJsfiles fragment -->
+        <th:block th:replace="~{acom/common :: cdnJsfiles}"></th:block>
+
+        <!-- userList -->
+        <script type="module" th:src="@{/js/path/list.js}"></script>
+    </body>
+</html>

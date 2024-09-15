@@ -122,7 +122,6 @@ public class BoardViewController {
 
         // Add this line to provide the list of users
         model.addAttribute("users", users);
-
         return "board/form";
     }
 
@@ -155,7 +154,6 @@ public class BoardViewController {
 
         // set the user_id to the boardDto, convert user_id to Long
         boardDto.setWriter(user.getId());
-        
 
         Board board_ = BoardMapper.toEntity(boardDto);
         log.debug("board: {}", board_);

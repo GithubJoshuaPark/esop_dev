@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import com.soro.esop.entity.PathList;
+import com.soro.esop.service.PathListService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -27,7 +30,11 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class CustomAuthentication401Filter extends OncePerRequestFilter {
+
+    private final PathListService pathListService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, 
                                     HttpServletResponse response, 
@@ -39,8 +46,11 @@ public class CustomAuthentication401Filter extends OncePerRequestFilter {
         // Check if the user is authenticated
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // List of paths that require authentication
-        List<String> pathList = Arrays.asList("/board/list", "/dx/entryList", "/dx/userList");
+        List<PathList> pathLists = pathListService.findAll();
+
+        // List of paths from pathLists
+        List<String> pathList = Arrays.asList(pathLists.stream().map(PathList::getPath).toArray(String[]::new));
+        log.debug("pathList: {}", pathList);
 
         Boolean isApiRequest = isApiRequest(request);
 
