@@ -186,53 +186,36 @@ $(document).ready(function() {
                 fileName: "userList",
                 //formats: ["XLSX", "CSV", "PDF"], // Formats that can be exported
                 allowExportSelectedData: true,     // Enable/Disable exporting selected rows
-                //excelFilterEnabled: true,          // Apply the filter when exporting to Excel
-                // customizeExcelCell: function(options) { // Customize Excel cells, but it does now work with the exportDataGrid() method
-                //     let gridCell = options.gridCell;
-                //     let excelCell = options.excelCell;
-                //
-                //     // Apply styles to header cells
-                //     if(gridCell.rowType === "header") {
-                //         excelCell.font = { bold: true };
-                //         excelCell.alignment = { horizontal: 'center' };
-                //         excelCell.fill = {
-                //             type: 'pattern',
-                //             pattern: 'solid',
-                //             fgColor: { argb: 'FFD3D3D3' } // Light gray
-                //         };
-                //     }
-                //
-                //     // Format data cells
-                //     if(gridCell.rowType === "data") {
-                //         let dataField = gridCell.column.dataField;
-                //         let value = gridCell.value;
-                //
-                //         if(dataField === "phoneNumber") {
-                //             excelCell.value = formatPhoneNumber(value);
-                //             excelCell.font = { color: { argb: 'FF0000FF' }, bold: true }; // Blue
-                //             excelCell.alignment = { horizontal: 'center' };
-                //         } else if (dataField === "ssn") {
-                //             excelCell.value = formatSSN(value);
-                //         } else if (dataField === "value") {
-                //             excelCell.alignment = { horizontal: 'center' };
-                //         }
-                //
-                //         // Conditional formatting
-                //         if(dataField === "value") {
-                //             excelCell.font = { color: { argb: 'FF008000' }, bold: true }; // Green
-                //             excelCell.fill = {
-                //                 type: 'pattern',
-                //                 pattern: 'solid',
-                //                 fgColor: { argb: 'FFFFC000' } // Light orange
-                //             };
-                //         }
-                //     }
-                // },
+                texts: {
+                    exportTo: "Export to...",
+                    exportAll: "Export all data",
+                    exportSelectedRows: "Export selected rows",
+                    excelFilterEnabled: true,
+                    ignoreExcelErrors: true
+                }
             },
             onExporting(e) {
-                console.log('Exporting to Excel on Exporting...: ', e);
+                // Customize the exported Excel file
+                console.log('Exporting to Excel...onExporting() : ');
+                e.cancel = true; // Prevent the default export action
+
+                let xlsxFileName = prompt('Enter a excel file name', 'userList.xlsx');
+
+                if (xlsxFileName) {
+                    // Use the default file name
+                    if(!xlsxFileName.includes('.xlsx')) {
+                        xlsxFileName += '.xlsx';
+                    }
+                    e.component.option("export.fileName", xlsxFileName);
+                }
+                else {
+                    // Use the file name entered by the user
+                    showCustomNotification("Export excel file name 필요해요...", NotificationType.WARNING);
+                    return;
+                }
+
                 const workbook = new ExcelJS.Workbook();
-                const worksheet = workbook.addWorksheet('userList');
+                const worksheet = workbook.addWorksheet(xlsxFileName.replace('.xlsx', ''));
 
                 DevExpress.excelExporter.exportDataGrid({
                     component: e.component,
@@ -287,8 +270,9 @@ $(document).ready(function() {
                     return workbook.xlsx.writeBuffer();
                 }).then((buffer) => {
                     console.log('Exported to Excel...exportDataGrid() : ');
-                    saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'userList.xlsx');
-                    showCustomNotification("Exported to userList.xlsx successfully.", NotificationType.SUCCESS);
+                    let message = `Exported to ${xlsxFileName} successfully.`;
+                    saveAs(new Blob([buffer], { type: 'application/octet-stream' }), xlsxFileName);
+                    showCustomNotification(message, NotificationType.SUCCESS);
                 }).catch((error) => {
                     console.error('Error exporting to Excel: ', error);
                     let message = "Error exporting to Excel: " + error;

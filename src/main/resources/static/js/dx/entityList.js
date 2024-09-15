@@ -178,11 +178,35 @@ $(document).ready(function() {
                 fileName: "entityList",
                 //formats: ["XLSX", "CSV", "PDF"], // Formats that can be exported
                 allowExportSelectedData: true,     // Enable/Disable exporting selected rows
-                //excelFilterEnabled: true,          // Apply the filter when exporting to Excel
+                texts: {
+                    exportTo: "Export to...",
+                    exportAll: "Export All",
+                    exportSelectedRows: "Export Selected Rows",
+                    excelFilterEnabled: true
+                }
             },
             onExporting(e) {
+                // Customize the exported Excel file
+                console.log('Exporting to Excel...onExporting() : ');
+                // get a file name from the user through the file save dialog
+                e.cancel = true; // Cancel the default export action
+                let xlsxFileName = prompt('Enter a excel file name', 'entityList.xlsx');
+
+                if (xlsxFileName) {
+                    // Use the default file name
+                    if(!xlsxFileName.includes('.xlsx')) {
+                        xlsxFileName += '.xlsx';
+                    }
+                    e.component.option("export.fileName", xlsxFileName);
+                }
+                else {
+                    // Use the file name entered by the user
+                    showCustomNotification("Export excel file name 필요해요...", NotificationType.WARNING);
+                    return;
+                }
+
                 const workbook = new ExcelJS.Workbook();
-                const worksheet = workbook.addWorksheet('entityList');
+                const worksheet = workbook.addWorksheet(xlsxFileName.replace('.xlsx', ''));
 
                 DevExpress.excelExporter.exportDataGrid({
                     component: e.component,
@@ -237,8 +261,9 @@ $(document).ready(function() {
                     return workbook.xlsx.writeBuffer();
                 }).then((buffer) => {
                     console.log('Exported to Excel...');
-                    saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'entityList.xlsx');
-                    showCustomNotification("Exported to entityList.xlsx successfully.", NotificationType.SUCCESS);
+                    let message = `Exported to ${xlsxFileName} successfully.`;
+                    saveAs(new Blob([buffer], { type: 'application/octet-stream' }), xlsxFileName);
+                    showCustomNotification(message, NotificationType.SUCCESS);
                 }).catch((error) => {
                     console.error('Error exporting to Excel: ', error);
                     let message = "Error exporting to Excel: " + error;
