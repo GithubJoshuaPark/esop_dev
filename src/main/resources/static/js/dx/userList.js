@@ -148,10 +148,10 @@ $(document).ready(function() {
                 },
             ],
             editing: {
-                mode: "form",
-                allowAdding: true,
-                allowUpdating: true,
-                allowDeleting: true,
+                mode: "form",         // edit mode: "form", "popup", "batch"
+                allowAdding: true,    // Enable adding
+                allowUpdating: true,  // Enable updating
+                allowDeleting: true,  // Enable deleting
                 useIcons: true,       // Display icons instead of text for edit/delete buttons
                 confirmDelete: false, // Disable the default confirmation dialog
                 texts: {
