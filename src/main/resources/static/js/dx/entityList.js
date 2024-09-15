@@ -1,4 +1,5 @@
-import {showCustomNotification, NotificationType , formatSSN, formatPhoneNumber } from "../utils/utils.js";
+import {showCustomNotification, NotificationType ,
+    formatSSN, formatPhoneNumber, exportDataGridToExcel, showPromptDialog } from "../utils/utils.js";
 
 $(document).ready(function() {
     console.log("list module...");
@@ -190,86 +191,24 @@ $(document).ready(function() {
                 console.log('Exporting to Excel...onExporting() : ');
                 // get a file name from the user through the file save dialog
                 e.cancel = true; // Cancel the default export action
-                let xlsxFileName = prompt('Enter a excel file name', 'entityList.xlsx');
 
-                if (xlsxFileName) {
-                    // Use the default file name
-                    if(!xlsxFileName.includes('.xlsx')) {
-                        xlsxFileName += '.xlsx';
+                // Show a prompt dialog to get the file name
+                let defaultFileName = 'entityList_' + new Date().toISOString().slice(0,10); // e.g., userList_2023-10-14
+                let fileName = prompt("Enter a file name:", defaultFileName);
+                if (fileName) {
+                    // Remove invalid characters from file name
+                    fileName = fileName.replace(/[/\\?%*:|"<>]/g, '-').trim();
+                    if(fileName === '') {
+                        // Show a message if the file name is empty
+                        showCustomNotification("File name is required.", NotificationType.WARNING);
+                    } else {
+                        // Proceed with exporting using the provided file name
+                        exportDataGridToExcel(e.component, fileName);
                     }
-                    e.component.option("export.fileName", xlsxFileName);
+                } else {
+                    // User canceled or provided an empty file name
+                    showCustomNotification("Export canceled.", NotificationType.INFO);
                 }
-                else {
-                    // Use the file name entered by the user
-                    showCustomNotification("Export excel file name 필요해요...", NotificationType.WARNING);
-                    return;
-                }
-
-                const workbook = new ExcelJS.Workbook();
-                const worksheet = workbook.addWorksheet(xlsxFileName.replace('.xlsx', ''));
-
-                DevExpress.excelExporter.exportDataGrid({
-                    component: e.component,
-                    worksheet,
-                    autoFilterEnabled: true,
-                }).then(() => {
-                    // Customize the exported Excel file
-                    console.log('Customizing the exported Excel file...');
-                    const A1 = worksheet.getCell('A1');
-                    A1.value = '번호'; // Set the value of the cell A1, (caption literal value)
-                    A1.font = { bold: true };
-                    A1.alignment = { horizontal: 'center' };
-                    A1.fill = {
-                        type: 'pattern',
-                        pattern: 'solid',
-                        fgColor: { argb: 'FFD3D3D3' } // Light gray
-                    };
-                    // Apply styles to header cells
-                    worksheet.getRow(1).eachCell((cell) => {
-                        cell.font = { bold: true };
-                        cell.alignment = { horizontal: 'center' };
-                        cell.fill = {
-                            type: 'pattern',
-                            pattern: 'solid',
-                            fgColor: { argb: 'FFD3D3D3' } // Light gray
-                        };
-                    });
-                    // Format data cells
-                    worksheet.eachRow((row, rowNumber) => {
-                        if(rowNumber === 1) return; // Skip the header row
-                        row.eachCell((cell, colNumber) => {
-                            if(colNumber === 5) {
-                                cell.value = formatPhoneNumber(cell.value);
-                                cell.font = { color: { argb: 'FF0000FF' }, bold: true }; // Blue
-                                cell.alignment = { horizontal: 'center' };
-                            } else if (colNumber === 6) {
-                                cell.value = formatSSN(cell.value);
-                            } else if (colNumber === 3) {
-                                cell.alignment = { horizontal: 'center' };
-                            }
-                            if(colNumber === 3) {
-                                cell.font = { color: { argb: 'FF008000' }, bold: true }; // Green
-                                cell.fill = {
-                                    type: 'pattern',
-                                    pattern: 'solid',
-                                    fgColor: { argb: 'FFFFC000' } // Light orange
-                                };
-                            }
-                        });
-                    });
-                    // Save the workbook
-                    return workbook.xlsx.writeBuffer();
-                }).then((buffer) => {
-                    console.log('Exported to Excel...');
-                    let message = `Exported to ${xlsxFileName} successfully.`;
-                    saveAs(new Blob([buffer], { type: 'application/octet-stream' }), xlsxFileName);
-                    showCustomNotification(message, NotificationType.SUCCESS);
-                }).catch((error) => {
-                    console.error('Error exporting to Excel: ', error);
-                    let message = "Error exporting to Excel: " + error;
-                    showCustomNotification(message, NotificationType.ERROR);
-                    return Promise.reject(message);
-                });
             },
             onToolbarPreparing: function(e) {
                 e.toolbarOptions.items.unshift(

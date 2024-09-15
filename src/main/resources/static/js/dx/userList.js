@@ -1,4 +1,5 @@
-import {showCustomNotification, NotificationType , formatSSN, formatPhoneNumber } from "../utils/utils.js";
+import {showCustomNotification, NotificationType ,
+        formatSSN, formatPhoneNumber, exportDataGridToExcel } from "../utils/utils.js";
 
 $(document).ready(function() {
     console.log("list module...");
@@ -87,7 +88,7 @@ $(document).ready(function() {
             }
         });
 
-        $("#gridContainer").dxDataGrid({
+        let gridInstance = $("#gridContainer").dxDataGrid({
             dataSource: dxDataSource,
             key: "id",
             method: "GET",
@@ -148,7 +149,44 @@ $(document).ready(function() {
                 },
             ],
             editing: {
-                mode: "form",         // edit mode: "form", "popup", "batch"
+                mode: "popup",         // edit mode: "form", "popup", "batch"
+                popup: {
+                    title: "User Info",
+                    showTitle: true,
+                    width: 800,
+                    height: 400,
+                    position: { my: "center", at: "center", of: window },
+                    dragEnabled: true,
+                    closeOnOutsideClick: false, // Prevent closing the popup when clicking outside
+                    toolbarItems: [
+                        {
+                            toolbar: "bottom",
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                text: "저장",
+                                onClick: function(e) {
+                                    console.log('Custom button clicked...', e);
+                                    // insert or update
+                                    gridInstance.saveEditData();
+                                }
+                            }
+                        },
+                        {
+                            toolbar: "bottom",
+                            location: "after",
+                            widget: "dxButton",
+                            options: {
+                                text: "취소",
+                                onClick: function(e) {
+                                    console.log('Custom button clicked...', e);
+                                    // cancel
+                                    gridInstance.cancelEditData();
+                                }
+                            }
+                        }
+                    ],
+                },
                 allowAdding: true,    // Enable adding
                 allowUpdating: true,  // Enable updating
                 allowDeleting: true,  // Enable deleting
@@ -199,86 +237,23 @@ $(document).ready(function() {
                 console.log('Exporting to Excel...onExporting() : ');
                 e.cancel = true; // Prevent the default export action
 
-                let xlsxFileName = prompt('Enter a excel file name', 'userList.xlsx');
-
-                if (xlsxFileName) {
-                    // Use the default file name
-                    if(!xlsxFileName.includes('.xlsx')) {
-                        xlsxFileName += '.xlsx';
+                // Show a prompt dialog to get the file name
+                let defaultFileName = 'userList_' + new Date().toISOString().slice(0,10); // e.g., userList_2023-10-14
+                let fileName = prompt("Enter a file name:", defaultFileName);
+                if (fileName) {
+                    // Remove invalid characters from file name
+                    fileName = fileName.replace(/[/\\?%*:|"<>]/g, '-').trim();
+                    if(fileName === '') {
+                        // Show a message if the file name is empty
+                        showCustomNotification("File name is required.", NotificationType.WARNING);
+                    } else {
+                        // Proceed with exporting using the provided file name
+                        exportDataGridToExcel(e.component, fileName);
                     }
-                    e.component.option("export.fileName", xlsxFileName);
+                } else {
+                    // User canceled or provided an empty file name
+                    showCustomNotification("Export canceled.", NotificationType.INFO);
                 }
-                else {
-                    // Use the file name entered by the user
-                    showCustomNotification("Export excel file name 필요해요...", NotificationType.WARNING);
-                    return;
-                }
-
-                const workbook = new ExcelJS.Workbook();
-                const worksheet = workbook.addWorksheet(xlsxFileName.replace('.xlsx', ''));
-
-                DevExpress.excelExporter.exportDataGrid({
-                    component: e.component,
-                    worksheet,
-                    //autoFilterEnabled: true,
-                }).then(() => {
-                    // Customize the exported Excel file
-                    console.log('Exported to Excel...onExporting() Manipulating..: ');
-                    const A1 = worksheet.getCell('A1');
-                    A1.value = '번호';
-                    A1.font = { bold: true };
-                    A1.alignment = { horizontal: 'center' };
-                    A1.fill = {
-                        type: 'pattern',
-                        pattern: 'solid',
-                        fgColor: { argb: 'FFD3D3D3' } // Light gray
-                    };
-                    // Apply styles to header cells
-                    worksheet.getRow(1).eachCell((cell) => {
-                        cell.font = { bold: true };
-                        cell.alignment = { horizontal: 'center' };
-                        cell.fill = {
-                            type: 'pattern',
-                            pattern: 'solid',
-                            fgColor: { argb: 'FFD3D3D3' } // Light gray
-                        };
-                    });
-                    // Format data cells
-                    worksheet.eachRow((row, rowNumber) => {
-                        if(rowNumber === 1) return; // Skip the header row
-                        row.eachCell((cell, colNumber) => {
-                            if(colNumber === 5) {
-                                cell.value = formatPhoneNumber(cell.value);
-                                cell.font = { color: { argb: 'FF0000FF' }, bold: true }; // Blue
-                                cell.alignment = { horizontal: 'center' };
-                            } else if (colNumber === 6) {
-                                cell.value = formatSSN(cell.value);
-                            } else if (colNumber === 3) {
-                                cell.alignment = { horizontal: 'center' };
-                            }
-                            if(colNumber === 3) {
-                                cell.font = { color: { argb: 'FF008000' }, bold: true }; // Green
-                                cell.fill = {
-                                    type: 'pattern',
-                                    pattern: 'solid',
-                                    fgColor: { argb: 'FFFFC000' } // Light orange
-                                };
-                            }
-                        });
-                    });
-                    // Save the workbook
-                    return workbook.xlsx.writeBuffer();
-                }).then((buffer) => {
-                    console.log('Exported to Excel...exportDataGrid() : ');
-                    let message = `Exported to ${xlsxFileName} successfully.`;
-                    saveAs(new Blob([buffer], { type: 'application/octet-stream' }), xlsxFileName);
-                    showCustomNotification(message, NotificationType.SUCCESS);
-                }).catch((error) => {
-                    console.error('Error exporting to Excel: ', error);
-                    let message = "Error exporting to Excel: " + error;
-                    showCustomNotification(message, NotificationType.ERROR);
-                    return Promise.reject(message);
-                });
             },
             onToolbarPreparing: function(e) {
                 e.toolbarOptions.items.unshift(
@@ -328,7 +303,7 @@ $(document).ready(function() {
                     }
                 });
             },
-        });
+        }).dxDataGrid("instance"); // Get the grid instance
     }
 
 });

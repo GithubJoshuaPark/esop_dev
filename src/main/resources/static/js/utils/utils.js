@@ -35,7 +35,7 @@ export function showCustomNotification(message, type) {
             element.append(content);
         },
         type: type, // "success", "warning", "error", "info"
-        displayTime: 3000,
+        displayTime: 2000,
         position: {
             my: "center",
             at: "center",
@@ -74,4 +74,137 @@ export function formatSSN(value) {
     if(!value) return "";
     let digits = value.replace(/\D/g, "");            // Remove non-numeric characters
     return digits.replace(/(\d{6})(\d{7})/, '$1-$2'); // Apply format xxxxxx-xxxxxxx
+}
+
+export function exportDataGridToExcel(dataGrid, xlsxFileName) {
+    if (xlsxFileName) {
+        // Use the default file name
+        if (!xlsxFileName.includes('.xlsx')) {
+            xlsxFileName += '.xlsx';
+        }
+    } else {
+        // Use the file name entered by the user
+        showCustomNotification("Export excel file name 필요해요...", NotificationType.WARNING);
+        return;
+    }
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet(xlsxFileName.replace('.xlsx', ''));
+
+    DevExpress.excelExporter.exportDataGrid({
+        component: dataGrid, // e.component
+        worksheet,
+        //autoFilterEnabled: true,
+    }).then(() => {
+        // Customize the exported Excel file
+        console.log('Exported to Excel...onExporting() Manipulating..: ');
+        const A1 = worksheet.getCell('A1');
+        A1.value = '번호';
+        A1.font = {bold: true};
+        A1.alignment = {horizontal: 'center'};
+        A1.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: {argb: 'FFD3D3D3'} // Light gray
+        };
+        // Apply styles to header cells
+        worksheet.getRow(1).eachCell((cell) => {
+            cell.font = {bold: true};
+            cell.alignment = {horizontal: 'center'};
+            cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: {argb: 'FFD3D3D3'} // Light gray
+            };
+        });
+        // Format data cells
+        worksheet.eachRow((row, rowNumber) => {
+            if (rowNumber === 1) return; // Skip the header row
+            row.eachCell((cell, colNumber) => {
+                if (colNumber === 5) {
+                    cell.value = formatPhoneNumber(cell.value);
+                    cell.font = {color: {argb: 'FF0000FF'}, bold: true}; // Blue
+                    cell.alignment = {horizontal: 'center'};
+                } else if (colNumber === 6) {
+                    cell.value = formatSSN(cell.value);
+                } else if (colNumber === 3) {
+                    cell.alignment = {horizontal: 'center'};
+                }
+                if (colNumber === 3) {
+                    cell.font = {color: {argb: 'FF008000'}, bold: true}; // Green
+                    cell.fill = {
+                        type: 'pattern',
+                        pattern: 'solid',
+                        fgColor: {argb: 'FFFFC000'} // Light orange
+                    };
+                }
+            });
+        });
+        // Save the workbook
+        return workbook.xlsx.writeBuffer();
+    }).then((buffer) => {
+        console.log('Exported to Excel...exportDataGrid() : ');
+        let message = `Exported to ${xlsxFileName} successfully.`;
+        saveAs(new Blob([buffer], {type: 'application/octet-stream'}), xlsxFileName);
+        showCustomNotification(message, NotificationType.SUCCESS);
+    }).catch((error) => {
+        console.error('Error exporting to Excel: ', error);
+        let message = "Error exporting to Excel: " + error;
+        showCustomNotification(message, NotificationType.ERROR);
+        return Promise.reject(message);
+    });
+}
+
+export function showPromptDialog(title, message, defaultValue) {
+    console.log('showPromptDialog() : title: ', title);
+    console.log('showPromptDialog() : message: ', message);
+    console.log('showPromptDialog() : defaultValue: ', defaultValue);
+
+    return new Promise(function(resolve) {
+        let $popupContent = $('<div>');
+        let $message = $('<p>').text(message).appendTo($popupContent);
+        let $input = $('<div>').dxTextBox({
+            value: defaultValue,
+            width: '100%',
+        }).appendTo($popupContent);
+
+        let popup = $popupContent.dxPopup({
+            title: title,
+            visible: true,
+            showCloseButton: true,
+            width: 400,
+            height: 'auto',
+            contentTemplate: $popupContent,
+            toolbarItems: [
+                {
+                    widget: 'dxButton',
+                    toolbar: 'bottom',
+                    location: 'after',
+                    options: {
+                        text: 'OK',
+                        onClick: function() {
+                            let value = $input.dxTextBox('instance').option('value');
+                            popup.hide();
+                            resolve(value);
+                        }
+                    }
+                },
+                {
+                    widget: 'dxButton',
+                    toolbar: 'bottom',
+                    location: 'after',
+                    options: {
+                        text: 'Cancel',
+                        onClick: function() {
+                            popup.hide();
+                            resolve(null);
+                        }
+                    }
+                }
+            ],
+            onHidden: function() {
+                popup.dispose();
+            }
+        }).dxPopup('instance');
+    });
 }
