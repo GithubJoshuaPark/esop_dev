@@ -179,17 +179,6 @@ $(document).ready(function() {
                 //formats: ["XLSX", "CSV", "PDF"], // Formats that can be exported
                 allowExportSelectedData: true,     // Enable/Disable exporting selected rows
                 excelFilterEnabled: true,          // Apply the filter when exporting to Excel
-                customizeExcelCell: function(options) {
-                    let grid = $("#gridContainer").dxDataGrid("instance");
-                    let column = grid.columnOption(options.gridCell.column.dataField);
-                    let value = options.value;
-
-                    if(column.dataField === "phoneNumber") {
-                        options.value = formatPhoneNumber(value);
-                    } else if(column.dataField === "ssn") {
-                        options.value = formatSSN(value);
-                    }
-                },
             },
             onExporting(e) {
                 const workbook = new ExcelJS.Workbook();
@@ -200,13 +189,55 @@ $(document).ready(function() {
                     worksheet,
                     autoFilterEnabled: true,
                 }).then(() => {
-                    console.log('Exported to Excel...');
-                    workbook.xlsx.writeBuffer().then((buffer) => {
-                        let savedResult = saveAs(new Blob([buffer], { type: 'application/octet-stream' }),
-                            'entityList.xlsx');
-                        console.log('savedResult', savedResult);
-                        showCustomNotification(savedResult, NotificationType.SUCCESS);
+                    // Customize the exported Excel file
+                    console.log('Customizing the exported Excel file...');
+                    const A1 = worksheet.getCell('A1');
+                    A1.value = '번호';
+                    A1.font = { bold: true };
+                    A1.alignment = { horizontal: 'center' };
+                    A1.fill = {
+                        type: 'pattern',
+                        pattern: 'solid',
+                        fgColor: { argb: 'FFD3D3D3' } // Light gray
+                    };
+                    // Apply styles to header cells
+                    worksheet.getRow(1).eachCell((cell) => {
+                        cell.font = { bold: true };
+                        cell.alignment = { horizontal: 'center' };
+                        cell.fill = {
+                            type: 'pattern',
+                            pattern: 'solid',
+                            fgColor: { argb: 'FFD3D3D3' } // Light gray
+                        };
                     });
+                    // Format data cells
+                    worksheet.eachRow((row, rowNumber) => {
+                        row.eachCell((cell, colNumber) => {
+                            if(colNumber === 5) {
+                                cell.value = formatPhoneNumber(cell.value);
+                                cell.font = { color: { argb: 'FF0000FF' }, bold: true }; // Blue
+                                cell.alignment = { horizontal: 'center' };
+                            } else if (colNumber === 6) {
+                                cell.value = formatSSN(cell.value);
+                            } else if (colNumber === 3) {
+                                cell.alignment = { horizontal: 'center' };
+                            }
+                            if(colNumber === 3) {
+                                cell.font = { color: { argb: 'FF008000' }, bold: true }; // Green
+                                cell.fill = {
+                                    type: 'pattern',
+                                    pattern: 'solid',
+                                    fgColor: { argb: 'FFFFC000' } // Light orange
+                                };
+                            }
+                        });
+                    });
+                    // Save the workbook
+                    return workbook.xlsx.writeBuffer();
+                }).then((buffer) => {
+                    console.log('Exported to Excel...');
+                    saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'entityList.xlsx');
+                    showCustomNotification("Exported to entityList.xlsx successfully.", NotificationType.SUCCESS);
                 }).catch((error) => {
                     console.error('Error exporting to Excel: ', error);
                     let message = "Error exporting to Excel: " + error;

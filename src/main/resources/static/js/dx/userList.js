@@ -186,37 +186,108 @@ $(document).ready(function() {
                 fileName: "userList",
                 //formats: ["XLSX", "CSV", "PDF"], // Formats that can be exported
                 allowExportSelectedData: true,     // Enable/Disable exporting selected rows
-                excelFilterEnabled: true,          // Apply the filter when exporting to Excel
-                customizeExcelCell: function(options) {
-                    let grid = $("#gridContainer").dxDataGrid("instance");
-                    let column = grid.columnOption(options.gridCell.column.dataField);
-                    let value = options.value;
-
-                    if(column.dataField === "phoneNumber") {
-                        options.value     = formatPhoneNumber(value);
-                        options.font      = { color: { argb: 'FF0000FF' }, bold: true };
-                        options.alignment = { horizontal: 'center' };
-                    } else if(column.dataField === "ssn") {
-                        options.value = formatSSN(value);
-                    }
-                },
+                //excelFilterEnabled: true,          // Apply the filter when exporting to Excel
+                // customizeExcelCell: function(options) { // Customize Excel cells, but it does now work with the exportDataGrid() method
+                //     let gridCell = options.gridCell;
+                //     let excelCell = options.excelCell;
+                //
+                //     // Apply styles to header cells
+                //     if(gridCell.rowType === "header") {
+                //         excelCell.font = { bold: true };
+                //         excelCell.alignment = { horizontal: 'center' };
+                //         excelCell.fill = {
+                //             type: 'pattern',
+                //             pattern: 'solid',
+                //             fgColor: { argb: 'FFD3D3D3' } // Light gray
+                //         };
+                //     }
+                //
+                //     // Format data cells
+                //     if(gridCell.rowType === "data") {
+                //         let dataField = gridCell.column.dataField;
+                //         let value = gridCell.value;
+                //
+                //         if(dataField === "phoneNumber") {
+                //             excelCell.value = formatPhoneNumber(value);
+                //             excelCell.font = { color: { argb: 'FF0000FF' }, bold: true }; // Blue
+                //             excelCell.alignment = { horizontal: 'center' };
+                //         } else if (dataField === "ssn") {
+                //             excelCell.value = formatSSN(value);
+                //         } else if (dataField === "value") {
+                //             excelCell.alignment = { horizontal: 'center' };
+                //         }
+                //
+                //         // Conditional formatting
+                //         if(dataField === "value") {
+                //             excelCell.font = { color: { argb: 'FF008000' }, bold: true }; // Green
+                //             excelCell.fill = {
+                //                 type: 'pattern',
+                //                 pattern: 'solid',
+                //                 fgColor: { argb: 'FFFFC000' } // Light orange
+                //             };
+                //         }
+                //     }
+                // },
             },
             onExporting(e) {
+                console.log('Exporting to Excel on Exporting...: ', e);
                 const workbook = new ExcelJS.Workbook();
                 const worksheet = workbook.addWorksheet('userList');
 
                 DevExpress.excelExporter.exportDataGrid({
                     component: e.component,
                     worksheet,
-                    autoFilterEnabled: true,
+                    //autoFilterEnabled: true,
                 }).then(() => {
-                    console.log('Exported to Excel...');
-                    workbook.xlsx.writeBuffer().then((buffer) => {
-                        let savedResult = saveAs(new Blob([buffer], { type: 'application/octet-stream' }),
-                            'userList.xlsx');
-                        console.log('savedResult', savedResult);
-                        showCustomNotification(savedResult, NotificationType.SUCCESS);
+                    // Customize the exported Excel file
+                    console.log('Exported to Excel...onExporting() Manipulating..: ');
+                    const A1 = worksheet.getCell('A1');
+                    A1.value = '번호';
+                    A1.font = { bold: true };
+                    A1.alignment = { horizontal: 'center' };
+                    A1.fill = {
+                        type: 'pattern',
+                        pattern: 'solid',
+                        fgColor: { argb: 'FFD3D3D3' } // Light gray
+                    };
+                    // Apply styles to header cells
+                    worksheet.getRow(1).eachCell((cell) => {
+                        cell.font = { bold: true };
+                        cell.alignment = { horizontal: 'center' };
+                        cell.fill = {
+                            type: 'pattern',
+                            pattern: 'solid',
+                            fgColor: { argb: 'FFD3D3D3' } // Light gray
+                        };
                     });
+                    // Format data cells
+                    worksheet.eachRow((row, rowNumber) => {
+                        row.eachCell((cell, colNumber) => {
+                            if(colNumber === 5) {
+                                cell.value = formatPhoneNumber(cell.value);
+                                cell.font = { color: { argb: 'FF0000FF' }, bold: true }; // Blue
+                                cell.alignment = { horizontal: 'center' };
+                            } else if (colNumber === 6) {
+                                cell.value = formatSSN(cell.value);
+                            } else if (colNumber === 3) {
+                                cell.alignment = { horizontal: 'center' };
+                            }
+                            if(colNumber === 3) {
+                                cell.font = { color: { argb: 'FF008000' }, bold: true }; // Green
+                                cell.fill = {
+                                    type: 'pattern',
+                                    pattern: 'solid',
+                                    fgColor: { argb: 'FFFFC000' } // Light orange
+                                };
+                            }
+                        });
+                    });
+                    // Save the workbook
+                    return workbook.xlsx.writeBuffer();
+                }).then((buffer) => {
+                    console.log('Exported to Excel...exportDataGrid() : ');
+                    saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'userList.xlsx');
+                    showCustomNotification("Exported to userList.xlsx successfully.", NotificationType.SUCCESS);
                 }).catch((error) => {
                     console.error('Error exporting to Excel: ', error);
                     let message = "Error exporting to Excel: " + error;
@@ -233,6 +304,10 @@ $(document).ready(function() {
                             icon: "exportxlsx",
                             text: "Export to Excel",
                         },
+                        // onClick: function() {
+                        //     console.log('Export to Excel...');
+                        //     e.component.exportToExcel(false);
+                        // },
                         template: function() {
                             return $("<div>").addClass("toolbar-header").text("사용자 목록");
                         }
