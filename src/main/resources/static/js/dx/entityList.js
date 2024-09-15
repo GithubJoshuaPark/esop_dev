@@ -133,7 +133,7 @@ $(document).ready(function() {
                     showMaskMode: "onFocus" // Use the mask only when the editor is focused
                   }
                 },
-                { dataField: "action",
+                { caption: "Action",
                     type: "buttons",
                     width: 100,
                     buttons: ["edit", "delete"]
@@ -178,7 +178,7 @@ $(document).ready(function() {
                 fileName: "entityList",
                 //formats: ["XLSX", "CSV", "PDF"], // Formats that can be exported
                 allowExportSelectedData: true,     // Enable/Disable exporting selected rows
-                excelFilterEnabled: true,          // Apply the filter when exporting to Excel
+                //excelFilterEnabled: true,          // Apply the filter when exporting to Excel
             },
             onExporting(e) {
                 const workbook = new ExcelJS.Workbook();
@@ -192,7 +192,7 @@ $(document).ready(function() {
                     // Customize the exported Excel file
                     console.log('Customizing the exported Excel file...');
                     const A1 = worksheet.getCell('A1');
-                    A1.value = '번호';
+                    A1.value = '번호'; // Set the value of the cell A1, (caption literal value)
                     A1.font = { bold: true };
                     A1.alignment = { horizontal: 'center' };
                     A1.fill = {
@@ -212,6 +212,7 @@ $(document).ready(function() {
                     });
                     // Format data cells
                     worksheet.eachRow((row, rowNumber) => {
+                        if(rowNumber === 1) return; // Skip the header row
                         row.eachCell((cell, colNumber) => {
                             if(colNumber === 5) {
                                 cell.value = formatPhoneNumber(cell.value);

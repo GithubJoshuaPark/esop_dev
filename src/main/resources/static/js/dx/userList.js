@@ -262,6 +262,7 @@ $(document).ready(function() {
                     });
                     // Format data cells
                     worksheet.eachRow((row, rowNumber) => {
+                        if(rowNumber === 1) return; // Skip the header row
                         row.eachCell((cell, colNumber) => {
                             if(colNumber === 5) {
                                 cell.value = formatPhoneNumber(cell.value);
