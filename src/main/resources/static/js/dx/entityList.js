@@ -12,7 +12,18 @@ $(document).ready(function() {
         let dxDataSource = new DevExpress.data.CustomStore({
             key: "id",
             load: function() {
-                return $.getJSON("/api/v1/dx/entityList/fordx");
+                return axios.get("/api/v1/dx/entityList/fordx", {})
+                    .then(response => {
+                        let response_ = response.data;
+                        console.log('response', response_);
+                        return response_;
+                    })
+                    .catch(error => {
+                        console.error("Error loading entities: ", error);
+                        let message = "Error loading entities: " + error;
+                        showCustomNotification(message, NotificationType.ERROR);
+                        return Promise.reject(message);
+                    });
             },
             insert: function(values) {
                 return $.ajax({
@@ -141,7 +152,48 @@ $(document).ready(function() {
                 },
             ],
             editing: {
-                mode: "form",
+                mode: "popup",  // edit mode: "form", "popup", "batch"
+                popup: {
+                    title: "User Info",
+                    showTitle: true,
+                    width: 800,
+                    height: 525,
+                },
+                // form: {
+                //     items: [
+                //         {
+                //             itemType: "group",
+                //             colCount: 2, // Display 2 columns
+                //             items: [
+                //                 {
+                //                     dataField: "name",
+                //                     label: { text: "이름" },
+                //                     editorOptions: { placeholder: "이름을 입력하세요" }
+                //                 },
+                //                 {
+                //                     dataField: "value",
+                //                     label: { text: "값" },
+                //                     editorOptions: { placeholder: "값을 입력하세요" }
+                //                 },
+                //                 {
+                //                     dataField: "address",
+                //                     label: { text: "주소" },
+                //                     editorOptions: { placeholder: "주소를 입력하세요" }
+                //                 },
+                //                 {
+                //                     dataField: "phoneNumber",
+                //                     label: { text: "전화번호" },
+                //                     editorOptions: { placeholder: "전화번호를 입력하세요" }
+                //                 },
+                //                 {
+                //                     dataField: "ssn",
+                //                     label: { text: "SSN" },
+                //                     editorOptions: { placeholder: "SSN을 입력하세요" }
+                //                 }
+                //             ]
+                //         }
+                //     ]
+                // },
                 allowAdding: true,
                 allowUpdating: true,
                 allowDeleting: true, // Enable the delete button
@@ -185,6 +237,14 @@ $(document).ready(function() {
                     exportSelectedRows: "Export Selected Rows",
                     excelFilterEnabled: true
                 }
+            },
+            onInitNewRow: function(e) {
+                // Set default values for new rows
+                e.data.name = "New User";
+                e.data.value = 0;
+                e.data.address = "New Address";
+                e.data.phoneNumber = "000-0000-0000";
+                e.data.ssn = "000000-0000000";
             },
             onExporting(e) {
                 // Customize the exported Excel file

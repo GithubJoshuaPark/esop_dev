@@ -36,6 +36,7 @@ $(document).ready(function() {
                         let response_ = response.data;
                         console.log('response', response_);
                         showCustomNotification("Entity inserted successfully.", NotificationType.SUCCESS);
+                        return response_; // Return the inserted entity
                     })
                     .catch(error => {
                         console.error("Error inserting entity: ", error);
@@ -103,13 +104,6 @@ $(document).ready(function() {
                     caption: "Phone Number",
                     hint: "Enter a phone number in the format xxxxxx-xxxxxxx",
                     validationRules: [{ type: "required" }],
-                    customizeText: function(cellInfo) {
-                        let value = cellInfo.value;
-                        if(!value) return "";
-                        let digits = value.replace(/\D/g, ""); // Remove non-numeric characters
-                        // Apply format xxx-xxxx-xxxx
-                        return digits.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
-                    },
                     editorOptions: {
                         mask: "000-0000-0000",
                         maskChar: "_",
@@ -120,13 +114,6 @@ $(document).ready(function() {
                     caption: "SSN",
                     hint: "Enter a 13-digit SSN",
                     validationRules: [{ type: "required" }],
-                    customizeText: function(cellInfo) {
-                        let value = cellInfo.value;
-                        if(!value) return "";
-                        let digits = value.replace(/\D/g, ""); // Remove non-numeric characters
-                        // Apply format xxxxxx-xxxxxxx
-                        return digits.replace(/(\d{6})(\d{7})/, '$1-$2');
-                    },
                     editorOptions: {
                         mask: "000000-0000000",
                         maskChar: "_",
@@ -136,18 +123,16 @@ $(document).ready(function() {
                 { dataField: "email",
                     caption: "Email",
                     hint: "Enter a valid email address",
-                    validationRules: [{ type: "required" }],
-                    customizeText: function(cellInfo) {
-                        let value = cellInfo.value;
-                        if(!value) return "";
-                        let email = value;
-                        return email;
-                    },
+                    validationRules: [{ type: "required" }, { type: "email" }],
                 },
                 {
                     type: "buttons",
                     width: 100,
-                    buttons: ["edit", "delete"]
+                    buttons: ["edit", "delete"],
+                    visible: (e) => {
+                        // Hide buttons if there's no data
+                        return e.row && e.row.data && Object.keys(e.row.data).length > 0;
+                    }
                 },
             ],
             editing: {
@@ -156,38 +141,7 @@ $(document).ready(function() {
                     title: "User Info",
                     showTitle: true,
                     width: 800,
-                    height: 400,
-                    position: { my: "center", at: "center", of: window },
-                    dragEnabled: true,
-                    closeOnOutsideClick: false, // Prevent closing the popup when clicking outside
-                    toolbarItems: [
-                        {
-                            toolbar: "bottom",
-                            location: "after",
-                            widget: "dxButton",
-                            options: {
-                                text: "저장",
-                                onClick: function(e) {
-                                    console.log('Custom button clicked...', e);
-                                    // insert or update
-                                    gridInstance.saveEditData();
-                                }
-                            }
-                        },
-                        {
-                            toolbar: "bottom",
-                            location: "after",
-                            widget: "dxButton",
-                            options: {
-                                text: "취소",
-                                onClick: function(e) {
-                                    console.log('Custom button clicked...', e);
-                                    // cancel
-                                    gridInstance.cancelEditData();
-                                }
-                            }
-                        }
-                    ],
+                    height: 525,
                 },
                 allowAdding: true,    // Enable adding
                 allowUpdating: true,  // Enable updating
@@ -233,6 +187,15 @@ $(document).ready(function() {
                     excelFilterEnabled: true,
                     ignoreExcelErrors: true
                 }
+            },
+            onInitNewRow: function(e) {
+                // Set default values for new rows
+                e.data.name = "New User";
+                e.data.value = 0;
+                e.data.address = "New Address";
+                e.data.phoneNumber = "000-0000-0000";
+                e.data.ssn = "000000-0000000";
+                e.data.email = ""
             },
             onExporting(e) {
                 // Customize the exported Excel file
