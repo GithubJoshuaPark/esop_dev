@@ -35,7 +35,7 @@ export function showCustomNotification(message, type) {
             element.append(content);
         },
         type: type, // "success", "warning", "error", "info"
-        displayTime: 2000,
+        displayTime: 1000,
         position: {
             my: "center",
             at: "center",

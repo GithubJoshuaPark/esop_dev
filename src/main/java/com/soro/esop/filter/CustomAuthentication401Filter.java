@@ -47,10 +47,16 @@ public class CustomAuthentication401Filter extends OncePerRequestFilter {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         List<PathList> pathLists = pathListService.findAll();
-
         // List of paths from pathLists
         List<String> pathList = Arrays.asList(pathLists.stream().map(PathList::getPath).toArray(String[]::new));
         log.debug("pathList: {}", pathList);
+
+        if(pathList.isEmpty()) {
+            log.warn("pathList is empty");
+            pathList = Arrays.asList("/dx/entityList", "/dx/userList", "/path/list", "/board/list");
+        } else {
+            log.debug("pathLists: {}", pathList);
+        }
 
         Boolean isApiRequest = isApiRequest(request);
 

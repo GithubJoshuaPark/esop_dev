@@ -81,6 +81,7 @@ $(document).ready(function() {
                         let response_ = response.data;
                         console.log('response', response_);
                         showCustomNotification("Entity deleted successfully.", NotificationType.SUCCESS);
+                        return response_; // Return the deleted entity
                     })
                     .catch(error => {
                         console.error("Error deleting entity: ", error);
@@ -103,10 +104,6 @@ $(document).ready(function() {
                     type: "buttons",
                     width: 100,
                     buttons: ["edit", "delete"],
-                    visible(e) {
-                        // if no data, hide the edit/delete buttons
-                        return e.row.data.id !== undefined;
-                    },
                 },
             ],
             editing: {
@@ -276,20 +273,18 @@ $(document).ready(function() {
             },
             onRowRemoving: function(e) {
                 // Display a confirmation dialog before deletion
-                e.cancel = true; // Prevent the default deletion action until confirmed
-
-                let dialogResult = DevExpress.ui.dialog.confirm("삭제할 거니?", "삭제 확인");
-                dialogResult.done(function(confirm) {
-                    if (confirm) {
-                        console.log('deleting....', e.component);
-                        // Proceed with deletion
-                        e.component.deleteRow(e.rowIndex);
-                        // Display custom message after deletion
-                        DevExpress.ui.notify("삭제 되었습니다..", "success", 2000);
-                    } else {
-                        // Deletion canceled by the user
-                        DevExpress.ui.notify("취소 되었습니다..", "info", 2000);
-                    }
+                e.cancel = new Promise((resolve) => {
+                    let dialogResult = DevExpress.ui.dialog.confirm("삭제할 거니?", "삭제 확인");
+                    dialogResult.done(function(confirm) {
+                        if (confirm) {
+                            console.log('Deleting....', e.data);
+                            resolve(false);  // Allow the deletion to proceed
+                            // The actual deletion will be handled by the CustomStore's remove function
+                        } else {
+                            resolve(true);  // Cancel the deletion
+                            DevExpress.ui.notify("취소 되었습니다.", "info", 1000);
+                        }
+                    });
                 });
             },
         }).dxDataGrid("instance"); // Get the grid instance

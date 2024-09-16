@@ -242,27 +242,19 @@ $(document).ready(function() {
                 DevExpress.ui.notify("삭제 취소 하셨어요.", "info", 2000);
             },
             onRowRemoving: function(e) {
-                console.log("onRowRemoving...", e);
-
                 // Display a confirmation dialog before deletion
-                e.cancel = true; // Prevent the default deletion action until confirmed
-
-                var dialogResult = DevExpress.ui.dialog.confirm("삭제할 거니?", "삭제 확인");
-
-                dialogResult.done(function(confirm) {
-                    if (confirm) {
-
-                        console.log('deleting....', e.component);
-
-                        // Proceed with deletion
-                        e.component.deleteRow(e.rowIndex);
-
-                        // Display custom message after deletion
-                        DevExpress.ui.notify("삭제 되었습니다..", "success", 2000);
-                    } else {
-                        // Deletion canceled by the user
-                        DevExpress.ui.notify("취소 되었습니다..", "info", 2000);
-                    }
+                e.cancel = new Promise((resolve) => {
+                    let dialogResult = DevExpress.ui.dialog.confirm("삭제할 거니?", "삭제 확인");
+                    dialogResult.done(function(confirm) {
+                        if (confirm) {
+                            console.log('Deleting....', e.data);
+                            resolve(false);  // Allow the deletion to proceed
+                            // The actual deletion will be handled by the CustomStore's remove function
+                        } else {
+                            resolve(true);  // Cancel the deletion
+                            DevExpress.ui.notify("취소 되었습니다.", "info", 1000);
+                        }
+                    });
                 });
             },
         });

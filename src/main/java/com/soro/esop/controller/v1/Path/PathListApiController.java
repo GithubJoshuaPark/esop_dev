@@ -6,6 +6,7 @@ import com.soro.esop.service.PathListService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -78,7 +79,12 @@ public class PathListApiController {
 
     @DeleteMapping("/list/{id}")
     public ResponseEntity<Void> deletePathList(@PathVariable Long id) {
-        pathListService.delete(id);
-        return ResponseEntity.ok().build();
+        try{
+            pathListService.delete(id);
+            return ResponseEntity.ok().build();
+        } catch(Exception e) {
+            log.error("Error deleting entity with id: {}, e:{}", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
