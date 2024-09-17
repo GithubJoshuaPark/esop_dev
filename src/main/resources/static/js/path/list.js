@@ -176,11 +176,11 @@ $(document).ready(function() {
                         }
                     ]
                 },
-                allowAdding: true,    // Enable adding
-                allowUpdating: true,  // Enable updating
-                allowDeleting: true,  // Enable deleting
+                allowAdding: true,    // Enable adding   (+)
+                allowUpdating: true,  // Enable updating (!)
+                //allowDeleting: true,  // Enable deleting (trash) --> Use custom toolbar button instead
                 useIcons: true,       // Display icons instead of text for edit/delete buttons
-                confirmDelete: false, // Disable the default confirmation dialog
+                //confirmDelete: false, // Disable the default confirmation dialog
                 texts: {
                     confirmDeleteMessage: "삭제할 거니?",
                     saveRowChanges: "저장",
@@ -189,6 +189,11 @@ $(document).ready(function() {
                     editRow: "수정",
                     addRow: "추가",
                 }
+            },
+            selection: {
+                mode: "multiple",
+                showCheckBoxesMode: "always", // "onClick" | "onLongTap" | "always" | "none"
+                allowSelectAll: true,
             },
             paging: {
                 pageSize: 5
@@ -253,21 +258,6 @@ $(document).ready(function() {
                         }
                     });
             },
-            onToolbarPreparing: function(e) {
-                e.toolbarOptions.items.unshift(
-                    {
-                        location: "before",
-                        widget: "dxButton",
-                        options: {
-                            icon: "exportxlsx",
-                            text: "Export to Excel",
-                        },
-                        template: function() {
-                            return $("<div>").addClass("toolbar-header").text("path List");
-                        }
-                    }
-                );
-            }, // Customize the toolbar
             onRowInserting: function(e) {
                 e.data = e.data || {}; // Default to empty object
                 console.log('inserting....', e.data);
@@ -276,11 +266,15 @@ $(document).ready(function() {
                 // Display custom message when cancel button is clicked
                 DevExpress.ui.notify("수정 취소 하셨어요.", "info", 2000);
             },
-            onDeleteCanceling: function(e) {
-                // Display custom message when cancel button is clicked
-                DevExpress.ui.notify("삭제 취소 하셨어요.", "info", 2000);
-            },
-            onRowRemoving: function(e) {
+            // onRowDeleting: function(e) {
+            //     // Display custom message when delete button is clicked
+            //     DevExpress.ui.notify("삭제 하셨어요.", "info", 2000);
+            // },
+            // onDeleteCanceling: function(e) {
+            //     // Display custom message when cancel button is clicked
+            //     DevExpress.ui.notify("삭제 취소 하셨어요.", "info", 2000);
+            // },
+            onRowRemoving: function(e){
                 // Display a confirmation dialog before deletion
                 e.cancel = new Promise((resolve) => {
                     let dialogResult = DevExpress.ui.dialog.confirm("삭제할 거니?", "삭제 확인");
@@ -296,6 +290,44 @@ $(document).ready(function() {
                     });
                 });
             },
+            onToolbarPreparing: function(e) {
+                e.toolbarOptions.items.unshift(
+                    {
+                                location: "before",
+                                widget: "dxButton",
+                                options: {
+                                    icon: "trash",
+                                    text: "Delete Selected",
+                                    elementAttr: {
+                                        class: "red-trash-icon"
+                                    },
+                                    onClick: function() {
+                                        // Get selected row keys (IDs)
+                                        // Delete selected rows (same as fixed code above)
+                                        let selectedRowKeys = gridInstance.getSelectedRowKeys();
+
+                                        if (selectedRowKeys.length === 0) {
+                                            showCustomNotification("No rows selected", NotificationType.WARNING);
+                                            return;
+                                        }
+
+                                        DevExpress.ui.dialog.confirm("선택 한 행들 삭제 할 겨?", "삭제 확인")
+                                            .done(function(confirm) {
+                                                if (confirm) {
+                                                    // Iterate over selected rows and delete each one using the data source's remove function
+                                                    selectedRowKeys.forEach(function(key) {
+                                                        dxDataSource.remove(key).then(() => {
+                                                            gridInstance.refresh(); // Refresh grid after deletion
+                                                        });
+                                                    });
+                                                    showCustomNotification("삭제 잘 되었어요.", NotificationType.SUCCESS);
+                                                }
+                                            });
+                                    }
+                                }
+                            },
+                );
+            }, // Customize the toolbar
         }).dxDataGrid("instance"); // Get the grid instance
     }
 
