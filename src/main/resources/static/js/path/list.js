@@ -116,35 +116,6 @@ $(document).ready(function() {
                     position: { my: "center", at: "center", of: window },
                     dragEnabled: true,
                     closeOnOutsideClick: false, // Prevent closing the popup when clicking outside
-                    form: {
-                        items: [
-                            {
-                                itemType: "group",
-                                colCount: 2,
-                                items: [
-                                    {
-                                        dataField: "path",
-                                        label: {text: "Path"},
-                                        editorType: "dxTextBox",
-                                        editorOptions: {
-                                            placeholder: "Path",
-                                            showClearButton: true
-                                        },
-                                        validationRules: [{ type: "required" }]
-                                    },
-                                    {
-                                        dataField: "comment",
-                                        label: {text: "Comment"},
-                                        editorType: "dxTextBox",
-                                        editorOptions: {
-                                            placeholder: "Comment",
-                                            showClearButton: true
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    },
                     toolbarItems: [
                         {
                             toolbar: "bottom",
@@ -173,6 +144,37 @@ $(document).ready(function() {
                             }
                         }
                     ],
+                },
+                form: {
+                    items: [
+                        {
+                            itemType: "group",
+                            colCount: 1,
+                            items: [
+                                {
+                                    dataField: "path",
+                                    label: {text: "Path"},
+                                    editorType: "dxTextBox",
+                                    editorOptions: {
+                                        placeholder: "Path",
+                                        showClearButton: true,
+                                        width: 400,
+                                    },
+                                    validationRules: [{ type: "required" }]
+                                },
+                                {
+                                    dataField: "comment",
+                                    label: {text: "Comment"},
+                                    editorType: "dxTextBox",
+                                    editorOptions: {
+                                        placeholder: "Comment",
+                                        showClearButton: true,
+                                        width: 400,
+                                    }
+                                }
+                            ]
+                        }
+                    ]
                 },
                 allowAdding: true,    // Enable adding
                 allowUpdating: true,  // Enable updating

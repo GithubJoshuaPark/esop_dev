@@ -1,6 +1,7 @@
 package com.soro.esop.config;
 
 import com.soro.esop.repository.TokenRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +28,7 @@ import com.soro.esop.utils.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity // Enable the method security (register the MethodSecurityConfiguration to use)
@@ -103,12 +105,15 @@ public class WebSecurityConfig {
     /**
      * It's called by the Spring IoC container
      * during the initialization of the security configuration.
+     * This method is called when the AuthenticationManager is needed,
+     * typically during the creation of the security filter chain.
      * @param authConfig
      * @return
      * @throws Exception
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        log.debug("authenticationManager: {}", authConfig.getAuthenticationManager().toString());
         return authConfig.getAuthenticationManager();
     }
 
@@ -116,7 +121,7 @@ public class WebSecurityConfig {
     /**
      * Set up the UserDetailsService and PasswordEncoder
      * that will be used for authentication throughout the application.
-     * It's called by Spring during the application's security configuration phase.
+     * It's called by the Spring IoC containe during the application's security configuration phase.
      * It sets up the UserDetailsService and PasswordEncoder
      * that will be used for authentication throughout the application.
      * @param auth
@@ -124,6 +129,7 @@ public class WebSecurityConfig {
      */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        log.debug("configureGlobal: {}", auth.toString());
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 }
