@@ -16,15 +16,15 @@ $(document).ready(function() {
             load: function() {
                 return axios.get("/api/v1/path/list", {})
                             .then(response => {
-                                let response_ = response.data;
+                                let response_ = response.data || []; // Default to empty array
                                 console.log('response', response_);
                                 return response_;
                             })
                             .catch(error => {
                                 console.error("Error loading entities: ", error);
-                                let message = "Error loading entities: " + error;
+                                let message = String.format("Error loading entities: %s",error);
                                 showCustomNotification(message, NotificationType.ERROR);
-                                return Promise.reject(message);
+                                return [];
                             });
             },
             insert: function(values) {
@@ -219,6 +219,12 @@ $(document).ready(function() {
                     ignoreExcelErrors: true
                 }
             },
+            onInitNewRow: function(e) {
+                e.data = {
+                    path: "",
+                    comment: ""
+                };
+            },
             onExporting(e) {
                 // Customize the exported Excel file
                 console.log('Exporting to Excel...onExporting() : ');
@@ -261,6 +267,7 @@ $(document).ready(function() {
                 );
             }, // Customize the toolbar
             onRowInserting: function(e) {
+                e.data = e.data || {}; // Default to empty object
                 console.log('inserting....', e.data);
             },
             onEditCanceling: function(e) {

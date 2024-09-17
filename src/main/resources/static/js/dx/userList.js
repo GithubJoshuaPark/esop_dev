@@ -16,15 +16,15 @@ $(document).ready(function() {
             load: function() {
                 return axios.get("/api/v1/dx/userList/fordx", {})
                             .then(response => {
-                                let response_ = response.data;
+                                let response_ = response.data || []; // Get the data from the response
                                 console.log('response', response_);
                                 return response_;
                             })
                             .catch(error => {
                                 console.error("Error loading entities: ", error);
-                                let message = "Error loading entities: " + error;
+                                let message = String.format("Error loading entities: %s", error.toString());
                                 showCustomNotification(message, NotificationType.ERROR);
-                                return Promise.reject(message);
+                                return [];
                             });
             },
             insert: function(values) {
@@ -137,11 +137,22 @@ $(document).ready(function() {
             ],
             editing: {
                 mode: "popup",         // edit mode: "form", "popup", "batch"
-                popup: {
+                popup: { // Customize the popup layout and appearance when it comes to editing with a popup mode
                     title: "User Info",
                     showTitle: true,
                     width: 800,
                     height: 525,
+                },
+                form: { // Customize the form layout and appearance when it comes to editing with a form mode
+                    colCount: 2,
+                    items: [
+                        { dataField: "name" },
+                        { dataField: "value" },
+                        { dataField: "address" },
+                        { dataField: "phoneNumber" },
+                        { dataField: "ssn" },
+                        { dataField: "email" },
+                    ]
                 },
                 allowAdding: true,    // Enable adding
                 allowUpdating: true,  // Enable updating
@@ -190,12 +201,14 @@ $(document).ready(function() {
             },
             onInitNewRow: function(e) {
                 // Set default values for new rows
-                e.data.name = "New User";
-                e.data.value = 0;
-                e.data.address = "New Address";
-                e.data.phoneNumber = "000-0000-0000";
-                e.data.ssn = "000000-0000000";
-                e.data.email = ""
+                e.data = {
+                    name: "New User",
+                    value: 0,
+                    address: "New Address",
+                    phoneNumber: "000-0000-0000",
+                    ssn: "000000-0000000",
+                    email: ""
+                };
             },
             onExporting(e) {
                 // Customize the exported Excel file
@@ -243,6 +256,8 @@ $(document).ready(function() {
                 );
             }, // Customize the toolbar
             onRowInserting: function(e) {
+                // Ensuure the data object exists
+                e.data = e.data || {};
                 console.log('inserting....', e.data);
             },
             onEditCanceling: function(e) {
