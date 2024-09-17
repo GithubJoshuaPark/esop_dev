@@ -46,18 +46,13 @@ public class CustomAuthentication401Filter extends OncePerRequestFilter {
         // Check if the user is authenticated
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        List<PathList> pathLists = null;
         List<String> pathList = null;
         try{
-            pathLists = pathListService.findAll();
+            List<PathList> pathLists = pathListService.findAll();
             if(pathLists != null && pathLists.size() > 0) {
-                if(pathList != null && pathList.size() > 0) {
-                    log.warn("pathList is not empty");
-                    pathList = Arrays.asList(pathLists.stream().map(PathList::getPath).toArray(String[]::new));
-                } else {
-                    pathList = Arrays.asList("/dx/entityList", "/dx/userList", "/path/list", "/board/list");
-                    log.debug("pathLists: {}", pathList);
-                }
+                pathList = Arrays.asList(pathLists.stream().map(PathList::getPath).toArray(String[]::new));
+            } else {
+                pathList = Arrays.asList("/dx/entityList", "/dx/userList", "/path/list", "/board/list");
             }
             // List of paths from pathLists
             log.debug("pathList: {}", pathList);
