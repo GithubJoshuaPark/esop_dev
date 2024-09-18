@@ -28,16 +28,45 @@ $(document).ready(function() {
                     });
             },
             insert: function(values) {
-                return $.ajax({
-                    url: "/api/v1/dx/entityList/fordx",
-                    method: "POST",
-                    xhrFields: {
-                        withCredentials: true // Send cookies when calling the API
-                    },
-                    data: JSON.stringify(values),
-                    contentType: "application/json",
-                    dataType: "json"
-                });
+                // return $.ajax({
+                //     url: "/api/v1/dx/entityList/fordx",
+                //     method: "POST",
+                //     xhrFields: {
+                //         withCredentials: true // Send cookies when calling the API
+                //     },
+                //     data: JSON.stringify(values),
+                //     contentType: "application/json",
+                //     dataType: "json"
+                // });
+
+                return axios.post("/api/v1/dx/entityList/fordx", values, {
+                    withCredentials: true,
+                    })
+                    .then(response => {
+                        let data = response.data;
+                        console.log('inserting....', data);
+                        showCustomNotification("Record added successfully.", NotificationType.SUCCESS);
+                        return data;
+                    })
+                    .catch(error => {
+                        // Handle errors
+                        if (error.response && error.response.status === 400) {
+                            // Display validation errors
+                            let errorResponse = error.response.data;
+                            if (errorResponse && errorResponse.errors) {
+                                let message = errorResponse.errors.join('\n');
+                                showCustomNotification(message, NotificationType.ERROR);
+                            } else {
+                                let message = "An error occurred while adding the record.";
+                                showCustomNotification(message, NotificationType.ERROR);
+                            }
+                        } else {
+                            console.error("Error adding entity: ", error);
+                            let message = "Error adding entity: " + error;
+                            showCustomNotification(message, NotificationType.ERROR);
+                        }
+                        return Promise.reject(error);
+                    });
             },
             update: function(key, values) {
                 // values are the updated values(only) for the row
@@ -62,43 +91,90 @@ $(document).ready(function() {
                 }
 
                 console.log('updating....', updatedData);
-                return $.ajax({
-                    url: "/api/v1/dx/entityList/fordx/" + key,
-                    method: "PUT",
-                    xhrFields: {
-                        withCredentials: true // Send cookies when calling the API
-                    },
-                    data: JSON.stringify(updatedData),
-                    contentType: "application/json",
-                    dataType: "json"
-                }).fail(function(xhr, status, error) {
-                    // Handle errors
-                    if (xhr.status === 400) {
-                        // Display validation errors
-                        let errorResponse = xhr.responseJSON;
-                        if (errorResponse && errorResponse.errors) {
-                            let message = errorResponse.errors.join('\n');
-                            ShowCustomNotification(message, NotificationType.INFO);
+
+                // return $.ajax({
+                //     url: "/api/v1/dx/entityList/fordx/" + key,
+                //     method: "PUT",
+                //     xhrFields: {
+                //         withCredentials: true // Send cookies when calling the API
+                //     },
+                //     data: JSON.stringify(updatedData),
+                //     contentType: "application/json",
+                //     dataType: "json"
+                // }).fail(function(xhr, status, error) {
+                //     // Handle errors
+                //     if (xhr.status === 400) {
+                //         // Display validation errors
+                //         let errorResponse = xhr.responseJSON;
+                //         if (errorResponse && errorResponse.errors) {
+                //             let message = errorResponse.errors.join('\n');
+                //             ShowCustomNotification(message, NotificationType.INFO);
+                //         } else {
+                //             let message = "An error occurred while updating the record.";
+                //             ShowCustomNotification(message, NotificationType.ERROR);
+                //         }
+                //     }
+                //     else {
+                //         console.error("Error updating entity: ", error);
+                //         let message = "Error updating entity: " + error;
+                //         ShowCustomNotification(message, NotificationType.ERROR);
+                //     }
+                // });
+
+                return axios.put("/api/v1/dx/entityList/fordx/" + key, updatedData, {
+                    withCredentials: true,
+                    })
+                    .then(response => {
+                        let data = response.data;
+                        console.log('updating....', data);
+                        showCustomNotification("Record updated successfully.", NotificationType.SUCCESS);
+                        return data;
+                    })
+                    .catch(error => {
+                        // Handle errors
+                        if (error.response && error.response.status === 400) {
+                            // Display validation errors
+                            let errorResponse = error.response.data;
+                            if (errorResponse && errorResponse.errors) {
+                                let message = errorResponse.errors.join('\n');
+                                showCustomNotification(message, NotificationType.ERROR);
+                            } else {
+                                let message = "An error occurred while updating the record.";
+                                showCustomNotification(message, NotificationType.ERROR);
+                            }
                         } else {
-                            let message = "An error occurred while updating the record.";
-                            ShowCustomNotification(message, NotificationType.ERROR);
+                            console.error("Error updating entity: ", error);
+                            let message = "Error updating entity: " + error;
+                            showCustomNotification(message, NotificationType.ERROR);
                         }
-                    }
-                    else {
-                        console.error("Error updating entity: ", error);
-                        let message = "Error updating entity: " + error;
-                        ShowCustomNotification(message, NotificationType.ERROR);
-                    }
-                });
+                        return Promise.reject(error);
+                    });
+
             },
             remove: function(key) {
-                return $.ajax({
-                    url: "/api/v1/dx/entityList/fordx/" + key,
-                    method: "DELETE",
-                    xhrFields: {
-                        withCredentials: true // Send cookies when calling the API
-                    },
-                });
+
+                // return $.ajax({
+                //     url: "/api/v1/dx/entityList/fordx/" + key,
+                //     method: "DELETE",
+                //     xhrFields: {
+                //         withCredentials: true // Send cookies when calling the API
+                //     },
+                // });
+
+                return axios.delete("/api/v1/dx/entityList/fordx/" + key, {
+                    withCredentials: true,
+                    })
+                    .then(response => {
+                        console.log('deleting....', key);
+                        showCustomNotification("Record deleted successfully.", NotificationType.SUCCESS);
+                    })
+                    .catch(error => {
+                        // Handle errors
+                        console.error("Error deleting entity: ", error);
+                        let message = "Error deleting entity: " + error;
+                        showCustomNotification(message, NotificationType.ERROR);
+                        return Promise.reject(error);
+                    });
             }
         });
 
@@ -226,19 +302,6 @@ $(document).ready(function() {
                             dataField: "fromDate",
                             label: { text: "시작일" },
                             editorType: "dxDateBox",
-                            editorOptions: {
-                                width: 200,
-                                onValueChanged: function(e) {
-                                    const dataGrid = $("#gridContainer").dxDataGrid("instance");
-                                    const editRowKey = dataGrid.option("editing.editRowKey");
-                                    console.log('editRowKey', editRowKey);
-                                    if (editRowKey !== undefined) {
-                                        const editIndex = dataGrid.getRowIndexByKey(editRowKey);
-                                        console.log('editIndex', editIndex);
-                                        //dataGrid.cellValue(editIndex, "toDate", null);
-                                    }
-                                }
-                            },
                             defaultValue: new Date(),
                             format: formatDateYyyyMmdd,
                         },
@@ -246,25 +309,37 @@ $(document).ready(function() {
                             dataField: "toDate",
                             label: { text: "종료일" },
                             editorType: "dxDateBox",
-                            editorOptions: {
-                                width: 200,
-                                onValueChanged: function(e) {
-                                    const dataGrid = $("#gridContainer").dxDataGrid("instance");
-                                    const editRowKey = dataGrid.option("editing.editRowKey");
-                                    if (editRowKey !== undefined) {
-                                        const editIndex = dataGrid.getRowIndexByKey(editRowKey);
-                                        const fromDate = dataGrid.cellValue(editIndex, "fromDate");
-                                        if (e.value && fromDate && e.value < fromDate) {
-                                            showCustomNotification("종료일은 시작일 이후여야 합니다.", NotificationType.WARNING);
-                                            e.component.option("isValid", false);
-                                        } else {
-                                            e.component.option("isValid", true);
-                                        }
-                                    }
-                                }
-                            },
                             defaultValue: new Date(),
                             format: formatDateYyyyMmdd,
+                            validationRules: [{
+                                type: "custom",
+                                validationCallback: function(params) {
+                                    const toDate = params.value;
+                                    console.log('toDate: ', toDate);
+
+                                    const dataGrid = $("#gridContainer").dxDataGrid("instance");
+                                    const editRowKey = dataGrid.option("editing.editRowKey"); // Get the key of the row being edited
+                                    console.log('editRowKey: ', editRowKey);
+
+                                    if (editRowKey !== undefined) {
+                                        const editIndex = dataGrid.getRowIndexByKey(editRowKey);
+                                        console.log('editIndex: ', editIndex);
+
+                                        const fromDate = dataGrid.cellValue(editIndex, "fromDate");
+                                        console.log('fromDate: ', fromDate);
+
+                                        if (toDate && fromDate && toDate < fromDate) {
+                                            showCustomNotification("종료일은 시작일 이후여야 합니다.", NotificationType.WARNING);
+                                            dataGrid.option("isValid", false);
+                                            return false;
+                                        }
+                                        else {
+                                            dataGrid.option("isValid", true);
+                                            return true;
+                                        }
+                                    }
+                                },
+                            }]
                         },
                         {
                             dataField: "description",
@@ -327,29 +402,6 @@ $(document).ready(function() {
                     phoneNumber: "00000000000",
                     ssn: "0000000000000"
                 };
-            },
-            onEditorPreparing: function(e) {
-                if (e.dataField === "toDate" && e.parentType === "dataRow") {
-                    const originalValueChanged = e.editorOptions.onValueChanged;
-                    e.editorOptions.onValueChanged = function(args) {
-                        if (originalValueChanged) {
-                            originalValueChanged.call(this, args);
-                        }
-
-                        const dataGrid = $("#gridContainer").dxDataGrid("instance");
-                        const editRowKey = dataGrid.option("editing.editRowKey");
-                        if (editRowKey !== undefined) {
-                            const editIndex = dataGrid.getRowIndexByKey(editRowKey);
-                            const fromDateValue = dataGrid.cellValue(editIndex, "fromDate");
-                            if (args.value && fromDateValue && args.value < fromDateValue) {
-                                showCustomNotification("종료일은 시작일 이후여야 합니다.", NotificationType.WARNING);
-                                args.component.option("isValid", false);
-                            } else {
-                                args.component.option("isValid", true);
-                            }
-                        }
-                    }
-                }
             },
             onExporting(e) {
                 // Customize the exported Excel file
@@ -424,7 +476,7 @@ $(document).ready(function() {
                     });
                 });
             },
-        });
+        }).dxDataGrid("instance");
     }
 
 });
