@@ -15,9 +15,9 @@ import lombok.AccessLevel;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonDeserialize(using = YnDesirializer.class)
 public enum Yn implements BaseEnum {
-    $ ("@", Name.builder().ko("YN").en("").zh("").ja("").build()),
-    N ("N", Name.builder().ko("N").en("N").zh("N").ja("N").build()),
-    Y ("Y", Name.builder().ko("Y").en("Y").zh("Y").ja("Y").build());
+    $ ("@", Name.builder().ko("YN").en("").zh("").ja("").build()),   // ordinal: 0
+    N ("N", Name.builder().ko("N").en("N").zh("N").ja("N").build()), // ordinal: 1
+    Y ("Y", Name.builder().ko("Y").en("Y").zh("Y").ja("Y").build()); // ordinal: 2
 
     private String value;
 
