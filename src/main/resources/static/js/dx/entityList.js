@@ -296,24 +296,25 @@ $(document).ready(function() {
                                 text: "거래중지",
                                 valueExpr: "Y",
                                 falseValue: "N",
-                                onValueChanged: function(e) {
-                                    console.log('isTrxCeaseYn: ', e.value);
-
-                                    let dataGrid = $("#gridContainer").dxDataGrid("instance");
-                                    let editRowKey = dataGrid.option("editing.editRowKey"); // Get the key of the row being edited
-                                    let editIndex = dataGrid.getRowIndexByKey(editRowKey);
-
-                                    console.log('editRowKey: ', editRowKey);
-                                    console.log('editIndex: ', editIndex);
-
-                                    if(e.value == true) {
-                                        //dataGrid.cellValue(editIndex, "toDate", new Date() + 15);
-                                    } else {
-                                        //dataGrid.cellValue(editIndex, "toDate", new Date());
-                                    }
-                                    return true;
-
-                                },
+                                trueValue: "Y",
+                                // onValueChanged: function(e) {
+                                //     console.log('isTrxCeaseYn: ', e.value);
+                                //
+                                //     let dataGrid = $("#gridContainer").dxDataGrid("instance");
+                                //     let editRowKey = dataGrid.option("editing.editRowKey"); // Get the key of the row being edited
+                                //     let editIndex = dataGrid.getRowIndexByKey(editRowKey);
+                                //
+                                //     console.log('editRowKey: ', editRowKey);
+                                //     console.log('editIndex: ', editIndex);
+                                //
+                                //     if(e.value == true) {
+                                //         //dataGrid.cellValue(editIndex, "toDate", new Date() + 15);
+                                //     } else {
+                                //         //dataGrid.cellValue(editIndex, "toDate", new Date());
+                                //     }
+                                //     return true;
+                                //
+                                // },
                             },
                         },
                         {
