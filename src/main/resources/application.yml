@@ -11,6 +11,7 @@ spring:
             ddl-auto: update
         show-sql: true
         properties:
+            javax.persistence.validation.mode: none # disable bean validation for Entity Event Listener working(2024.09.18)
             hibernate:
                 format_sql: true
                 show_sql: true

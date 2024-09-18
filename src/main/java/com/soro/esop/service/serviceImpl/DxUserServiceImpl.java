@@ -1,13 +1,16 @@
 package com.soro.esop.service.serviceImpl;
 
+import com.soro.esop.entity.DxEntity;
 import com.soro.esop.entity.DxUser;
 import com.soro.esop.repository.DxUserRepository;
 import com.soro.esop.service.DxUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -16,7 +19,7 @@ public class DxUserServiceImpl implements DxUserService {
     private final DxUserRepository dxEntityRepository;
 
     @Override
-    public DxUser findById(Long id) {
+    public DxUser findById(String id) {
         return dxEntityRepository.findById(id).orElse(null);
     }
 
@@ -37,8 +40,9 @@ public class DxUserServiceImpl implements DxUserService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         dxEntityRepository.deleteById(id);
     }
+
     
 }

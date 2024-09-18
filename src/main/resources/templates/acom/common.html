@@ -35,11 +35,11 @@
             <li class="nav-item" th:classappend="${activePageName} == 'BoardList' ? 'active' ">
                 <a class="nav-link" th:href="@{/board/list}">Board<span class="sr-only" th:if="${activePageName} == 'BoardList'">(current)</span></a>
             </li>
-            <li class="nav-item" th:classappend="${activePageName} == 'dxEntityList' ? 'active' ">
-                <a class="nav-link" th:href="@{/dx/entityList}">DxEntity<span class="sr-only" th:if="${activePageName} == 'dxEntityList'">(current)</span></a>
-            </li>
             <li class="nav-item" th:classappend="${activePageName} == 'dxUserList' ? 'active' ">
                 <a class="nav-link" th:href="@{/dx/userList}">DxUser<span class="sr-only" th:if="${activePageName} == 'dxUserList'">(current)</span></a>
+            </li>
+            <li class="nav-item" th:classappend="${activePageName} == 'dxEntityList' ? 'active' ">
+                <a class="nav-link" th:href="@{/dx/entityList}">DxEntity<span class="sr-only" th:if="${activePageName} == 'dxEntityList'">(current)</span></a>
             </li>
             <li class="nav-item" th:classappend="${activePageName} == 'pathList' ? 'active' ">
                 <a class="nav-link" th:href="@{/path/list}">pathList<span class="sr-only" th:if="${activePageName} == 'pathList'">(current)</span></a>

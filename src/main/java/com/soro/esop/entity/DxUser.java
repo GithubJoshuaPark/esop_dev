@@ -1,18 +1,23 @@
 package com.soro.esop.entity;
 
 
+import com.soro.esop.entity.listeners.DxUserListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 @Data
 @Entity
 @Table(name = "dx_user")
+@EntityListeners(DxUserListener.class)
 public class DxUser {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
+    private String id;
 
     @NotBlank(message = "Name should not be empty")
     @Size(min=3, message = "Name should have at least 3 characters")

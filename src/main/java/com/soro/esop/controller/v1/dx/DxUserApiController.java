@@ -12,6 +12,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -43,12 +44,13 @@ public class DxUserApiController {
 
     @PostMapping("/userList/fordx")
     public ResponseEntity<DxUser> createDxUser(@RequestBody DxUser dxEntity) {
+        log.debug("Request to create entity: {}", dxEntity);
         DxUser savedEntity = dxService.save(dxEntity);
         return ResponseEntity.ok(savedEntity);
     }
 
     @PutMapping("/userList/fordx/{id}")
-    public ResponseEntity<?> updateDxUser(@PathVariable Long id,
+    public ResponseEntity<?> updateDxUser(@PathVariable String id,
                                           @Valid @RequestBody DxUser dxEntity,
                                           BindingResult bindingResult) {
         dxEntity.setId(id);
@@ -68,7 +70,7 @@ public class DxUserApiController {
     }
 
     @DeleteMapping("/userList/fordx/{id}")
-    public ResponseEntity<Void> deleteDxUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteDxUser(@PathVariable String id) {
         dxService.delete(id);
         return ResponseEntity.ok().build();
     }
