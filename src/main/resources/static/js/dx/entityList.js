@@ -178,7 +178,7 @@ $(document).ready(function() {
             }
         });
 
-        $("#gridContainer").dxDataGrid({
+        let gridInstance = $("#gridContainer").dxDataGrid({
             dataSource: dxDataSource,
             method: "GET",
             columns: [
@@ -296,6 +296,24 @@ $(document).ready(function() {
                                 text: "거래중지",
                                 valueExpr: "Y",
                                 falseValue: "N",
+                                onValueChanged: function(e) {
+                                    console.log('isTrxCeaseYn: ', e.value);
+
+                                    let dataGrid = $("#gridContainer").dxDataGrid("instance");
+                                    let editRowKey = dataGrid.option("editing.editRowKey"); // Get the key of the row being edited
+                                    let editIndex = dataGrid.getRowIndexByKey(editRowKey);
+
+                                    console.log('editRowKey: ', editRowKey);
+                                    console.log('editIndex: ', editIndex);
+
+                                    if(e.value == true) {
+                                        //dataGrid.cellValue(editIndex, "toDate", new Date() + 15);
+                                    } else {
+                                        //dataGrid.cellValue(editIndex, "toDate", new Date());
+                                    }
+                                    return true;
+
+                                },
                             },
                         },
                         {
@@ -434,16 +452,11 @@ $(document).ready(function() {
             onToolbarPreparing: function(e) {
                 e.toolbarOptions.items.unshift(
                     {
-                        location: "before",
-                        widget: "dxButton",
-                        options: {
-                            icon: "exportxlsx",
-                            text: "Export to Excel",
-                        },
-                        template: function() {
-                            return $("<div>").addClass("toolbar-header").text("사용자 목록");
+                            location: "before",
+                            template: function() {
+                                return $("<div>").addClass("toolbar-header").text("사용자 목록");
+                            }
                         }
-                    }
                 );
             }, // Customize the toolbar
             onRowInserting: function(e) {
