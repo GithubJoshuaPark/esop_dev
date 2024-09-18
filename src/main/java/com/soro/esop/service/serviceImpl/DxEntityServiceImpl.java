@@ -7,9 +7,11 @@ import com.soro.esop.service.DxEntityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -45,6 +47,7 @@ public class DxEntityServiceImpl implements DxEntityService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void createFromDxUser(DxUser dxUser) {
         log.debug("createFromDxUser: {}", dxUser);
         DxEntity dxEntity = new DxEntity();
@@ -54,13 +57,26 @@ public class DxEntityServiceImpl implements DxEntityService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateFromDxUser(DxUser dxUser) {
-        DxEntity dxEntity = dxEntityRepository.findBySsn(dxUser.getSsn()).orElseThrow();
-        updateDxEntityFromDxUser(dxEntity, dxUser);
-        dxEntityRepository.save(dxEntity);
+        log.debug("updateFromDxUser: {}", dxUser);
+
+        Optional<DxEntity> dxEntity = dxEntityRepository.findBySsn(dxUser.getSsn());
+        if (dxEntity.isEmpty()) {
+            log.error("DxEntity not found by ssn: {}", dxUser.getSsn());
+        }
+        else
+        {
+            log.debug("DxEntity found by ssn: {}", dxUser.getSsn());
+            dxEntity.ifPresent(entity -> {
+                updateDxEntityFromDxUser(entity, dxUser);
+                dxEntityRepository.save(entity);
+            });
+        }
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void deleteByDxUser(DxUser dxUser) {
         dxEntityRepository.findBySsn(dxUser.getSsn())
                 .ifPresent(dxEntityRepository::delete);
@@ -77,6 +93,7 @@ public class DxEntityServiceImpl implements DxEntityService {
         dxEntity.setAddress(dxUser.getAddress());
         dxEntity.setPhoneNumber(dxUser.getPhoneNumber());
         dxEntity.setSsn(dxUser.getSsn());
+        dxEntity.setDescription(dxUser.getDescription());
     }
     
 }

@@ -115,35 +115,18 @@ $(document).ready(function() {
                   caption: "전화번호",
                     hint: "Enter a phone number in the format xxxxxx-xxxxxxx",
                   validationRules: [{ type: "required" }],
-                  customizeText: function(cellInfo) {
-                    let value = cellInfo.value;
-                    if(!value) return "";
-                    let digits = value.replace(/\D/g, ""); // Remove non-numeric characters
-                    // Apply format xxx-xxxx-xxxx
-                    return digits.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
-                  },
-                  editorOptions: {
-                    mask: "000-0000-0000",
-                    maskChar: "_",
-                    showMaskMode: "onFocus" // Use the mask only when the editor is focused
-                  }
+                  format: formatPhoneNumber,
                 },
                 { dataField: "ssn",
-                    caption: "SSN",
+                    caption: "주민번호",
                     hint: "Enter a 13-digit SSN",
                   validationRules: [{ type: "required" }],
-                    customizeText: function(cellInfo) {
-                        let value = cellInfo.value;
-                        if(!value) return "";
-                        let digits = value.replace(/\D/g, ""); // Remove non-numeric characters
-                        // Apply format xxxxxx-xxxxxxx
-                        return digits.replace(/(\d{6})(\d{7})/, '$1-$2');
-                    },
-                  editorOptions: {
-                    mask: "000000-0000000",
-                    maskChar: "_",
-                    showMaskMode: "onFocus" // Use the mask only when the editor is focused
-                  }
+                    format: formatSSN,
+                },
+                {
+                    dataField: "description",
+                    caption: "설명",
+                    visible: false,
                 },
                 { caption: "Action",
                     type: "buttons",
@@ -166,36 +149,36 @@ $(document).ready(function() {
                             dataField: "name",
                             label: { text: "이름" },
                             editorType: "dxTextBox",
-                            editorOptions: { width: 200 },
-                            validationRules: [{ type: "required" }]
+                            // editorOptions: { width: 200 },
+                            validationRules: [{ type: "required" }],
                         },
                         {
                             dataField: "value",
                             label: { text: "값" },
                             editorType: "dxNumberBox",
-                            editorOptions: { width: 200 },
+                            // editorOptions: { width: 200 },
                         },
                         {
                             dataField: "address",
                             label: { text: "주소" },
                             editorType: "dxTextBox",
-                            editorOptions: { width: 200 },
-                            validationRules: [{ type: "required" }]
+                            // editorOptions: { width: 200 },
+                            validationRules: [{ type: "required" }],
                         },
                         {
                             dataField: "phoneNumber",
                             label: { text: "전화번호" },
                             editorType: "dxTextBox",
                             editorOptions: {
-                                mask: "000-0000-0000",
+                                mask: "(000)-0000-0000",
                                 maskChar: "_",
                                 showMaskMode: "onFocus"
                             },
-                            validationRules: [{ type: "required" }]
+                            validationRules: [{ type: "required" }],
                         },
                         {
                             dataField: "ssn",
-                            label: { text: "SSN" },
+                            label: { text: "주민번호" },
                             editorType: "dxTextBox",
                             editorOptions: {
                                 mask: "000000-0000000",
@@ -203,6 +186,12 @@ $(document).ready(function() {
                                 showMaskMode: "onFocus"
                             },
                             validationRules: [{ type: "required" }]
+                        },
+                        {
+                            dataField: "description",
+                            label: { text: "설명" },
+                            editorType: "dxTextArea",
+                            editorOptions: { height: 100 },
                         },
                     ]
                 },

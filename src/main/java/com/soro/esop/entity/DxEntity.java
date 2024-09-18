@@ -27,4 +27,6 @@ public class DxEntity {
 
     @NotBlank
     private String ssn;
+
+    private String description;
 }

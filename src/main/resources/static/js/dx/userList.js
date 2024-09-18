@@ -101,29 +101,26 @@ $(document).ready(function() {
                 { dataField: "value" },
                 { dataField: "address", validationRules: [{ type: "required" }] },
                 { dataField: "phoneNumber",
-                    caption: "Phone Number",
+                    caption: "전화번호",
                     hint: "Enter a phone number in the format xxxxxx-xxxxxxx",
                     validationRules: [{ type: "required" }],
-                    editorOptions: {
-                        mask: "000-0000-0000",
-                        maskChar: "_",
-                        showMaskMode: "onFocus" // Use the mask only when the editor is focused
-                    }
+                    format: formatPhoneNumber,
                 },
                 { dataField: "ssn",
-                    caption: "SSN",
+                    caption: "주민번호",
                     hint: "Enter a 13-digit SSN",
                     validationRules: [{ type: "required" }],
-                    editorOptions: {
-                        mask: "000000-0000000",
-                        maskChar: "_",
-                        showMaskMode: "onFocus" // Use the mask only when the editor is focused
-                    }
+                    format: formatSSN,
                 },
                 { dataField: "email",
                     caption: "Email",
                     hint: "Enter a valid email address",
                     validationRules: [{ type: "required" }, { type: "email" }],
+                },
+                {
+                    dataField: "description",
+                    caption: "설명",
+                    visible: false,
                 },
                 {
                     type: "buttons",
@@ -146,12 +143,63 @@ $(document).ready(function() {
                 form: { // Customize the form layout and appearance when it comes to editing with a form mode
                     colCount: 2,
                     items: [
-                        { dataField: "name" },
-                        { dataField: "value" },
-                        { dataField: "address" },
-                        { dataField: "phoneNumber" },
-                        { dataField: "ssn" },
-                        { dataField: "email" },
+                        {
+                            dataField: "name",
+                            label: { text: "이름" },
+                            editorType: "dxTextBox",
+                            // editorOptions: { width: 200 },
+                            validationRules: [{ type: "required" }],
+                        },
+                        {
+                            dataField: "value",
+                            label: { text: "값" },
+                            editorType: "dxNumberBox",
+                            // editorOptions: { width: 200 },
+                        },
+                        {
+                            dataField: "address",
+                            label: { text: "주소" },
+                            editorType: "dxTextBox",
+                            // editorOptions: { width: 200 },
+                            validationRules: [{ type: "required" }],
+                        },
+                        {
+                            dataField: "phoneNumber",
+                            label: { text: "전화번호" },
+                            editorType: "dxTextBox",
+                            editorOptions: {
+                                mask: "(000)-0000-0000",
+                                maskChar: "_",
+                                showMaskMode: "onFocus"
+                            },
+                            validationRules: [{ type: "required" }],
+                        },
+                        {
+                            dataField: "ssn",
+                            label: { text: "주민번호" },
+                            editorType: "dxTextBox",
+                            editorOptions: {
+                                mask: "000000-0000000",
+                                maskChar: "_",
+                                showMaskMode: "onFocus"
+                            },
+                            validationRules: [{ type: "required" }]
+                        },
+                        {
+                            dataField: "email",
+                            label: { text: "이메일" },
+                            editorType: "dxTextBox",
+                            // editorOptions: { width: 200 },
+                            validationRules: [{ type: "required" }, { type: "email" }], // Email validation
+                        },
+                        {
+                            dataField: "description",
+                            label: { text: "설명" },
+                            editorType: "dxTextArea",
+                            editorOptions: {
+                                height: 100
+                            },
+                        },
                     ]
                 },
                 allowAdding: true,    // Enable adding

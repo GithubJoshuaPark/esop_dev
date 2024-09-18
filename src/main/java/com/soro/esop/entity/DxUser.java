@@ -39,4 +39,6 @@ public class DxUser {
     @NotBlank(message = "Email should not be empty")
     @Email(message = "Email should be valid")
     private String email;
+
+    private String description;
 }

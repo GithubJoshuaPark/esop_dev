@@ -41,32 +41,22 @@ public class DxUserListener {
         DxUserListener.transactionTemplate = transactionTemplate;
     }
 
-
     @PostPersist
     public void postPersist(DxUser dxUser) {
         log.info("postPersist: {}", dxUser);
-        transactionTemplate.execute(status -> {
-            dxEntityService.createFromDxUser(dxUser);
-            return null;
-        });
+        dxEntityService.createFromDxUser(dxUser);
     }
 
     @PostUpdate
     public void postUpdate(DxUser dxUser) {
         log.info("postUpdate: {}", dxUser);
-        transactionTemplate.execute(status -> {
-            dxEntityService.updateFromDxUser(dxUser);
-            return null;
-        });
+        dxEntityService.updateFromDxUser(dxUser);
     }
 
     @PostRemove
     public void postRemove(DxUser dxUser) {
         log.info("postRemove: {}", dxUser);
-        transactionTemplate.execute(status -> {
-            dxEntityService.deleteByDxUser(dxUser);
-            return null;
-        });
+        dxEntityService.deleteByDxUser(dxUser);
     }
 
 }
