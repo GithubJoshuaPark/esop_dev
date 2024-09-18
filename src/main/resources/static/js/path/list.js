@@ -116,34 +116,34 @@ $(document).ready(function() {
                     position: { my: "center", at: "center", of: window },
                     dragEnabled: true,
                     closeOnOutsideClick: false, // Prevent closing the popup when clicking outside
-                    toolbarItems: [
-                        {
-                            toolbar: "bottom",
-                            location: "after",
-                            widget: "dxButton",
-                            options: {
-                                text: "저장",
-                                onClick: function(e) {
-                                    console.log('Custom button clicked...', e);
-                                    // insert or update
-                                    gridInstance.saveEditData();
-                                }
-                            }
-                        },
-                        {
-                            toolbar: "bottom",
-                            location: "after",
-                            widget: "dxButton",
-                            options: {
-                                text: "취소",
-                                onClick: function(e) {
-                                    console.log('Custom button clicked...', e);
-                                    // cancel
-                                    gridInstance.cancelEditData();
-                                }
-                            }
-                        }
-                    ],
+                    // toolbarItems: [
+                    //     {
+                    //         toolbar: "bottom",
+                    //         location: "after",
+                    //         widget: "dxButton",
+                    //         options: {
+                    //             text: "저장",
+                    //             onClick: function(e) {
+                    //                 console.log('Custom button clicked...', e);
+                    //                 // insert or update
+                    //                 gridInstance.saveEditData();
+                    //             }
+                    //         }
+                    //     },
+                    //     {
+                    //         toolbar: "bottom",
+                    //         location: "after",
+                    //         widget: "dxButton",
+                    //         options: {
+                    //             text: "취소",
+                    //             onClick: function(e) {
+                    //                 console.log('Custom button clicked...', e);
+                    //                 // cancel
+                    //                 gridInstance.cancelEditData();
+                    //             }
+                    //         }
+                    //     }
+                    // ],
                 },
                 form: {
                     items: [
@@ -274,22 +274,22 @@ $(document).ready(function() {
             //     // Display custom message when cancel button is clicked
             //     DevExpress.ui.notify("삭제 취소 하셨어요.", "info", 2000);
             // },
-            onRowRemoving: function(e){
-                // Display a confirmation dialog before deletion
-                e.cancel = new Promise((resolve) => {
-                    let dialogResult = DevExpress.ui.dialog.confirm("삭제할 거니?", "삭제 확인");
-                    dialogResult.done(function(confirm) {
-                        if (confirm) {
-                            console.log('Deleting....', e.data);
-                            resolve(false);  // Allow the deletion to proceed
-                            // The actual deletion will be handled by the CustomStore's remove function
-                        } else {
-                            resolve(true);  // Cancel the deletion
-                            DevExpress.ui.notify("취소 되었습니다.", "info", 1000);
-                        }
-                    });
-                });
-            },
+            // onRowRemoving: function(e){
+            //     // Display a confirmation dialog before deletion
+            //     e.cancel = new Promise((resolve) => {
+            //         let dialogResult = DevExpress.ui.dialog.confirm("삭제할 거니?", "삭제 확인");
+            //         dialogResult.done(function(confirm) {
+            //             if (confirm) {
+            //                 console.log('Deleting....', e.data);
+            //                 resolve(false);  // Allow the deletion to proceed
+            //                 // The actual deletion will be handled by the CustomStore's remove function
+            //             } else {
+            //                 resolve(true);  // Cancel the deletion
+            //                 DevExpress.ui.notify("취소 되었습니다.", "info", 1000);
+            //             }
+            //         });
+            //     });
+            // },
             onToolbarPreparing: function(e) {
                 e.toolbarOptions.items.unshift(
                     {
@@ -297,7 +297,7 @@ $(document).ready(function() {
                                 widget: "dxButton",
                                 options: {
                                     icon: "trash",
-                                    text: "Delete Selected",
+                                    text: "Delete",
                                     elementAttr: {
                                         class: "red-trash-icon"
                                     },
