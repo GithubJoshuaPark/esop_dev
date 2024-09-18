@@ -253,8 +253,8 @@ $(document).ready(function() {
                     name: "New User",
                     value: 0,
                     address: "New Address",
-                    phoneNumber: "000-0000-0000",
-                    ssn: "000000-0000000",
+                    phoneNumber: "00000000000",
+                    ssn: "0000000000000",
                     email: ""
                 };
             },

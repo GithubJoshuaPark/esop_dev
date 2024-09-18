@@ -1,5 +1,7 @@
-import {showCustomNotification, NotificationType ,
-    formatSSN, formatPhoneNumber, exportDataGridToExcel, showPromptDialog } from "../utils/utils.js";
+import {
+    showCustomNotification, NotificationType,
+    formatSSN, formatPhoneNumber, exportDataGridToExcel, showPromptDialog, formatDateYyyyMmdd
+} from "../utils/utils.js";
 
 $(document).ready(function() {
     console.log("list module...");
@@ -59,7 +61,7 @@ $(document).ready(function() {
                     updatedData.ssn = updatedData.ssn.replace(/\D/g, '');
                 }
 
-                log.debug('updating....', updatedData);
+                console.log('updating....', updatedData);
                 return $.ajax({
                     url: "/api/v1/dx/entityList/fordx/" + key,
                     method: "PUT",
@@ -122,6 +124,28 @@ $(document).ready(function() {
                     hint: "Enter a 13-digit SSN",
                   validationRules: [{ type: "required" }],
                     format: formatSSN,
+                },
+                {
+                    dataField: "isTrxCeaseYn",
+                    caption: "거래중지여부",
+                    defaultValue: "N",
+                    visible: false,
+                },
+                {
+                    dataField: "fromDate",
+                    caption: "시작일",
+                    dataType: "date",
+                    defaultValue: new Date(),
+                    format: formatDateYyyyMmdd,
+                    visible: false,
+                },
+                {
+                    dataField: "toDate",
+                    caption: "종료일",
+                    dataType: "date",
+                    defaultValue: new Date(),
+                    format: formatDateYyyyMmdd,
+                    visible: false,
                 },
                 {
                     dataField: "description",
@@ -188,6 +212,61 @@ $(document).ready(function() {
                             validationRules: [{ type: "required" }]
                         },
                         {
+                            dataField: "isTrxCeaseYn",
+                            label: { text: "거래중지여부" },
+                            defaultValue: "N",
+                            editorType: "dxCheckBox",
+                            editorOptions: {
+                                text: "거래중지",
+                                valueExpr: "Y",
+                                falseValue: "N",
+                            },
+                        },
+                        {
+                            dataField: "fromDate",
+                            label: { text: "시작일" },
+                            editorType: "dxDateBox",
+                            editorOptions: {
+                                width: 200,
+                                onValueChanged: function(e) {
+                                    const dataGrid = $("#gridContainer").dxDataGrid("instance");
+                                    const editRowKey = dataGrid.option("editing.editRowKey");
+                                    console.log('editRowKey', editRowKey);
+                                    if (editRowKey !== undefined) {
+                                        const editIndex = dataGrid.getRowIndexByKey(editRowKey);
+                                        console.log('editIndex', editIndex);
+                                        //dataGrid.cellValue(editIndex, "toDate", null);
+                                    }
+                                }
+                            },
+                            defaultValue: new Date(),
+                            format: formatDateYyyyMmdd,
+                        },
+                        {
+                            dataField: "toDate",
+                            label: { text: "종료일" },
+                            editorType: "dxDateBox",
+                            editorOptions: {
+                                width: 200,
+                                onValueChanged: function(e) {
+                                    const dataGrid = $("#gridContainer").dxDataGrid("instance");
+                                    const editRowKey = dataGrid.option("editing.editRowKey");
+                                    if (editRowKey !== undefined) {
+                                        const editIndex = dataGrid.getRowIndexByKey(editRowKey);
+                                        const fromDate = dataGrid.cellValue(editIndex, "fromDate");
+                                        if (e.value && fromDate && e.value < fromDate) {
+                                            showCustomNotification("종료일은 시작일 이후여야 합니다.", NotificationType.WARNING);
+                                            e.component.option("isValid", false);
+                                        } else {
+                                            e.component.option("isValid", true);
+                                        }
+                                    }
+                                }
+                            },
+                            defaultValue: new Date(),
+                            format: formatDateYyyyMmdd,
+                        },
+                        {
                             dataField: "description",
                             label: { text: "설명" },
                             editorType: "dxTextArea",
@@ -245,9 +324,32 @@ $(document).ready(function() {
                     name: "New User",
                     value: 0,
                     address: "New Address",
-                    phoneNumber: "000-0000-0000",
-                    ssn: "000000-0000000"
+                    phoneNumber: "00000000000",
+                    ssn: "0000000000000"
                 };
+            },
+            onEditorPreparing: function(e) {
+                if (e.dataField === "toDate" && e.parentType === "dataRow") {
+                    const originalValueChanged = e.editorOptions.onValueChanged;
+                    e.editorOptions.onValueChanged = function(args) {
+                        if (originalValueChanged) {
+                            originalValueChanged.call(this, args);
+                        }
+
+                        const dataGrid = $("#gridContainer").dxDataGrid("instance");
+                        const editRowKey = dataGrid.option("editing.editRowKey");
+                        if (editRowKey !== undefined) {
+                            const editIndex = dataGrid.getRowIndexByKey(editRowKey);
+                            const fromDateValue = dataGrid.cellValue(editIndex, "fromDate");
+                            if (args.value && fromDateValue && args.value < fromDateValue) {
+                                showCustomNotification("종료일은 시작일 이후여야 합니다.", NotificationType.WARNING);
+                                args.component.option("isValid", false);
+                            } else {
+                                args.component.option("isValid", true);
+                            }
+                        }
+                    }
+                }
             },
             onExporting(e) {
                 // Customize the exported Excel file

@@ -76,6 +76,11 @@ export function formatSSN(value) {
     return digits.replace(/(\d{6})(\d{7})/, '$1-$2'); // Apply format xxxxxx-xxxxxxx
 }
 
+export function formatDateYyyyMmdd(value) {
+    if(!value) return "";
+    return new Date(value).toISOString().slice(0, 10); // Apply format yyyy-mm-dd
+}
+
 export function exportDataGridToExcel(dataGrid, xlsxFileName) {
     if (xlsxFileName) {
         // Use the default file name
