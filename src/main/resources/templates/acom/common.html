@@ -18,7 +18,13 @@
 
 <!-- menu -->
 <nav th:fragment="menu(activePageName)" class="navbar navbar-expand-md navbar-dark bg-info fixed-top">
-    <a class="navbar-brand" href="#" th:href="@{/}">ESOP</a>
+    <a class="navbar-brand" href="#" th:href="@{/}">
+        <img src="/images/company-logo.png"
+             th:src="@{/images/favicon16.png}"
+             alt="company-logo"
+             style="width: 60px; height: 50px; border-radius: 10%; transparent: 0.5;"
+        >
+    </a>
 
     <button class="navbar-toggler" type="button"
             data-toggle="collapse"
@@ -30,9 +36,6 @@
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item" th:classappend="${activePageName} == 'Home' ? 'active' ">
-                <a class="nav-link" th:href="@{/}">Home <span class="sr-only" th:if="${activePageName} == 'Home'">(current)</span></a>
-            </li>
             <li class="nav-item" th:classappend="${activePageName} == 'BoardList' ? 'active' ">
                 <a class="nav-link" th:href="@{/board/list}">Board<span class="sr-only" th:if="${activePageName} == 'BoardList'">(current)</span></a>
             </li>
