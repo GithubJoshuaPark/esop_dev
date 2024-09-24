@@ -1,9 +1,9 @@
 <!--
-@author : Joshua Park
-@email : soromiso@gmail.com
-@create date : 2024-08-18 21:52:55
-@modify date : 2024-08-18 21:52:55
-@desc [index.html] : Home page
+    @author : Joshua Park
+    @email : soromiso@gmail.com
+    @create date : 2024-08-18 21:52:55
+    @modify date : 2024-08-18 21:52:55
+    @desc [index.html] : Home page
 -->
 
 <!DOCTYPE html>
@@ -12,10 +12,19 @@
     <body>
         <nav th:replace="~{acom/common :: menu('Home')}">
         </nav>
+
         <main role="main" class="container">
             <div class="starter-template">
-                <h1>ESOP</h1>
-                <p class="lead">(Bootstrap, Thymeleaf, DevExpress Ex on my local)<br> 
+                <!-- image -->
+                <img src="/images/company-logo.png"
+                     th:src="@{/images/company-logo.png}"
+                     alt="company-logo"
+                     style="width: 200px; height: 100px; border-radius: 10%;"
+                >
+                <!--                <h1>ESOP</h1>-->
+                <br>
+                <br>
+                <p class="lead">( Bootstrap, Thymeleaf, DevExpress Ex on Dev Env )<br>
                                 God will make a way for you and help me all the time.</p>
             </div>
         </main><!-- /.container -->

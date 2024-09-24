@@ -19,6 +19,7 @@
 <!-- menu -->
 <nav th:fragment="menu(activePageName)" class="navbar navbar-expand-md navbar-dark bg-info fixed-top">
     <a class="navbar-brand" href="#" th:href="@{/}">ESOP</a>
+
     <button class="navbar-toggler" type="button"
             data-toggle="collapse"
             data-target="#navbarsExampleDefault"
@@ -62,6 +63,7 @@
             <span class="text-white mx-2" sec:authentication="principal.authorities">권한</span>
             <button class="btn btn-info my-2 my-sm-0" type="submit">LogOut</button>
         </form>
+
     </div>
 </nav>
 
