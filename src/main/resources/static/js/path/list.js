@@ -196,11 +196,11 @@ $(document).ready(function() {
                 allowSelectAll: true,
             },
             paging: {
-                pageSize: 5
+                pageSize: 10
             },
             pager: {
                 showPageSizeSelector: true,
-                allowedPageSizes: [5, 10, 20],
+                allowedPageSizes: [10, 20, 30],
                 showInfo: true,
                 visible: true
             },
