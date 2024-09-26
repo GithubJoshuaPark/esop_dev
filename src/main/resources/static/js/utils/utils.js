@@ -16,15 +16,16 @@ export const NotificationType = {
 export function showCustomNotification(message, type) {
     DevExpress.ui.notify({
         contentTemplate: function(element) {
-            var content = `
+             let content = `
                 <div class="custom-notify">
                     <div class="notify-header">
-                        <img src="/images/company-logo.png" 
-                             alt="Company Logo" 
-                             class="company-logo"
-                             cover="fit"
-                             width="50"
-                             height="50">
+<!--                        <img src="/images/kzinc01.png" -->
+<!--                             alt="Company Logo" -->
+<!--                             class="company-logo"-->
+<!--                             cover="fit"-->
+<!--                             width="50"-->
+<!--                             height="50">-->
+                        <span class="notify-title">${type.toUpperCase()}</span>
                     </div>
                     <div class="notify-body">
                         <span class="notify-icon ${type}-icon"></span>
@@ -176,7 +177,6 @@ export function showPromptDialog(title, message, defaultValue) {
 
         try {
             const $popup = $('<div>').appendTo('body');  // Append to body explicitly
-
             const popup = $popup.dxPopup({
                 title: title,
                 contentTemplate: function(contentElement) {
@@ -187,8 +187,8 @@ export function showPromptDialog(title, message, defaultValue) {
                             console.log("TextBox value changed:", e.value);
                         }
                     });
-                    textBoxInstance = $textBox.dxTextBox('instance');
 
+                    textBoxInstance = $textBox.dxTextBox('instance');
                     contentElement.append(
                         $('<p>').text(message),
                         $textBox
