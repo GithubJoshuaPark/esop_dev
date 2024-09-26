@@ -74,6 +74,5 @@ public class DxEntityApiController {
         dxService.delete(id);
         return ResponseEntity.ok().build();
     }
-    
-    
+
 }
