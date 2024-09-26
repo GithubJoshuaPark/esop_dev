@@ -1,4 +1,4 @@
-package com.soro.esop.exception;
+package com.soro.esop.esopException;
 
 import com.soro.esop.domain.ErrorResponse;
 import com.soro.esop.domain.HttpResponse;
@@ -38,9 +38,17 @@ public class GlobalHandleException extends ResponseEntityExceptionHandler implem
     private String errMsg_ = "";
 
     @ExceptionHandler(EsopException.class)
-    public ResponseEntity<ErrorResponse> handleEsopException(EsopException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<HttpResponse> handleEsopException(EsopException ex) {
+        log.error(">> EsopException: {}", ex.getMessage());
+        errMsg_ = String.format("EsopException: %s", ex.getMessage());
+        return new ResponseEntity<>(
+                HttpResponse.builder()
+                        .timeStamp(now().toString())
+                        .reason(errMsg_)
+                        .message(ex.getMessage())
+                        .status(HttpStatus.BAD_REQUEST)
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .build(), HttpStatus.BAD_REQUEST);
     }
 
     @Override
@@ -55,7 +63,7 @@ public class GlobalHandleException extends ResponseEntityExceptionHandler implem
                 HttpResponse.builder()
                         .timeStamp(now().toString())
                         .reason(errMsg_)
-                        .developerMessage(ex.getMessage())
+                        .message(ex.getMessage())
                         .status(HttpStatus.resolve(statusCode.value()))
                         .statusCode(statusCode.value())
                         .build(), statusCode);
@@ -79,7 +87,7 @@ public class GlobalHandleException extends ResponseEntityExceptionHandler implem
                 HttpResponse.builder()
                         .timeStamp(now().toString())
                         .reason(errMsg_)
-                        .developerMessage(ex.getMessage())
+                        .message(ex.getMessage())
                         .status(HttpStatus.resolve(statusCode.value()))
                         .statusCode(statusCode.value())
                         .build(), statusCode);
@@ -95,7 +103,7 @@ public class GlobalHandleException extends ResponseEntityExceptionHandler implem
                 HttpResponse.builder()
                         .timeStamp(now().toString())
                         .reason(errMsg_)
-                        .developerMessage(ex.getMessage())
+                        .message(ex.getMessage())
                         .status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                         .build(), HttpStatus.INTERNAL_SERVER_ERROR);

@@ -1,4 +1,4 @@
-package com.soro.esop.exception;
+package com.soro.esop.esopException;
 
 /**
  * packageName : com.soro.esop.exception
@@ -16,7 +16,7 @@ public class EsopErr {
     // Member(조합원) Error Messages
     public static final String MEMBER_ERR_HIS_NOT_FOUND = "기 등록된 거래 이력이 없습니다";
     public static final String MEMBER_ERR_INVALID_INPUT = "잘못된 입력 값입니다";
-    public static final String MEMBER_ERR_NOT_FOUND = "회원을 찾을 수 없습니다";
+    public static final String MEMBER_ERR_NOT_FOUND = "조합원을 찾을 수 없습니다";
 
     // Buy(매수) Error Messages
 

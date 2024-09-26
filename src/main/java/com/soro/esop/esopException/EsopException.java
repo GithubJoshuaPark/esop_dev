@@ -1,4 +1,11 @@
-package com.soro.esop.exception;
+package com.soro.esop.esopException;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 /**
  * packageName : com.soro.esop.exception
@@ -12,7 +19,8 @@ package com.soro.esop.exception;
  * 9/27/24             soromiso             new
  */
 public class EsopException extends RuntimeException{
-    private final String errorCode;
+    private String errorCode;
+    private List<String> details;
 
     public EsopException(String message) {
         super(message);
@@ -24,7 +32,17 @@ public class EsopException extends RuntimeException{
         this.errorCode = errorCode;
     }
 
+    public EsopException(String errorCode, String message, List<String> details) {
+        super(message);
+        this.errorCode = errorCode;
+        this.details = details;
+    }
+
     public String getErrorCode() {
         return errorCode;
+    }
+
+    public List<String> getDetails() {
+        return details;
     }
 }

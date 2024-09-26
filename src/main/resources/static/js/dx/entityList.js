@@ -11,6 +11,20 @@ $(document).ready(function() {
     function loadBoards() {
         console.log('Loading Entities...');
 
+        function showLogAndReturnWithPromise(error, trxOneOfCrud) {
+            if (error.response && error.response.data && error.response.data.message) {
+                // Display validation errors
+                let message = error.response.data.message;
+                showCustomNotification(message, NotificationType.ERROR);
+                return Promise.reject(message);
+            } else {
+                let message = `Error ${trxOneOfCrud} entity: ${error}`;
+                console.error(message);
+                showCustomNotification(message, NotificationType.ERROR);
+                return Promise.reject(error);
+            }
+        }
+
         let dxDataSource = new DevExpress.data.CustomStore({
             key: "id",
             load: function() {
@@ -21,8 +35,8 @@ $(document).ready(function() {
                         return response_;
                     })
                     .catch(error => {
-                        console.error("Error loading entities: ", error);
-                        let message = String.format("Error loading entities: %s",error);
+                        let message = `Error loading entities: ${error}`;
+                        console.error(message);
                         showCustomNotification(message, NotificationType.ERROR);
                         return [];
                     });
@@ -49,23 +63,7 @@ $(document).ready(function() {
                         return data;
                     })
                     .catch(error => {
-                        // Handle errors
-                        if (error.response && error.response.status === 400) {
-                            // Display validation errors
-                            let errorResponse = error.response.data;
-                            if (errorResponse && errorResponse.errors) {
-                                let message = errorResponse.errors.join('\n');
-                                showCustomNotification(message, NotificationType.ERROR);
-                            } else {
-                                let message = "An error occurred while adding the record.";
-                                showCustomNotification(message, NotificationType.ERROR);
-                            }
-                        } else {
-                            console.error("Error adding entity: ", error);
-                            let message = "Error adding entity: " + error;
-                            showCustomNotification(message, NotificationType.ERROR);
-                        }
-                        return Promise.reject(error);
+                        return showLogAndReturnWithPromise(error, 'Insert');
                     });
             },
             update: function(key, values) {
@@ -131,25 +129,8 @@ $(document).ready(function() {
                         return data;
                     })
                     .catch(error => {
-                        // Handle errors
-                        if (error.response && error.response.status === 400) {
-                            // Display validation errors
-                            let errorResponse = error.response.data;
-                            if (errorResponse && errorResponse.errors) {
-                                let message = errorResponse.errors.join('\n');
-                                showCustomNotification(message, NotificationType.ERROR);
-                            } else {
-                                let message = "An error occurred while updating the record.";
-                                showCustomNotification(message, NotificationType.ERROR);
-                            }
-                        } else {
-                            console.error("Error updating entity: ", error);
-                            let message = "Error updating entity: " + error;
-                            showCustomNotification(message, NotificationType.ERROR);
-                        }
-                        return Promise.reject(error);
+                        return showLogAndReturnWithPromise(error, 'Update');
                     });
-
             },
             remove: function(key) {
 
@@ -170,10 +151,7 @@ $(document).ready(function() {
                     })
                     .catch(error => {
                         // Handle errors
-                        console.error("Error deleting entity: ", error);
-                        let message = "Error deleting entity: " + error;
-                        showCustomNotification(message, NotificationType.ERROR);
-                        return Promise.reject(error);
+                        return showLogAndReturnWithPromise(error, 'Remove');
                     });
             }
         });
@@ -366,11 +344,11 @@ $(document).ready(function() {
                 },
             },
             paging: {
-                pageSize: 5
+                pageSize: 10
             },
             pager: {
                 showPageSizeSelector: true,
-                allowedPageSizes: [5, 10, 20],
+                allowedPageSizes: [10, 20, 30],
                 showInfo: true,
                 visible: true
             },
@@ -382,7 +360,7 @@ $(document).ready(function() {
                 width: 240,
                 placeholder: "Search..."
             },
-            noDataText: "데이터 없어요.", // Custom message when there's no data
+            noDataText: "등록된 내역이 없습니다.", // Custom message when there's no data
             export: {
                 enabled: true,                     // Enable the export feature
                 fileName: "entityList",

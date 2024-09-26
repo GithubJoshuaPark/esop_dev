@@ -2,6 +2,8 @@ package com.soro.esop.controller.v1.dx;
 
 import com.soro.esop.domain.ErrorResponse;
 import com.soro.esop.entity.DxEntity;
+import com.soro.esop.esopException.EsopErr;
+import com.soro.esop.esopException.EsopException;
 import com.soro.esop.service.DxEntityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +46,15 @@ public class DxEntityApiController {
     @PostMapping("/entityList/fordx")
     public ResponseEntity<DxEntity> createDxEntity(@RequestBody DxEntity dxEntity) {
         log.debug("Request to create entity: {}", dxEntity);
-        DxEntity savedEntity = dxService.save(dxEntity);
-        return ResponseEntity.ok(savedEntity);
+
+        throw new EsopException(EsopErr.MEMBER_ERR_HIS_NOT_FOUND);
+
+//        try{
+//            DxEntity savedEntity = dxService.save(dxEntity);
+//            return ResponseEntity.ok(savedEntity);
+//        } catch(Exception e){
+//            throw new EsopException(EsopErr.MEMBER_ERR_HIS_NOT_FOUND);
+//        }
     }
 
     @PutMapping("/entityList/fordx/{id}")
