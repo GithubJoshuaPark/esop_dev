@@ -297,24 +297,6 @@ $(document).ready(function() {
                                 valueExpr: "Y",
                                 falseValue: "N",
                                 trueValue: "Y",
-                                // onValueChanged: function(e) {
-                                //     console.log('isTrxCeaseYn: ', e.value);
-                                //
-                                //     let dataGrid = $("#gridContainer").dxDataGrid("instance");
-                                //     let editRowKey = dataGrid.option("editing.editRowKey"); // Get the key of the row being edited
-                                //     let editIndex = dataGrid.getRowIndexByKey(editRowKey);
-                                //
-                                //     console.log('editRowKey: ', editRowKey);
-                                //     console.log('editIndex: ', editIndex);
-                                //
-                                //     if(e.value == true) {
-                                //         //dataGrid.cellValue(editIndex, "toDate", new Date() + 15);
-                                //     } else {
-                                //         //dataGrid.cellValue(editIndex, "toDate", new Date());
-                                //     }
-                                //     return true;
-                                //
-                                // },
                             },
                         },
                         {
@@ -334,9 +316,9 @@ $(document).ready(function() {
                                 type: "custom",
                                 validationCallback: function(params) {
                                     const toDate = params.value;
-                                    console.log('toDate: ', toDate);
+                                    console.log('toDate: ', toDate); // undefined
 
-                                    const dataGrid = $("#gridContainer").dxDataGrid("instance");
+                                    const dataGrid = gridInstance; // $("#gridContainer").dxDataGrid("instance");
                                     const editRowKey = dataGrid.option("editing.editRowKey"); // Get the key of the row being edited
                                     console.log('editRowKey: ', editRowKey);
 
@@ -419,7 +401,10 @@ $(document).ready(function() {
                     value: 0,
                     address: "New Address",
                     phoneNumber: "00000000000",
-                    ssn: "0000000000000"
+                    ssn: "0000000000000",
+                    fromDate: new Date(),
+                    toDate: new Date(),
+
                 };
             },
             onExporting(e) {
