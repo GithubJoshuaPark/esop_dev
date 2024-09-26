@@ -347,6 +347,7 @@ $(document).ready(function() {
                             label: { text: "설명" },
                             editorType: "dxTextArea",
                             editorOptions: { height: 100 },
+                            colSpan: 2,
                         },
                     ]
                 },
