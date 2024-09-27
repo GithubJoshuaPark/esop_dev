@@ -13,7 +13,7 @@ export const NotificationType = {
     INFO: "info"
 };
 
-export function showCustomNotification(message, type) {
+export function showNotification(message, type) {
     DevExpress.ui.notify({
         contentTemplate: function(element) {
              let content = `
@@ -36,7 +36,7 @@ export function showCustomNotification(message, type) {
             element.append(content);
         },
         type: type, // "success", "warning", "error", "info"
-        displayTime: 3000,
+        displayTime: 1000,
         position: {
             my: "center",
             at: "center",
@@ -90,7 +90,7 @@ export function exportDataGridToExcel(dataGrid, xlsxFileName) {
         }
     } else {
         // Use the file name entered by the user
-        showCustomNotification("Export excel file name 필요해요...", NotificationType.WARNING);
+        showNotification("Export excel file name 필요해요...", NotificationType.WARNING);
         return;
     }
 
@@ -152,11 +152,11 @@ export function exportDataGridToExcel(dataGrid, xlsxFileName) {
         console.log('Exported to Excel...exportDataGrid() : ');
         let message = `Exported to ${xlsxFileName} successfully.`;
         saveAs(new Blob([buffer], {type: 'application/octet-stream'}), xlsxFileName);
-        showCustomNotification(message, NotificationType.SUCCESS);
+        showNotification(message, NotificationType.SUCCESS);
     }).catch((error) => {
         console.error('Error exporting to Excel: ', error);
         let message = "Error exporting to Excel: " + error;
-        showCustomNotification(message, NotificationType.ERROR);
+        showNotification(message, NotificationType.ERROR);
         return Promise.reject(message);
     });
 }

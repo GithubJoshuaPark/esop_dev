@@ -1,5 +1,5 @@
 import {
-    showCustomNotification, NotificationType,
+    showNotification, NotificationType,
     formatSSN, formatPhoneNumber, exportDataGridToExcel, showPromptDialog
 } from "../utils/utils.js";
 
@@ -23,7 +23,7 @@ $(document).ready(function() {
                             .catch(error => {
                                 console.error("Error loading entities: ", error);
                                 let message = String.format("Error loading entities: %s", error.toString());
-                                showCustomNotification(message, NotificationType.ERROR);
+                                showNotification(message, NotificationType.ERROR);
                                 return [];
                             });
             },
@@ -35,13 +35,13 @@ $(document).ready(function() {
                     .then(response => {
                         let response_ = response.data;
                         console.log('response', response_);
-                        showCustomNotification("Entity inserted successfully.", NotificationType.SUCCESS);
+                        showNotification("Entity inserted successfully.", NotificationType.SUCCESS);
                         return response_; // Return the inserted entity
                     })
                     .catch(error => {
                         console.error("Error inserting entity: ", error);
                         let message = "Error inserting entity: " + error;
-                        showCustomNotification(message, NotificationType.ERROR);
+                        showNotification(message, NotificationType.ERROR);
                         return Promise.reject(message);
                     });
             },
@@ -65,11 +65,11 @@ $(document).ready(function() {
                 }).then(response => {
                     let response_ = response.data;
                     console.log('response', response_);
-                    showCustomNotification("Entity updated successfully.", NotificationType.SUCCESS);
+                    showNotification("Entity updated successfully.", NotificationType.SUCCESS);
                 }).catch(error => {
                     console.error("Error updating entity: ", error);
                     let message = "Error updating entity: " + error;
-                    showCustomNotification(message, NotificationType.ERROR);
+                    showNotification(message, NotificationType.ERROR);
                     return Promise.reject(message);
                 });
             },
@@ -80,12 +80,12 @@ $(document).ready(function() {
                     .then(response => {
                         let response_ = response.data;
                         console.log('response', response_);
-                        showCustomNotification("Entity deleted successfully.", NotificationType.SUCCESS);
+                        showNotification("Entity deleted successfully.", NotificationType.SUCCESS);
                     })
                     .catch(error => {
                         console.error("Error deleting entity: ", error);
                         let message = "Error deleting entity: " + error;
-                        showCustomNotification(message, NotificationType.ERROR);
+                        showNotification(message, NotificationType.ERROR);
                         return Promise.reject(message);
                     });
             }
@@ -199,6 +199,7 @@ $(document).ready(function() {
                             editorOptions: {
                                 height: 100
                             },
+                            colSpan: 2,
                         },
                     ]
                 },
@@ -273,14 +274,14 @@ $(document).ready(function() {
                             fileName = fileName.replace(/[/\\?%*:|"<>]/g, '-').trim();
                             if(fileName === '') {
                                 // Show a message if the file name is empty
-                                showCustomNotification("File name is required.", NotificationType.WARNING);
+                                showNotification("File name is required.", NotificationType.WARNING);
                             } else {
                                 // Proceed with exporting using the provided file name
                                 exportDataGridToExcel(e.component, fileName);
                             }
                         } else {
                             // User canceled or provided an empty file name
-                            showCustomNotification("Export canceled.", NotificationType.INFO);
+                            showNotification("Export canceled.", NotificationType.INFO);
                         }
                     });
             },

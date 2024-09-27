@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -51,7 +51,7 @@ public class DxEntityServiceImpl implements DxEntityService {
     public void createFromDxUser(DxUser dxUser) {
         log.debug("createFromDxUser: {}", dxUser);
         DxEntity dxEntity = new DxEntity();
-        updateDxEntityFromDxUser(dxEntity, dxUser);
+        setDxEntityWithDxUser(dxEntity, dxUser);
         log.debug("dxEntity: {}", dxEntity);
         dxEntityRepository.save(dxEntity); // it occurred an error here
     }
@@ -69,7 +69,7 @@ public class DxEntityServiceImpl implements DxEntityService {
         {
             log.debug("DxEntity found by ssn: {}", dxUser.getSsn());
             dxEntity.ifPresent(entity -> {
-                updateDxEntityFromDxUser(entity, dxUser);
+                setDxEntityWithDxUser(entity, dxUser);
                 dxEntityRepository.save(entity);
             });
         }
@@ -87,13 +87,15 @@ public class DxEntityServiceImpl implements DxEntityService {
      * @param dxEntity as target
      * @param dxUser as source
      */
-    private void updateDxEntityFromDxUser(DxEntity dxEntity, DxUser dxUser) {
+    private void setDxEntityWithDxUser(DxEntity dxEntity, DxUser dxUser) {
         dxEntity.setName(dxUser.getName());
         dxEntity.setValue(dxUser.getValue());
         dxEntity.setAddress(dxUser.getAddress());
         dxEntity.setPhoneNumber(dxUser.getPhoneNumber());
         dxEntity.setSsn(dxUser.getSsn());
         dxEntity.setDescription(dxUser.getDescription());
+        dxEntity.setFromDate(LocalDate.now());
+        dxEntity.setToDate(LocalDate.now().plusYears(1));
     }
     
 }

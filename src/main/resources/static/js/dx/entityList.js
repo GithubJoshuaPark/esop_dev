@@ -1,5 +1,5 @@
 import {
-    showCustomNotification, NotificationType,
+    showNotification, NotificationType,
     formatSSN, formatPhoneNumber, exportDataGridToExcel, showPromptDialog, formatDateYyyyMmdd
 } from "../utils/utils.js";
 
@@ -15,12 +15,12 @@ $(document).ready(function() {
             if (error.response && error.response.data && error.response.data.message) {
                 // Display validation errors
                 let message = error.response.data.message;
-                showCustomNotification(message, NotificationType.ERROR);
+                showNotification(message, NotificationType.ERROR);
                 return Promise.reject(message);
             } else {
                 let message = `Error ${trxOneOfCrud} entity: ${error}`;
                 console.error(message);
-                showCustomNotification(message, NotificationType.ERROR);
+                showNotification(message, NotificationType.ERROR);
                 return Promise.reject(error);
             }
         }
@@ -37,7 +37,7 @@ $(document).ready(function() {
                     .catch(error => {
                         let message = `Error loading entities: ${error}`;
                         console.error(message);
-                        showCustomNotification(message, NotificationType.ERROR);
+                        showNotification(message, NotificationType.ERROR);
                         return [];
                     });
             },
@@ -59,7 +59,7 @@ $(document).ready(function() {
                     .then(response => {
                         let data = response.data;
                         console.log('inserting....', data);
-                        showCustomNotification("Record added successfully.", NotificationType.SUCCESS);
+                        showNotification("Record added successfully.", NotificationType.SUCCESS);
                         return data;
                     })
                     .catch(error => {
@@ -125,7 +125,7 @@ $(document).ready(function() {
                     .then(response => {
                         let data = response.data;
                         console.log('updating....', data);
-                        showCustomNotification("Record updated successfully.", NotificationType.SUCCESS);
+                        showNotification("Record updated successfully.", NotificationType.SUCCESS);
                         return data;
                     })
                     .catch(error => {
@@ -147,7 +147,7 @@ $(document).ready(function() {
                     })
                     .then(response => {
                         console.log('deleting....', key);
-                        showCustomNotification("Record deleted successfully.", NotificationType.SUCCESS);
+                        showNotification("Record deleted successfully.", NotificationType.SUCCESS);
                     })
                     .catch(error => {
                         // Handle errors
