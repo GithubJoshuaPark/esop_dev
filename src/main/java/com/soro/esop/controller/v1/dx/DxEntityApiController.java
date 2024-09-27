@@ -47,14 +47,12 @@ public class DxEntityApiController {
     public ResponseEntity<DxEntity> createDxEntity(@RequestBody DxEntity dxEntity) {
         log.debug("Request to create entity: {}", dxEntity);
 
-        throw new EsopException(EsopErr.MEMBER_ERR_HIS_NOT_FOUND);
-
-//        try{
-//            DxEntity savedEntity = dxService.save(dxEntity);
-//            return ResponseEntity.ok(savedEntity);
-//        } catch(Exception e){
-//            throw new EsopException(EsopErr.MEMBER_ERR_HIS_NOT_FOUND);
-//        }
+        try{
+            DxEntity savedEntity = dxService.save(dxEntity);
+            return ResponseEntity.ok(savedEntity);
+        } catch(Exception e){
+            throw new EsopException(EsopErr.HIS_NOT_FOUND);
+        }
     }
 
     @PutMapping("/entityList/fordx/{id}")

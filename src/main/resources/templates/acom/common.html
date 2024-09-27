@@ -26,7 +26,6 @@
              width="50"
              height="50"
         >
-        <!-- style="width: 60px; height: 50px; border-radius: 10%; transparent: 0.5;"-->
     </a>
 
     <button class="navbar-toggler" type="button"
@@ -39,18 +38,48 @@
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item" th:classappend="${activePageName} == 'BoardList' ? 'active' ">
-                <a class="nav-link" th:href="@{/board/list}">Board<span class="sr-only" th:if="${activePageName} == 'BoardList'">(current)</span></a>
+
+            <!--/*-->
+                <li class="nav-item" th:classappend="${activePageName} == 'BoardList' ? 'active' ">
+                    <a class="nav-link" th:href="@{/board/list}">Board<span class="sr-only" th:if="${activePageName} == 'BoardList'">(current)</span></a>
+                </li>
+                <li class="nav-item" th:classappend="${activePageName} == 'dxUserList' ? 'active' ">
+                    <a class="nav-link" th:href="@{/dx/userList}">DxUser<span class="sr-only" th:if="${activePageName} == 'dxUserList'">(current)</span></a>
+                </li>
+                <li class="nav-item" th:classappend="${activePageName} == 'dxEntityList' ? 'active' ">
+                    <a class="nav-link" th:href="@{/dx/entityList}">DxEntity<span class="sr-only" th:if="${activePageName} == 'dxEntityList'">(current)</span></a>
+                </li>
+                <li class="nav-item" th:classappend="${activePageName} == 'pathList' ? 'active' ">
+                    <a class="nav-link" th:href="@{/path/list}">pathList<span class="sr-only" th:if="${activePageName} == 'pathList'">(current)</span></a>
+                </li>
+            <!--*/-->
+
+            <!-- Boards Dropdown Menu -->
+            <li class="nav-item dropdown"
+                th:classappend="${(activePageName == 'BoardList' or activePageName == 'dxUserList' or activePageName == 'dxEntityList' or activePageName == 'pathList') ? ' active' : ''}">
+                <a class="nav-link dropdown-toggle" href="#" id="boardsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Boards
+                </a>
+                <div class="dropdown-menu" aria-labelledby="boardsDropdown">
+                    <a class="dropdown-item" th:href="@{/board/list}">
+                        BoardList
+                        <span class="sr-only" th:if="${activePageName == 'BoardList'}">(current)</span>
+                    </a>
+                    <a class="dropdown-item" th:href="@{/dx/userList}">
+                        DxUserList
+                        <span class="sr-only" th:if="${activePageName == 'dxUserList'}">(current)</span>
+                    </a>
+                    <a class="dropdown-item" th:href="@{/dx/entityList}">
+                        DxEntityList
+                        <span class="sr-only" th:if="${activePageName == 'dxEntityList'}">(current)</span>
+                    </a>
+                    <a class="dropdown-item" th:href="@{/path/list}">
+                        PathList
+                        <span class="sr-only" th:if="${activePageName == 'pathList'}">(current)</span>
+                    </a>
+                </div>
             </li>
-            <li class="nav-item" th:classappend="${activePageName} == 'dxUserList' ? 'active' ">
-                <a class="nav-link" th:href="@{/dx/userList}">DxUser<span class="sr-only" th:if="${activePageName} == 'dxUserList'">(current)</span></a>
-            </li>
-            <li class="nav-item" th:classappend="${activePageName} == 'dxEntityList' ? 'active' ">
-                <a class="nav-link" th:href="@{/dx/entityList}">DxEntity<span class="sr-only" th:if="${activePageName} == 'dxEntityList'">(current)</span></a>
-            </li>
-            <li class="nav-item" th:classappend="${activePageName} == 'pathList' ? 'active' ">
-                <a class="nav-link" th:href="@{/path/list}">pathList<span class="sr-only" th:if="${activePageName} == 'pathList'">(current)</span></a>
-            </li>
+
         </ul>
 
         <!-- User info, logOut -->
@@ -69,9 +98,9 @@
             <span class="text-white mx-2" sec:authentication="principal.authorities">권한</span>
             <button class="btn btn-info my-2 my-sm-0" type="submit">LogOut</button>
         </form>
-
     </div>
 </nav>
+
 
 <!-- JavaScript files fragment -->
 <th:block th:fragment="cdnJsfiles">
