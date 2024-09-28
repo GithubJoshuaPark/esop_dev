@@ -116,34 +116,6 @@ $(document).ready(function() {
                     position: { my: "center", at: "center", of: window },
                     dragEnabled: true,
                     closeOnOutsideClick: false, // Prevent closing the popup when clicking outside
-                    // toolbarItems: [
-                    //     {
-                    //         toolbar: "bottom",
-                    //         location: "after",
-                    //         widget: "dxButton",
-                    //         options: {
-                    //             text: "저장",
-                    //             onClick: function(e) {
-                    //                 console.log('Custom button clicked...', e);
-                    //                 // insert or update
-                    //                 gridInstance.saveEditData();
-                    //             }
-                    //         }
-                    //     },
-                    //     {
-                    //         toolbar: "bottom",
-                    //         location: "after",
-                    //         widget: "dxButton",
-                    //         options: {
-                    //             text: "취소",
-                    //             onClick: function(e) {
-                    //                 console.log('Custom button clicked...', e);
-                    //                 // cancel
-                    //                 gridInstance.cancelEditData();
-                    //             }
-                    //         }
-                    //     }
-                    // ],
                 },
                 form: {
                     items: [

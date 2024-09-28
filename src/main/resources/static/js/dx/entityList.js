@@ -90,35 +90,6 @@ $(document).ready(function() {
 
                 console.log('updating....', updatedData);
 
-                // return $.ajax({
-                //     url: "/api/v1/dx/entityList/fordx/" + key,
-                //     method: "PUT",
-                //     xhrFields: {
-                //         withCredentials: true // Send cookies when calling the API
-                //     },
-                //     data: JSON.stringify(updatedData),
-                //     contentType: "application/json",
-                //     dataType: "json"
-                // }).fail(function(xhr, status, error) {
-                //     // Handle errors
-                //     if (xhr.status === 400) {
-                //         // Display validation errors
-                //         let errorResponse = xhr.responseJSON;
-                //         if (errorResponse && errorResponse.errors) {
-                //             let message = errorResponse.errors.join('\n');
-                //             ShowCustomNotification(message, NotificationType.INFO);
-                //         } else {
-                //             let message = "An error occurred while updating the record.";
-                //             ShowCustomNotification(message, NotificationType.ERROR);
-                //         }
-                //     }
-                //     else {
-                //         console.error("Error updating entity: ", error);
-                //         let message = "Error updating entity: " + error;
-                //         ShowCustomNotification(message, NotificationType.ERROR);
-                //     }
-                // });
-
                 return axios.put("/api/v1/dx/entityList/fordx/" + key, updatedData, {
                     withCredentials: true,
                     })
@@ -308,7 +279,7 @@ $(document).ready(function() {
                                         console.log('fromDate: ', fromDate);
 
                                         if (toDate && fromDate && toDate < fromDate) {
-                                            showCustomNotification("종료일은 시작일 이후여야 합니다.", NotificationType.WARNING);
+                                            showNotification("종료일은 시작일 이후여야 합니다.", NotificationType.WARNING);
                                             dataGrid.option("isValid", false);
                                             return false;
                                         }
@@ -403,14 +374,14 @@ $(document).ready(function() {
                             fileName = fileName.replace(/[/\\?%*:|"<>]/g, '-').trim();
                             if(fileName === '') {
                                 // Show a message if the file name is empty
-                                showCustomNotification("File name is required.", NotificationType.WARNING);
+                                showNotification("File name is required.", NotificationType.WARNING);
                             } else {
                                 // Proceed with exporting using the provided file name
                                 exportDataGridToExcel(e.component, fileName);
                             }
                         } else {
                             // User canceled or provided an empty file name
-                            showCustomNotification("Export canceled.", NotificationType.INFO);
+                            showNotification("Export canceled.", NotificationType.INFO);
                         }
                     });
             },

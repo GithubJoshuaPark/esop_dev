@@ -19,12 +19,12 @@ export function showNotification(message, type) {
              let content = `
                 <div class="custom-notify">
                     <div class="notify-header">
-<!--                        <img src="/images/kzinc01.png" -->
-<!--                             alt="Company Logo" -->
-<!--                             class="company-logo"-->
-<!--                             cover="fit"-->
-<!--                             width="50"-->
-<!--                             height="50">-->
+                    <!--  <img src="/images/kzinc01.png" -->
+                    <!--       alt="Company Logo" -->
+                    <!--       class="company-logo"-->
+                    <!--       cover="fit"-->
+                    <!--       width="50"-->
+                    <!--       height="50">-->
                         <span class="notify-title">${type.toUpperCase()}</span>
                     </div>
                     <div class="notify-body">

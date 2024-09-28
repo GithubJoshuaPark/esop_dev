@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/path")
 @RequiredArgsConstructor
-public class PathListController {
+public class DxPathListController {
 
     @GetMapping("/list")
     public String boardList(Model model)

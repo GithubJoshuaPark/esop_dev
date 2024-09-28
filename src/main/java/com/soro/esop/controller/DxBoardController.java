@@ -2,8 +2,6 @@ package com.soro.esop.controller;
 
 import java.util.List;
 
-import com.soro.esop.entity.DxEntity;
-import com.soro.esop.service.DxEntityService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -45,12 +43,11 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/board")
 @RequiredArgsConstructor
-public class BoardViewController {
+public class DxBoardController {
 
     private final BoardService   boardService;
     private final UserService    userService;    
     private final BoardValidator boardValidator;
-
 
     @GetMapping("/list")
     public String boardList(@RequestParam(name="titleOrContent", required = false, defaultValue = "") String titleOrContent,
@@ -92,7 +89,7 @@ public class BoardViewController {
         model.addAttribute("endPage"    , endPage_        );
         model.addAttribute("pageSize"   , 5);
         model.addAttribute("currentPage", currentPage_    );
-        model.addAttribute("boards"     , boards_          );
+        model.addAttribute("boards"     , boards_         );
         model.addAttribute("welcomeMessage", "Welcome to the Board List Page");
         return "board/list";
     }

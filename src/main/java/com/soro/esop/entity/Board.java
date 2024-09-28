@@ -30,5 +30,5 @@ public class Board {
     private Long writer;
 
     private Boolean enabled = true;
-    private LocalDate regDate = LocalDate.now(); // LocalDate.now() : 현재 날짜를 반환
+    private LocalDate regDate = LocalDate.now();
 }

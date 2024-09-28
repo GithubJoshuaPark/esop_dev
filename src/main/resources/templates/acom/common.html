@@ -64,50 +64,14 @@
                 </div>
             </li>
             <li class="nav-item dropdown"
-                th:classappend="${(activePageName == 'BoardList' or activePageName == 'dxUserList' or activePageName == 'dxEntityList' or activePageName == 'pathList') ? ' active' : ''}">
+                th:classappend="${(activePageName == 'dxStockBuyList') ? ' active' : ''}">
                 <a class="nav-link dropdown-toggle" href="#" id="boardsDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Boards
+                    Esop
                 </a>
                 <div class="dropdown-menu" aria-labelledby="boardsDropdown">
-                    <a class="dropdown-item" th:href="@{/board/list}">
-                        BoardList
-                        <span class="sr-only" th:if="${activePageName == 'BoardList'}">(current)</span>
-                    </a>
-                    <a class="dropdown-item" th:href="@{/dx/userList}">
-                        DxUserList
-                        <span class="sr-only" th:if="${activePageName == 'dxUserList'}">(current)</span>
-                    </a>
-                    <a class="dropdown-item" th:href="@{/dx/entityList}">
-                        DxEntityList
-                        <span class="sr-only" th:if="${activePageName == 'dxEntityList'}">(current)</span>
-                    </a>
-                    <a class="dropdown-item" th:href="@{/path/list}">
-                        PathList
-                        <span class="sr-only" th:if="${activePageName == 'pathList'}">(current)</span>
-                    </a>
-                </div>
-            </li>
-            <li class="nav-item dropdown"
-                th:classappend="${(activePageName == 'BoardList' or activePageName == 'dxUserList' or activePageName == 'dxEntityList' or activePageName == 'pathList') ? ' active' : ''}">
-                <a class="nav-link dropdown-toggle" href="#" id="boardsDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Boards
-                </a>
-                <div class="dropdown-menu" aria-labelledby="boardsDropdown">
-                    <a class="dropdown-item" th:href="@{/board/list}">
-                        BoardList
-                        <span class="sr-only" th:if="${activePageName == 'BoardList'}">(current)</span>
-                    </a>
-                    <a class="dropdown-item" th:href="@{/dx/userList}">
-                        DxUserList
-                        <span class="sr-only" th:if="${activePageName == 'dxUserList'}">(current)</span>
-                    </a>
-                    <a class="dropdown-item" th:href="@{/dx/entityList}">
-                        DxEntityList
-                        <span class="sr-only" th:if="${activePageName == 'dxEntityList'}">(current)</span>
-                    </a>
-                    <a class="dropdown-item" th:href="@{/path/list}">
-                        PathList
-                        <span class="sr-only" th:if="${activePageName == 'pathList'}">(current)</span>
+                    <a class="dropdown-item" th:href="@{/dx/stockBuyList}">
+                        StockBuyList
+                        <span class="sr-only" th:if="${activePageName == 'dxStockBuyList'}">(current)</span>
                     </a>
                 </div>
             </li>

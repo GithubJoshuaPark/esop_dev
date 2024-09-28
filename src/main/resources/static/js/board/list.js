@@ -1,5 +1,3 @@
-import {showCustomNotification} from "../utils/utils.js";
-
 $(document).ready(function() {
     console.log("list module...");
     

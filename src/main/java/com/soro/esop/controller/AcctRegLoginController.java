@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/account")
 @RequiredArgsConstructor
-public class AccountViewController {
+public class AcctRegLoginController {
     
     private final UserService userService;
     private final RoleService roleService;
