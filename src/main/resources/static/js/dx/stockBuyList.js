@@ -5,6 +5,8 @@ import {
 
 $(document).ready(function() {
     console.log("list module...");
+
+    let activePopup = null; // Global variable to store the active popup
     
     loadStockBuyList();
 
@@ -341,21 +343,36 @@ $(document).ready(function() {
 
     function showDetailPopup(rowData) {
         console.log('showDetailPopup', rowData);
+
+        // Close any existing popup
+        if (activePopup) {
+            activePopup.hide();
+        }
+
         $("#gridContainer").hide(); // Hide the main grid
+
+        // Create a custom stepper using dxButtonGroup for the status
+        const stepperItems = [
+            { text: "대기 (Wait)"    , status: "W", hint: "Waiting for Stock buy " },  // itemData
+            { text: "입력 (Input)"   , status: "I", hint: "Inputted qty for Stock buy" },
+            { text: "승인 (Confirm)" , status: "C", hint: "Confirmed" },
+            { text: "완료 (Finished)", status: "F", hint: "Finished"  },
+        ];
 
         // Create a container for the popup
         let $popupContainer = $("<div>").appendTo("body");
-            let popupContent    = $("<div>").appendTo($popupContainer).addClass("popup-content");;
-                let tabsContainer   = $("<div>").appendTo(popupContent).addClass("tabs-container");;
+            let popupContent    = $("<div>").appendTo($popupContainer).addClass("popup-content");
+                //let tabsContainer   = $("<div>").appendTo(popupContent).addClass("tabs-container");
+                let stepperContainer = $("<div>").appendTo(popupContent).addClass("stepper-container");
                 let formContainer   = $("<div>").appendTo(popupContent).addClass("form-container");
             let buttonContainer = $("<div>").appendTo($popupContainer).addClass("button-container");
 
         // Create a popup to display the details
-        let popup = $popupContainer.dxPopup({
+        activePopup = $popupContainer.dxPopup({
             title: "Stock Buy Detail",
             showTitle: true,
             width: 800,
-            height: 300,
+            height: 400,
             onHidden: function() {
                 // Show the main grid container when popup is closed
                 $("#gridContainer").show();
@@ -365,30 +382,61 @@ $(document).ready(function() {
         }).dxPopup("instance"); // End of popup
 
         // Create tabs for the status
-        let tabs = tabsContainer.dxTabs({
-            dataSource: [
-                { text: "대기 (Wait)", status: "W" },
-                { text: "입력 (Input)", status: "I" },
-                { text: "승인 (Confirm)", status: "C" },
-                { text: "완료 (Finished)", status: "F" }
-            ],
-            visible: true,
-            selectedIndex: getTabIndexFromStatus(rowData.status),
+        // let tabs = tabsContainer.dxTabs({
+        //     dataSource: [
+        //         { text: "대기 (Wait)", status: "W" },  // itemData
+        //         { text: "입력 (Input)", status: "I" },
+        //         { text: "승인 (Confirm)", status: "C" },
+        //         { text: "완료 (Finished)", status: "F" }
+        //     ],
+        //     visible: true,
+        //     selectedIndex: getTabIndexFromStatus(rowData.status),
+        //     onItemClick: function(e) {
+        //         console.log('onItemClick', e.itemData);
+        //         let rowData_ = Object.assign({}, rowData, { status: e.itemData.status });
+        //         console.log('rowData_', rowData_);
+        //         updateStockBuyStatus(rowData.id, rowData_);
+        //     },
+        //     itemTemplate: function(itemData, itemIndex, itemElement) {
+        //         itemElement.addClass("custom-tab");
+        //         return itemData.text;
+        //     },
+        //     selectedItemTemplate: function(itemData, itemIndex, itemElement) {
+        //         itemElement.addClass("custom-tab selected-tab");
+        //         return itemData.text;
+        //     }
+        // }).dxTabs("instance"); // End of tabs
+
+        let stepper = stepperContainer.dxButtonGroup({
+            items: stepperItems,
+            keyExpr: "status",
+            selectedItemKeys: [rowData.status],
+            stylingMode: "outlined",
+            selectionMode: "single",
             onItemClick: function(e) {
-                console.log('onItemClick', e.itemData);
+                console.log('onSelectionChanged', e);
                 let rowData_ = Object.assign({}, rowData, { status: e.itemData.status });
                 console.log('rowData_', rowData_);
                 updateStockBuyStatus(rowData.id, rowData_);
             },
-            itemTemplate: function(itemData, itemIndex, itemElement) {
-                itemElement.addClass("custom-tab");
-                return itemData.text;
-            },
-            selectedItemTemplate: function(itemData, itemIndex, itemElement) {
-                itemElement.addClass("custom-tab selected-tab");
-                return itemData.text;
+            onContentReady: function(e) {
+                // Create tooltips for each stepper item after the buttons are rendered
+                stepperItems.forEach((item, index) => {
+                    let buttonElement = e.element.find(`.dx-item:eq(${index})`);
+                    let tooltipContainer = $("<div>").appendTo(stepperContainer);
+
+                    tooltipContainer.dxTooltip({
+                        target: buttonElement,
+                        position: "top",
+                        showEvent: "dxhoverstart",
+                        hideEvent: "dxhoverend",
+                        contentTemplate: function() {
+                            return item.hint;
+                        }
+                    });
+                });
             }
-        }).dxTabs("instance"); // End of tabs
+        }).dxButtonGroup("instance");
 
         // Create a form to display the details
         let form = formContainer.dxForm({
@@ -420,7 +468,7 @@ $(document).ready(function() {
             text: "Close",
             type: "default",
             onClick: function() {
-                popup.hide();
+                activePopup.hide();
             }
         }).dxButton("instance"); // End of closeBtn
 
@@ -439,31 +487,51 @@ $(document).ready(function() {
                     // margin: 10px;
                     // margin-top: 10px;
                 }
+                .stepper-container {
+                    margin: 10px 0;
+                }
                 .button-container {
                     position: absolute;
                     bottom: 10px;
                     right: 10px;
                 }
-                .custom-tab {
-                    background-color: #f0f0f0;
-                    border: 1px solid #ddd;
-                    padding: 10px;
-                    transition: background-color 0.3s;
+                // .custom-tab {
+                //     background-color: #f0f0f0;
+                //     border: 1px solid #ddd;
+                //     padding: 10px;
+                //     transition: background-color 0.3s;
+                // }
+                // .custom-tab:hover {
+                //     background-color: #e0e0e0;
+                // }
+                // .custom-tab
+                // .selected-tab {
+                //     background-color: #007bff !important; // Blue
+                //     color: white !important;
+                //     font-weight: bold;
+                // }
+                .dx-button-mode-outlined.dx-button-default {
+                    background-color: transparent;
+                    border-color: #ddd;
+                    color: #333;
                 }
-                .custom-tab:hover {
-                    background-color: #e0e0e0;
+                .dx-button-mode-outlined.dx-button-default.dx-button-has-text {
+                    border-radius: 4px;
                 }
-                .selected-tab {
-                    background-color: #007bff !important; // Blue
-                    color: white !important;
-                    font-weight: bold;
+                .dx-button-mode-outlined.dx-button-default.dx-state-hover {
+                    background-color: #f5f5f5;
+                }
+                .dx-buttongroup-item.dx-button.dx-button-mode-outlined.dx-state-focused {
+                    background-color: #007bff;
+                    color: white;
                 }
             `)
             .appendTo("head");
 
-        popup.show();
+        activePopup.show();
     } // End: showDetailPopup()
 
+    // MARK: - functions start
     function getTabIndexFromStatus(status) {
         const statusMap = { "W": 0, "I": 1, "C": 2, "F": 3 };
         return statusMap[status] || 0;
@@ -481,9 +549,18 @@ $(document).ready(function() {
             $("#gridContainer").dxDataGrid("instance").refresh(); // Refresh the main grid
 
             // update the status in the detail popup
-            let popup = $(".dx-popup").dxPopup("instance");
-            let form = popup.content().find(".form-container").dxForm("instance");
-            form.option("formData.status", data.status);
+            if (activePopup) {
+                let form = activePopup.content().find(".form-container").dxForm("instance");
+                if (form) {
+                    form.option("formData.status", data.status);
+                }
+
+                // Update the stepper
+                let stepper = activePopup.content().find(".stepper-container").dxButtonGroup("instance");
+                if (stepper) {
+                    stepper.option("selectedItemKeys", [data.status]);
+                }
+            }
 
         }).catch(error => {
             console.error("Error updating status: ", error);
@@ -491,5 +568,5 @@ $(document).ready(function() {
             showNotification(message, NotificationType.ERROR);
         });
     }
-
+    // MARK: - functions end
 });
