@@ -1,22 +1,33 @@
 import {
-    showNotification, NotificationType,
-    formatSSN, formatPhoneNumber, exportDataGridToExcel, showPromptDialog, formatDateYyyyMmdd
+    showNotification,
+    NotificationType,
+    DateFormat,
+    formatSSN,
+    formatPhoneNumber,
+    exportDataGridToExcel,
+    showPromptDialog,
+    formatDateYyyyMmdd,
+    getYyyyMmDdFromValueWithFormat
 } from "../utils/utils.js";
 
 $(document).ready(function() {
     console.log("list module...");
 
     let activePopup = null; // Global variable to store the active popup
+    let endPointUrl = "/api/v1/dx/stockBuyList/fordx";
     
     loadStockBuyList();
 
     function loadStockBuyList() {
         console.log('Loading Users...');
 
+        // Create a container for the stepper
+        //let stepperContainerAboveDataGrid = $("<div>").attr("id", "stepperContainerAboveDataGrid").insertBefore("#gridContainer");
+
         let dxDataSource = new DevExpress.data.CustomStore({
             key: "id",
             load: function() {
-                return axios.get("/api/v1/dx/stockBuyList/fordx", {})
+                return axios.get(endPointUrl, {})
                             .then(response => {
                                 let response_ = response.data || []; // Get the data from the response
                                 console.log('response', response_);
@@ -31,7 +42,7 @@ $(document).ready(function() {
             },
             insert: function(values) {
                 console.log('inserting....', values);
-                return axios.post("/api/v1/dx/stockBuyList/fordx", values, {
+                return axios.post(endPointUrl, values, {
                           withCredentials: true // Send cookies when calling the API
                      })
                     .then(response => {
@@ -54,7 +65,7 @@ $(document).ready(function() {
 
                 console.log('updating....', updatedData);
 
-                return axios.put("/api/v1/dx/stockBuyList/fordx/" + key, updatedData, {
+                return axios.put(endPointUrl + "/" + key, updatedData, {
                    withCredentials: true // Send cookies when calling the API
                 }).then(response => {
                     let response_ = response.data;
@@ -68,7 +79,7 @@ $(document).ready(function() {
                 });
             },
             remove: function(key) {
-                return axios.delete("/api/v1/dx/stockBuyList/fordx/" + key, {
+                return axios.delete(endPointUrl + "/" + key, {
                         withCredentials: true // Send cookies when calling the API
                     })
                     .then(response => {
@@ -90,31 +101,18 @@ $(document).ready(function() {
             key: "id",
             method: "GET",
             columns: [
-                { dataField: "id", allowEditing: false, visible: false },
+                { dataField: "id"           , allowEditing: false, visible: false },
+                { dataField: "reqDt"        , caption: "요청일"   , dataType: "date"  , format: formatDateYyyyMmdd },
+                { dataField: "curBal"       , caption: "현재 잔고", dataType: "number", format: "#,##0.##" },
+                { dataField: "curStockPrice", caption: "현재 주가", dataType: "number", format: "#,##0.##" },
+                { dataField: "reqQty"       , caption: "요청 수량", dataType: "number", format: "#,##0"    },
+                { dataField: "reqAmt"       , caption: "요청 금액", dataType: "number", format: "#,##0.##" },
                 {
-                    dataField: "reqDt",
-                    caption: "요청일",
-                    dataType: "date",
-                    defaultValue: new Date(),
-                    format: formatDateYyyyMmdd,
-                },
-                {
-                    dataField: "reqQty",
-                    caption: "요청수량",
+                    dataField: "afterBal",
+                    caption: "거래 후 잔고",
                     dataType: "number", // "number", "string", "date", "boolean", "object", "datetime", "datetimeoffset", "time"
                     defaultValue: 0,
-                    editorOptions: {
-                        format: "#,##0",
-                    }
-                },
-                {
-                    dataField: "reqAmt",
-                    caption: "요청금액",
-                    dataType: "number",
-                    defaultValue: 0,
-                    editorOptions: {
-                        format: "#,##0",
-                    }
+                    format: "#,##0",
                 },
                 {
                     dataField: "status",
@@ -172,8 +170,26 @@ $(document).ready(function() {
                             format: formatDateYyyyMmdd,
                         },
                         {
+                            dataField: "curBal",
+                            label: { text: "현재 잔고" },
+                            editorType: "dxNumberBox",
+                            editorOptions: {
+                                format: "#,##0",
+                            },
+                            validationRules: [{ type: "required" }],
+                        },
+                        {
+                            dataField: "curStockPrice",
+                            label: { text: "현재 주가" },
+                            editorType: "dxNumberBox",
+                            editorOptions: {
+                                format: "#,##0",
+                            },
+                            validationRules: [{ type: "required" }],
+                        },
+                        {
                             dataField: "reqQty",
-                            label: { text: "요청수량" },
+                            label: { text: "요청 수량" },
                             editorType: "dxNumberBox",
                             editorOptions: {
                                 format: "#,##0",
@@ -182,7 +198,16 @@ $(document).ready(function() {
                         },
                         {
                             dataField: "reqAmt",
-                            label: { text: "요청금액" },
+                            label: { text: "요청 금액" },
+                            editorType: "dxNumberBox", // "dxAutocomplete", "dxLookup", "dxSelectBox", "dxTagBox", "dxTextArea", "dxTextBox", "dxNumberBox", "dxDateBox", "dxCheckBox", "dxSwitch", "dxRadioGroup", "dxSlider", "dxRangeSlider", "dxButtonGroup", "dxCalendar", "dxColorBox", "dxDateBox", "dxHtmlEditor", "dxLookup", "dxRadioGroup", "dxSelectBox", "dxTagBox", "dxTextArea", "dxTextBox", "dxCheckBox", "dxSwitch", "dxSlider", "dxRangeSlider", "dxButtonGroup", "dxCalendar", "dxColorBox", "dxDateBox", "dxHtmlEditor"
+                            editorOptions: {
+                                format: "#,##0",
+                            },
+                            validationRules: [{ type: "required" }],
+                        },
+                        {
+                            dataField: "afterBal",
+                            label: { text: "거래 후 잔고" },
                             editorType: "dxNumberBox", // "dxAutocomplete", "dxLookup", "dxSelectBox", "dxTagBox", "dxTextArea", "dxTextBox", "dxNumberBox", "dxDateBox", "dxCheckBox", "dxSwitch", "dxRadioGroup", "dxSlider", "dxRangeSlider", "dxButtonGroup", "dxCalendar", "dxColorBox", "dxDateBox", "dxHtmlEditor", "dxLookup", "dxRadioGroup", "dxSelectBox", "dxTagBox", "dxTextArea", "dxTextBox", "dxCheckBox", "dxSwitch", "dxSlider", "dxRangeSlider", "dxButtonGroup", "dxCalendar", "dxColorBox", "dxDateBox", "dxHtmlEditor"
                             editorOptions: {
                                 format: "#,##0",
@@ -254,6 +279,13 @@ $(document).ready(function() {
                     ignoreExcelErrors: true
                 }
             },
+            onContentReady: function(e) {
+                let firstRow = e.component.getDataSource().items()[0];
+                if(firstRow && firstRow.reqDt) {
+                    console.log('firstRow.reqDt', firstRow.reqDt);
+                    initializeStepper(firstRow.reqDt);
+                }
+            },
             onInitNewRow: function(e) {
                 // Set default values for new rows
                 e.data = {
@@ -262,6 +294,14 @@ $(document).ready(function() {
                     reqQty: 0,
                     status: "W", // Default status is "W" (Wait)
                 };
+            },
+            onRowInserting: function(e) {
+                // Ensuure the data object exists
+                e.data = e.data || {};
+                console.log('inserting....', e.data);
+            },
+            onRowInserted: function(e) {
+                initializeStepper(e.data.reqDt);
             },
             onExporting(e) {
                 // Customize the exported Excel file
@@ -308,11 +348,6 @@ $(document).ready(function() {
                     }
                 );
             }, // Customize the toolbar
-            onRowInserting: function(e) {
-                // Ensuure the data object exists
-                e.data = e.data || {};
-                console.log('inserting....', e.data);
-            },
             onEditCanceling: function(e) {
                 // Display custom message when cancel button is clicked
                 DevExpress.ui.notify("수정 취소 하셨어요.", "info", 2000);
@@ -339,31 +374,86 @@ $(document).ready(function() {
             },
         }).dxDataGrid("instance"); // Get the grid instance
 
+        initializeStepper(new Date()); // Initialize stepper with current date
+
+        // Apply styling for stepper container
+        $("<style>")
+            .prop("type", "text/css")
+            .html(`
+                #stockBuyWrapper {
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                }
+                #stepperContainerAboveDataGrid {
+                    margin-bottom: 20px;
+                    
+                    // place right side rather than left side
+                    position: absolute;
+                    right: 0;          
+                                                  
+                }
+                #gridContainer {
+                    flex-grow: 1;
+                }
+            `)
+            .appendTo("head");
+
     } // End: loadBoards()
 
-    function showDetailPopup(rowData) {
-        console.log('showDetailPopup', rowData);
+    function initializeStepper(reqDt) {
+        // Make API call to get current status
+        let reqDtYyyyMm_ = getYyyyMmDdFromValueWithFormat(reqDt, DateFormat.YYYYMM);
+        console.log('initializeStepper.reqDtYyyyMm_: ', reqDtYyyyMm_);
+
+        axios.get(`/api/v1/dx/stockBuyList/fordx/getDxStockBuyByReqDt/${reqDtYyyyMm_}`, {})
+            .then(response => {
+                console.log('initializeStepper.response', response);
+                let currentStatus = response.data.status; // Get the current status, e.g., "W", "I", "C", "F"
+                createStepper(currentStatus);
+            })
+            .catch(error => {
+                console.error("Error fetching status:", error);
+                showNotification("Error fetching status", NotificationType.ERROR);
+                createStepper("W"); // Create stepper with default status
+            });
+    }
+
+    function createStepper(currentStatus) {
+        let stepperItems = [
+            { text: "대기 (Wait)", status: "W" },
+            { text: "입력 (Input)", status: "I" },
+            { text: "승인 (Confirm)", status: "C" },
+            { text: "완료 (Finished)", status: "F" }
+        ];
+
+        $("#stepperContainerAboveDataGrid").dxButtonGroup({
+            items: stepperItems,
+            keyExpr: "status",
+            selectedItemKeys: [currentStatus],
+            stylingMode: "outlined",
+            selectionMode: "single",
+            disabled: true, // Make it read-only
+            onItemClick: function(e) {
+                // No action on click as it's read-only
+            }
+        });
+    }
+
+    function showDetailPopup(rowDataFr_) {
+        console.log('showDetailPopup', rowDataFr_);
 
         // Close any existing popup
         if (activePopup) {
             activePopup.hide();
         }
 
-        $("#gridContainer").hide(); // Hide the main grid
-
-        // Create a custom stepper using dxButtonGroup for the status
-        const stepperItems = [
-            { text: "대기 (Wait)"    , status: "W", hint: "Waiting for Stock buy " },  // itemData
-            { text: "입력 (Input)"   , status: "I", hint: "Inputted qty for Stock buy" },
-            { text: "승인 (Confirm)" , status: "C", hint: "Confirmed" },
-            { text: "완료 (Finished)", status: "F", hint: "Finished"  },
-        ];
-
         // Create a container for the popup
         let $popupContainer = $("<div>").appendTo("body");
             let popupContent    = $("<div>").appendTo($popupContainer).addClass("popup-content");
                 //let tabsContainer   = $("<div>").appendTo(popupContent).addClass("tabs-container");
                 let stepperContainer = $("<div>").appendTo(popupContent).addClass("stepper-container");
+                let sliderContainer = $("<div>").appendTo(popupContent).addClass("slider-container");
                 let formContainer   = $("<div>").appendTo(popupContent).addClass("form-container");
             let buttonContainer = $("<div>").appendTo($popupContainer).addClass("button-container");
 
@@ -374,10 +464,8 @@ $(document).ready(function() {
             width: 800,
             height: 400,
             onHidden: function() {
-                // Show the main grid container when popup is closed
-                $("#gridContainer").show();
-                // Remove the popup container from the DOM
-                $popupContainer.remove();
+                $popupContainer.remove(); // Remove the popup container from the DOM
+                activePopup = null;
             }
         }).dxPopup("instance"); // End of popup
 
@@ -390,12 +478,12 @@ $(document).ready(function() {
         //         { text: "완료 (Finished)", status: "F" }
         //     ],
         //     visible: true,
-        //     selectedIndex: getTabIndexFromStatus(rowData.status),
+        //     selectedIndex: getTabIndexFromStatus(rowDataFr_.status),
         //     onItemClick: function(e) {
         //         console.log('onItemClick', e.itemData);
-        //         let rowData_ = Object.assign({}, rowData, { status: e.itemData.status });
-        //         console.log('rowData_', rowData_);
-        //         updateStockBuyStatus(rowData.id, rowData_);
+        //         let rowDataFr__ = Object.assign({}, rowDataFr_, { status: e.itemData.status });
+        //         console.log('rowDataFr__', rowDataFr__);
+        //         updateStockBuyStatus(rowDataFr_.id, rowDataFr__);
         //     },
         //     itemTemplate: function(itemData, itemIndex, itemElement) {
         //         itemElement.addClass("custom-tab");
@@ -407,17 +495,27 @@ $(document).ready(function() {
         //     }
         // }).dxTabs("instance"); // End of tabs
 
+
+        // Create stepperItems for the custom stepper using dxButtonGroup for the status
+        const stepperItems = [
+            { text: "대기 (Wait)"    , status: "W", hint: "Waiting for Stock buy " },  // itemData
+            { text: "입력 (Input)"   , status: "I", hint: "Inputted qty for Stock buy" },
+            { text: "승인 (Confirm)" , status: "C", hint: "Confirmed" },
+            { text: "완료 (Finished)", status: "F", hint: "Finished"  },
+        ];
+
+        // Create a custom stepper using dxButtonGroup  for the status
         let stepper = stepperContainer.dxButtonGroup({
             items: stepperItems,
             keyExpr: "status",
-            selectedItemKeys: [rowData.status],
+            selectedItemKeys: [rowDataFr_.status],
             stylingMode: "outlined",
             selectionMode: "single",
             onItemClick: function(e) {
                 console.log('onSelectionChanged', e);
-                let rowData_ = Object.assign({}, rowData, { status: e.itemData.status });
-                console.log('rowData_', rowData_);
-                updateStockBuyStatus(rowData.id, rowData_);
+                let rowDataFr__ = Object.assign({}, rowDataFr_, { status: e.itemData.status });
+                console.log('rowDataFr__', rowDataFr__);
+                updateStockBuyStatus(rowDataFr_.id, rowDataFr__);
             },
             onContentReady: function(e) {
                 // Create tooltips for each stepper item after the buttons are rendered
@@ -438,9 +536,45 @@ $(document).ready(function() {
             }
         }).dxButtonGroup("instance");
 
+        // Create statusItems for a slider to change the status
+        const statusItems = [
+            { value: 0, text: "대기", status: "W" },
+            { value: 1, text: "입력", status: "I" },
+            { value: 2, text: "승인", status: "C" },
+            { value: 3, text: "완료", status: "F" }
+        ];
+
+        // Create a slider to change the status
+        let slider = sliderContainer.dxSlider({
+            min: 0,
+            max: 3,
+            value: statusItems.findIndex(item => item.status === rowDataFr_.status),
+            step: 1,
+            tooltip: {
+                enabled: true,
+                format: function(value) {
+                    return statusItems[value].text;
+                },
+                showMode: "always",
+                position: "top"
+            },
+            label: {
+                visible: true,
+                format: function(value) {
+                    return statusItems[value].text;
+                },
+                position: "top"
+            },
+            onValueChanged: function(e) {
+                let newStatus = statusItems[e.value].status;
+                let updatedData = { ...rowDataFr_, status: newStatus };
+                updateStockBuyStatus(rowDataFr_.id, updatedData);
+            }
+        }).dxSlider("instance");
+
         // Create a form to display the details
         let form = formContainer.dxForm({
-            formData: rowData,
+            formData: rowDataFr_,
             readOnly: true,
             showColonAfterLabel: true,
             showValidationSummary: true,
@@ -490,6 +624,9 @@ $(document).ready(function() {
                 .stepper-container {
                     margin: 10px 0;
                 }
+                .slider-container {
+                    margin: 10px 0;
+                }
                 .button-container {
                     position: absolute;
                     bottom: 10px;
@@ -531,6 +668,7 @@ $(document).ready(function() {
         activePopup.show();
     } // End: showDetailPopup()
 
+    //---------------------------------------------------------
     // MARK: - functions start
     function getTabIndexFromStatus(status) {
         const statusMap = { "W": 0, "I": 1, "C": 2, "F": 3 };
@@ -550,6 +688,7 @@ $(document).ready(function() {
 
             // update the status in the detail popup
             if (activePopup) {
+                // Update the formData.status in the form
                 let form = activePopup.content().find(".form-container").dxForm("instance");
                 if (form) {
                     form.option("formData.status", data.status);
@@ -560,6 +699,18 @@ $(document).ready(function() {
                 if (stepper) {
                     stepper.option("selectedItemKeys", [data.status]);
                 }
+
+                // Update the slider
+                let slider = activePopup.content().find(".slider-container").dxSlider("instance");
+                if (slider) {
+                    const statusItems = [
+                        { value: 0, text: "대기", status: "W" },
+                        { value: 1, text: "입력", status: "I" },
+                        { value: 2, text: "승인", status: "C" },
+                        { value: 3, text: "완료", status: "F" }
+                    ];
+                    slider.option("value", statusItems.findIndex(item => item.status === data.status));
+                }
             }
 
         }).catch(error => {
@@ -569,4 +720,6 @@ $(document).ready(function() {
         });
     }
     // MARK: - functions end
-});
+    //---------------------------------------------------------
+
+}); // End: $(document).ready()

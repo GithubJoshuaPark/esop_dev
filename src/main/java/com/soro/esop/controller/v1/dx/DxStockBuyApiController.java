@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,12 @@ public class DxStockBuyApiController {
     public ResponseEntity<List<DxStockBuy>> getData() {
         List<DxStockBuy>  dxEntities =  dxService.findAll();
         return ResponseEntity.ok(dxEntities);
+    }
+
+    @GetMapping("/stockBuyList/fordx/getDxStockBuyByReqDt/{reqDt}")
+    public ResponseEntity<DxStockBuy> getDxStockBuyByReqDt(@PathVariable(name="reqDt", required = false) String reqDt) {
+        DxStockBuy dxEntity = dxService.findOneRowByReqDt(reqDt);
+        return ResponseEntity.ok(dxEntity);
     }
 
     @GetMapping("/stockBuyList/fordx/{id}")

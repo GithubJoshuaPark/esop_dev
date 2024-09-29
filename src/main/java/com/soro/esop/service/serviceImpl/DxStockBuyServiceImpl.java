@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -41,5 +42,14 @@ public class DxStockBuyServiceImpl implements DxStockBuyService {
         dxEntityRepository.deleteById(id);
     }
 
-    
+    @Override
+    public DxStockBuy findOneRowByReqDt(String reqDt) {
+        return dxEntityRepository.findOneRowByReqDt(reqDt);
+    }
+
+    @Override
+    public DxStockBuy findOneRowByReqDt(LocalDate reqDt) {
+        String reqDtStr = reqDt.toString();
+        return dxEntityRepository.findOneRowByReqDt(reqDtStr);
+    }
 }

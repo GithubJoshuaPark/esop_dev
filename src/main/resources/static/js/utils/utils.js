@@ -13,6 +13,15 @@ export const NotificationType = {
     INFO: "info"
 };
 
+export const DateFormat = {
+    YYYY_MM_DD: 'yyyy-mm-dd',
+    YYYY_MM: 'yyyy-mm',
+    YYYYMM: 'yyyymm',
+    YYYY: 'yyyy',
+    MM: 'mm',
+    DD: 'dd',
+};
+
 export function showNotification(message, type) {
     DevExpress.ui.notify({
         contentTemplate: function(element) {
@@ -77,9 +86,49 @@ export function formatSSN(value) {
     return digits.replace(/(\d{6})(\d{7})/, '$1-$2'); // Apply format xxxxxx-xxxxxxx
 }
 
+/**
+ * Format date to yyyy-mm-dd
+ * @param value: ex) 2021-08-01T00:00:00.000Z or 2021-08-01 or 2021-08-01T00:00:00
+ * @returns {string}: ex: 2021-08-01
+ */
 export function formatDateYyyyMmdd(value) {
     if(!value) return "";
     return new Date(value).toISOString().slice(0, 10); // Apply format yyyy-mm-dd
+}
+
+/**
+ * Format date to yyyy-mm
+ * @param value: ex: 2021-08-01T00:00:00.000Z or 2021-08-01 or 2021-08-01T00:00:00
+ * @returns {*|string}: ex: 2021-08
+ */
+export function getYyyyMmDdFromValueWithFormat(value, format = DateFormat.YYYY_MM_DD) {
+    if(!value) return "";
+
+    const date = new Date(value);
+    const isoDateString = date.toISOString();
+
+    switch (format) {
+        case DateFormat.YYYY_MM_DD:
+            return isoDateString.slice(0, 10); // Format: yyyy-mm-dd
+
+        case DateFormat.YYYY_MM:
+            return isoDateString.slice(0, 7); // Format: yyyy-mm
+
+        case DateFormat.YYYYMM:
+            return isoDateString.slice(0, 7).replace(/-/g, ''); // Format: yyyymm
+
+        case DateFormat.YYYY:
+            return isoDateString.slice(0, 4); // Format: yyyy
+
+        case DateFormat.MM:
+            return isoDateString.slice(5, 7); // Format: mm
+
+        case DateFormat.DD:
+            return isoDateString.slice(8, 10); // Format: dd
+
+        default:
+            throw new Error(`Unsupported format: ${format}`);
+    }
 }
 
 export function exportDataGridToExcel(dataGrid, xlsxFileName) {
