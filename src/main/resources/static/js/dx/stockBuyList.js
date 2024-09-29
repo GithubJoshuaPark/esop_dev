@@ -768,16 +768,17 @@ $(document).ready(function() {
             .prop("type", "text/css")
             .html(\`
                 #stockBuyWrapper {
+                    position: relative;
                     display: flex;
-                    flex-direction: column;
+                    flex-direction: column
                 }
                 #stepperContainerAboveDataGrid {
-                    align-self: flex-end;
-                    margin-bottom: 10px;
+                    position: relative;
+                    margin-left: 420px;
+                    margin-bottom: 20px;
                 }
                 #gridContainer {
-                    flex-grow: 1;
-                    width: calc(100% - 320px); /* Adjust based on stepper width + margin */
+                    margin-top: 80px; /* Adjust based on stepper height */
                 }
             \`)
             .appendTo("head");
