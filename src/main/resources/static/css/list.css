@@ -37,3 +37,7 @@ body {
 .red-trash-icon .dx-icon-trash {
     color: red !important;
 }
+
+.dx-datagrid .dx-header-row .dx-datagrid-text-content {
+    text-align: center;
+}

@@ -288,3 +288,10 @@ export function showPromptDialog(title, message, defaultValue) {
         }
     });
 }
+
+
+export function headerStyleCenter (header, info) {
+    $("<div>").css({ "text-align": "center", "width": "100%" })
+        .text(info.column.caption)
+        .appendTo(header);
+}
