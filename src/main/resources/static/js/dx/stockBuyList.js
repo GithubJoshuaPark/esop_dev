@@ -24,7 +24,6 @@ $(document).ready(function() {
 
         // Create a container for the stepper
         //let stepperContainerAboveDataGrid = $("<div>").attr("id", "stepperContainerAboveDataGrid").insertBefore("#gridContainer");
-
         let dxDataSource = new DevExpress.data.CustomStore({
             key: "id",
             load: function() {
@@ -121,10 +120,10 @@ $(document).ready(function() {
                     dataType: "string",
                     lookup: {
                         dataSource: [
-                            { value: "W", text: "대기 (Wait)" },
-                            { value: "I", text: "입력 (Input)" },
-                            { value: "C", text: "승인 (Confirm)" },
-                            { value: "F", text: "완료 (Finished)" },
+                            { value: "W", text: "매수대기" },
+                            { value: "I", text: "결과입력" },
+                            { value: "C", text: "예탁진행" },
+                            { value: "F", text: "매수완료" },
                         ],
                         valueExpr: "value",
                         displayExpr: "text"
@@ -222,10 +221,10 @@ $(document).ready(function() {
                             editorOptions: {
                                 lookup: {
                                     dataSource: [
-                                        { value: "W", text: "대기 (Wait)" },
-                                        { value: "I", text: "입력 (Input)" },
-                                        { value: "C", text: "승인 (Confirm)" },
-                                        { value: "F", text: "완료 (Finished)" },
+                                        { value: "W", text: "매수대기" },
+                                        { value: "I", text: "결과입력" },
+                                        { value: "C", text: "예탁진행" },
+                                        { value: "F", text: "매수완료" },
                                     ],
                                     valueExpr: "value",
                                     displayExpr: "text"
@@ -382,21 +381,19 @@ $(document).ready(function() {
             .prop("type", "text/css")
             .html(`
                     #stockBuyWrapper {
-                        position: relative;
                         display: flex;
+                        flex-direction: column;
+                    }
+                    #stepperWrapper {
+                        display: flex;
+                        flex-direction: row;
                         justify-content: space-between;
-                        align-items: flex-start;
                     }
                     #stepperContainerAboveDataGrid {
-                        position: absolute;
-                        top: 0;
-                        right: 0;
-                        width: 300px; /* Adjust width as needed */
-                        margin-left: 20px; /* Add some space between grid and stepper */
+                        margin: 10px 0;
                     }
                     #gridContainer {
-                        flex-grow: 1;
-                        width: calc(100% - 320px); /* Adjust based on stepper width + margin */
+
                     }
                 `)
             .appendTo("head");
@@ -417,16 +414,16 @@ $(document).ready(function() {
             .catch(error => {
                 console.error("Error fetching status:", error);
                 showNotification("Error fetching status", NotificationType.ERROR);
-                createStepper("W"); // Create stepper with default status
+                createStepper("S01"); // Create stepper with default status
             });
     }
 
     function createStepper(currentStatus) {
         let stepperItems = [
-            { text: "대기 (Wait)", status: "W" },
-            { text: "입력 (Input)", status: "I" },
-            { text: "승인 (Confirm)", status: "C" },
-            { text: "완료 (Finished)", status: "F" }
+            { text: "매수대기", status: "W" },
+            { text: "결과입력", status: "I" },
+            { text: "예탁진행", status: "C" },
+            { text: "매수완료", status: "F" }
         ];
 
         $("#stepperContainerAboveDataGrid").dxButtonGroup({
@@ -505,10 +502,10 @@ $(document).ready(function() {
 
         // Create stepperItems for the custom stepper using dxButtonGroup for the status
         const stepperItems = [
-            { text: "대기 (Wait)"    , status: "W", hint: "Waiting for Stock buy " },  // itemData
-            { text: "입력 (Input)"   , status: "I", hint: "Inputted qty for Stock buy" },
-            { text: "승인 (Confirm)" , status: "C", hint: "Confirmed" },
-            { text: "완료 (Finished)", status: "F", hint: "Finished"  },
+            { text: "매수대기", status: "W", hint: "매수대기"    },  // itemData
+            { text: "결과입력", status: "I", hint: "매수수량입력" },
+            { text: "예탁진행", status: "C", hint: "예탁진행"    },
+            { text: "매수완료", status: "F", hint: "매수완료"    },
         ];
 
         // Create a custom stepper using dxButtonGroup  for the status
@@ -545,10 +542,10 @@ $(document).ready(function() {
 
         // Create statusItems for a slider to change the status
         const statusItems = [
-            { value: 0, text: "대기", status: "W" },
-            { value: 1, text: "입력", status: "I" },
-            { value: 2, text: "승인", status: "C" },
-            { value: 3, text: "완료", status: "F" }
+            { value: 0, text: "매수대기", status: "W" },
+            { value: 1, text: "결과입력", status: "I" },
+            { value: 2, text: "예탁진행", status: "C" },
+            { value: 3, text: "매수완료", status: "F" }
         ];
 
         // Create a slider to change the status
@@ -592,10 +589,10 @@ $(document).ready(function() {
                 { dataField: "reqAmt", label: { text: "요청금액" }, editorType: "dxNumberBox", editorOptions: {format: "#,##0",},},
                 { dataField: "status", label: { text: "상태"     }, editorType: "dxSelectBox", editorOptions: {
                         items: [
-                            { value: "W", text: "대기 (Wait)" },
-                            { value: "I", text: "입력 (Input)" },
-                            { value: "C", text: "승인 (Confirm)" },
-                            { value: "F", text: "완료 (Finished)" },
+                            { value: "W", text: "매수대기" },
+                            { value: "I", text: "결과입력" },
+                            { value: "C", text: "예탁진행" },
+                            { value: "F", text: "매수완료" },
                         ],
                         valueExpr: "value",
                         displayExpr: "text"
@@ -639,21 +636,6 @@ $(document).ready(function() {
                     bottom: 10px;
                     right: 10px;
                 }
-                // .custom-tab {
-                //     background-color: #f0f0f0;
-                //     border: 1px solid #ddd;
-                //     padding: 10px;
-                //     transition: background-color 0.3s;
-                // }
-                // .custom-tab:hover {
-                //     background-color: #e0e0e0;
-                // }
-                // .custom-tab
-                // .selected-tab {
-                //     background-color: #007bff !important; // Blue
-                //     color: white !important;
-                //     font-weight: bold;
-                // }
                 .dx-button-mode-outlined.dx-button-default {
                     background-color: transparent;
                     border-color: #ddd;
@@ -672,61 +654,57 @@ $(document).ready(function() {
             `)
             .appendTo("head");
 
+        function updateStockBuyStatus(id, data) {
+            console.log('updateStockBuyStatus', id, data);
+            axios.put("/api/v1/dx/stockBuyList/fordx/" + id,
+                { ...data },
+                { withCredentials: true}, // Send cookies when calling the API
+            ).then(response => {
+                let response_ = response.data;
+                console.log('response', response_);
+                showNotification("Status updated successfully.", NotificationType.SUCCESS);
+                $("#gridContainer").dxDataGrid("instance").refresh(); // Refresh the main grid
+
+                // update the status in the detail popup
+                if (activePopup) {
+                    // Update the formData.status in the form
+                    let form = activePopup.content().find(".form-container").dxForm("instance");
+                    if (form) {
+                        form.option("formData.status", data.status);
+                    }
+
+                    // Update the stepper
+                    let stepper = activePopup.content().find(".stepper-container").dxButtonGroup("instance");
+                    if (stepper) {
+                        stepper.option("selectedItemKeys", [data.status]);
+                    }
+
+                    // Update the slider
+                    let slider = activePopup.content().find(".slider-container").dxSlider("instance");
+                    if (slider) {
+                        const statusItems = [
+                            { value: 0, text: "매수대기", status: "W" },
+                            { value: 1, text: "결과입력", status: "I" },
+                            { value: 2, text: "예탁진행", status: "C" },
+                            { value: 3, text: "매수완료", status: "F" }
+                        ];
+                        slider.option("value", statusItems.findIndex(item => item.status === data.status));
+                    }
+                }
+
+            }).catch(error => {
+                console.error("Error updating status: ", error);
+                let message = "Error updating status: " + error;
+                showNotification(message, NotificationType.ERROR);
+            });
+        }
+
+        function getTabIndexFromStatus(status) {
+            const statusMap = { "W": 0, "I": 1, "C": 2, "F": 3 };
+            return statusMap[status] || 0;
+        }
+
         activePopup.show();
     } // End: showDetailPopup()
-
-    //---------------------------------------------------------
-    // MARK: - functions start
-    function getTabIndexFromStatus(status) {
-        const statusMap = { "W": 0, "I": 1, "C": 2, "F": 3 };
-        return statusMap[status] || 0;
-    }
-
-    function updateStockBuyStatus(id, data) {
-        console.log('updateStockBuyStatus', id, data);
-        axios.put("/api/v1/dx/stockBuyList/fordx/" + id,
-            { ...data },
-            { withCredentials: true}, // Send cookies when calling the API
-        ).then(response => {
-            let response_ = response.data;
-            console.log('response', response_);
-            showNotification("Status updated successfully.", NotificationType.SUCCESS);
-            $("#gridContainer").dxDataGrid("instance").refresh(); // Refresh the main grid
-
-            // update the status in the detail popup
-            if (activePopup) {
-                // Update the formData.status in the form
-                let form = activePopup.content().find(".form-container").dxForm("instance");
-                if (form) {
-                    form.option("formData.status", data.status);
-                }
-
-                // Update the stepper
-                let stepper = activePopup.content().find(".stepper-container").dxButtonGroup("instance");
-                if (stepper) {
-                    stepper.option("selectedItemKeys", [data.status]);
-                }
-
-                // Update the slider
-                let slider = activePopup.content().find(".slider-container").dxSlider("instance");
-                if (slider) {
-                    const statusItems = [
-                        { value: 0, text: "대기", status: "W" },
-                        { value: 1, text: "입력", status: "I" },
-                        { value: 2, text: "승인", status: "C" },
-                        { value: 3, text: "완료", status: "F" }
-                    ];
-                    slider.option("value", statusItems.findIndex(item => item.status === data.status));
-                }
-            }
-
-        }).catch(error => {
-            console.error("Error updating status: ", error);
-            let message = "Error updating status: " + error;
-            showNotification(message, NotificationType.ERROR);
-        });
-    }
-    // MARK: - functions end
-    //---------------------------------------------------------
 
 }); // End: $(document).ready()
