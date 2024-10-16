@@ -69,6 +69,10 @@
                     Esop
                 </a>
                 <div class="dropdown-menu" aria-labelledby="boardsDropdown">
+                    <a class="dropdown-item" th:href="@{/dx/member}">
+                        Member
+                        <span class="sr-only" th:if="${activePageName == 'member'}">(current)</span>
+                    </a>
                     <a class="dropdown-item" th:href="@{/dx/stockBuyList}">
                         StockBuyList
                         <span class="sr-only" th:if="${activePageName == 'dxStockBuyList'}">(current)</span>

@@ -9,26 +9,18 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head th:replace="~{acom/common :: head('ESOP > List', '/css/list.css')}"/>
     <body>
-        <nav th:replace="~{acom/common :: menu('dxStockBuyList')}">
+        <nav th:replace="~{acom/common :: menu('member')}">
         </nav>
         
         <main role="main" class="container">
             <div class="text-left">
-                <h3>Dx StockBuy</h3>
+                <h3>Dx Member</h3>
             </div>
             <!--  show up test welcome message -->
             <div>
                  <div th:if="${welcomeMessage}" class="alert alert-success text-center" role="alert">
                     <strong th:text="${welcomeMessage}"></strong>
                  </div>
-            </div>
-
-            <div id="stockBuyWrapper">
-                <div id="stepperWrapper">
-                    <p></p>
-                    <div id="stepperContainerAboveDataGrid"></div>
-                </div>
-                <div id="gridContainer"></div>
             </div>
 
         </main>
@@ -40,6 +32,6 @@
         <th:block th:replace="~{acom/common :: cdnJsfiles}"></th:block>
 
         <!-- userList -->
-        <script type="module" th:src="@{/js/dx/stockBuyList.js}"></script>
+        <script type="module" th:src="@{/js/dx/member.js}"></script>
     </body>
 </html>

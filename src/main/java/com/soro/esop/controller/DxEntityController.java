@@ -22,11 +22,52 @@ import org.springframework.web.bind.annotation.*;
 public class DxEntityController {
 
     @GetMapping("/entityList")
-    public String boardList(Model model)
+    public String entityList(Model model)
     {
         log.debug("dx/entityList");
         model.addAttribute("welcomeMessage", "Welcome to the Dx List");
         return "dx/entityList"; // dx/entityList.html
+    }
+
+    @GetMapping("/stockBuyList")
+    public String stockBuyList(Model model)
+    {
+        log.debug("dx/stockBuyList");
+        model.addAttribute("welcomeMessage", "Welcome to the Dx StockBuyList");
+        return "dx/stockBuyList";
+    }
+
+    @GetMapping("/userList")
+    public String userList(Model model)
+    {
+        log.debug("dx/userList");
+        model.addAttribute("welcomeMessage", "Welcome to the Dx List");
+        return "dx/userList";
+    }
+
+
+    @GetMapping("/member")
+    public String getMember(Model model)
+    {
+        log.debug("dx/member");
+        model.addAttribute("welcomeMessage", "Welcome to the Dx Member");
+        return "dx/member";
+    }
+
+    @PostMapping("/member")
+    public String postMember(Model model)
+    {
+        log.debug("dx/member");
+        model.addAttribute("welcomeMessage", "Welcome to the Dx Member");
+        return "dx/member";
+    }
+
+    @PutMapping("/member")
+    public String putMember(Model model)
+    {
+        log.debug("dx/member");
+        model.addAttribute("welcomeMessage", "Welcome to the Dx Member");
+        return "dx/member";
     }
 
 }
