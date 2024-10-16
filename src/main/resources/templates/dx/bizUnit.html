@@ -9,7 +9,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head th:replace="~{acom/common :: head('ESOP > List', '/css/list.css')}"/>
     <body>
-        <nav th:replace="~{acom/common :: menu('member')}">
+        <nav th:replace="~{acom/common :: menu('bizUnit')}">
         </nav>
         
         <main role="main" class="container">
@@ -28,6 +28,6 @@
         <th:block th:replace="~{acom/common :: cdnJsfiles}"></th:block>
 
         <!-- userList -->
-        <script type="module" th:src="@{/js/dx/member.js}"></script>
+        <script type="module" th:src="@{/js/dx/bizUnit.js}"></script>
     </body>
 </html>

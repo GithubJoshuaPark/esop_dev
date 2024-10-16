@@ -69,6 +69,26 @@
                     Esop
                 </a>
                 <div class="dropdown-menu" aria-labelledby="boardsDropdown">
+                    <a class="dropdown-item" th:href="@{/dx/company}">
+                        Company
+                        <span class="sr-only" th:if="${activePageName == 'company'}">(current)</span>
+                    </a>
+                    <a class="dropdown-item" th:href="@{/dx/bizUnit}">
+                        BizUnit
+                        <span class="sr-only" th:if="${activePageName == 'bizUnit'}">(current)</span>
+                    </a>
+                    <a class="dropdown-item" th:href="@{/dx/dept}">
+                        Dept
+                        <span class="sr-only" th:if="${activePageName == 'dept'}">(current)</span>
+                    </a>
+                    <a class="dropdown-item" th:href="@{/dx/team}">
+                        Team
+                        <span class="sr-only" th:if="${activePageName == 'team'}">(current)</span>
+                    </a>
+                    <a class="dropdown-item" th:href="@{/dx/acct}">
+                        Acct
+                        <span class="sr-only" th:if="${activePageName == 'acct'}">(current)</span>
+                    </a>
                     <a class="dropdown-item" th:href="@{/dx/member}">
                         Member
                         <span class="sr-only" th:if="${activePageName == 'member'}">(current)</span>

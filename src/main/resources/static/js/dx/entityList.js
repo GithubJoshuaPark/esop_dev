@@ -104,7 +104,6 @@ $(document).ready(function() {
                     });
             },
             remove: function(key) {
-
                 // return $.ajax({
                 //     url: "/api/v1/dx/entityList/fordx/" + key,
                 //     method: "DELETE",
@@ -112,7 +111,6 @@ $(document).ready(function() {
                 //         withCredentials: true // Send cookies when calling the API
                 //     },
                 // });
-
                 return axios.delete("/api/v1/dx/entityList/fordx/" + key, {
                     withCredentials: true,
                     })

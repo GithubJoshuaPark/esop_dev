@@ -1,8 +1,6 @@
 package com.soro.esop.entity;
 
 
-import com.soro.esop.entity.enums.C01Status;
-import com.soro.esop.entity.listeners.DxUserListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,24 +10,18 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Data
 @Entity
-@Table(name = "dx_member")
-public class DxMember {
+@Table(name = "dx_biz_unit")
+public class DxBizUnit {
     
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
-    private String id;     // 회원고유 ID
+    private String id;     // 고유 ID
 
     private String coCd;   // 회사코드
     private String bsCd;   // 사업장코드
-    private String deptCd; // 부서코드
-    private String teamCd; // 팀코드
-    private String accId;  // 계정ID
-
-    @NotBlank(message = "Name should not be empty")
-    @Size(min=3, message = "Name should have at least 3 characters")
-    private String name;
+    private String bsNm;   // 사업장명
 
     @NotBlank(message = "Phone number should not be empty")
     private String phoneNumber;
@@ -37,15 +29,9 @@ public class DxMember {
     @NotBlank(message = "Address should not be empty")
     private String address;
 
-    @NotBlank(message = "SSN should not be empty")
-    @Size(min=13, max=13, message = "SSN should have 13 characters")
-    private String ssn;
-
     @NotBlank(message = "Email should not be empty")
     @Email(message = "Email should be valid")
     private String email;
-
-    private C01Status status;
 
     private Long acctBal;
     private Long loanAmt;
