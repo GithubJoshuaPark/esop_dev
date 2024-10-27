@@ -789,8 +789,10 @@ $(document).ready(function() {
         // Make API call to get current status
         let reqDtYyyyMm_ = getYyyyMmDdFromValueWithFormat(reqDt, DateFormat.YYYYMM);
         console.log('initializeStepper.reqDtYyyyMm_: ', reqDtYyyyMm_);
+        
+        let urlPath = '/api/v1/dx/stockBuyList/fordx/getDxStockBuyByReqDt/' + reqDtYyyyMm_;
 
-        axios.get(\`/api/v1/dx/stockBuyList/fordx/getDxStockBuyByReqDt/${reqDtYyyyMm_}\`, {})
+        axios.get(urlPath, {})
             .then(response => {
                 console.log('initializeStepper.response', response);
                 let currentStatus = response.data.status; // Get the current status, e.g., "W", "I", "C", "F"
@@ -904,7 +906,7 @@ $(document).ready(function() {
             onContentReady: function(e) {
                 // Create tooltips for each stepper item after the buttons are rendered
                 stepperItems.forEach((item, index) => {
-                    let buttonElement = e.element.find(\`.dx-item:eq(${index})\`);
+                    let buttonElement = e.element.find(\`.dx-item:eq(\${index})\`);
                     let tooltipContainer = $("<div>").appendTo(stepperContainer);
 
                     tooltipContainer.dxTooltip({

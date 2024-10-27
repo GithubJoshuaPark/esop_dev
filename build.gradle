@@ -59,10 +59,10 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools' // hot reload
 
 	// MariaDB
-	//runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'              // Add MariaDB dependency
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'              // Add MariaDB dependency
 
 	// MySQL Connector
-	runtimeOnly 'mysql:mysql-connector-java:8.0.33'				// Add MySQL dependency (should use 8.0.33)
+	//runtimeOnly 'mysql:mysql-connector-java:8.0.33'				// Add MySQL dependency (should use 8.0.33)
 
 	// Spring Boot Configuration Processor
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
