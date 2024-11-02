@@ -29,12 +29,9 @@ public class DxBizUnit {
     @NotBlank(message = "Address should not be empty")
     private String address;
 
-    @NotBlank(message = "Email should not be empty")
+    @NotBlank(message = "Email should snot be empty")
     @Email(message = "Email should be valid")
     private String email;
 
-    private Long acctBal;
-    private Long loanAmt;
-    private Long contributeAmt;
     private String description;
 }

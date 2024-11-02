@@ -34,8 +34,5 @@ public class DxDept {
     @Email(message = "Email should be valid")
     private String email;
 
-    private Long acctBal;
-    private Long loanAmt;
-    private Long contributeAmt;
     private String description;
 }
